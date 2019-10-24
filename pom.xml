@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>Build geometry and meshes for glTF formats.</description>
-    <url>https://www.kinetica.com/</url>
+    <url>https://github.com/chadj2/jgltf-mesh</url>
 
     <licenses>
         <license>
@@ -27,6 +27,12 @@
             <organizationUrl>https://www.kinetica.com</organizationUrl>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/chadj2/jgltf-mesh.git</connection>
+        <developerConnection>scm:git:ssh://github.com:chadj2/jgltf-mesh.git</developerConnection>
+        <url>https://github.com/chadj2/jgltf-mesh</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
