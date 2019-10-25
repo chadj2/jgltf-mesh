@@ -6,7 +6,7 @@ This project transforms simple 2D arrays into 3D meshes represented as glTF mode
 1. **Lathe:** The edge of the y-axis is wrapped to create cylindrical shapes. 
 1. **Manifold:** Both axes are wrapped to create solid spherical shapes. 
 
-The [MeshBuilder][MESHBUILDER] class provides a fluent interface that saves effort because only the locations of vertices need to be specified. Tangent vectors are calculated automatically to provide smooth and  interpolated reflections from the surface. The resulting glTF model includes:
+The [MeshBuilder][MESHBUILDER] class provides a fluent interface that saves effort because only the locations of vertices need to be specified. Normal vectors are calculated automatically to provide smooth and  interpolated reflections from the surface. The resulting glTF model includes:
 
 * **Triangle indices:** Indicates which points should render triangles 
 * **Texture coordinates:** Maps points on a texture to a mesh 
