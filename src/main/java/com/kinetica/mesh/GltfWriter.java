@@ -138,14 +138,61 @@ public class GltfWriter {
         List<Node> _gltfList = this._gltf.getNodes();
         this._topScene.addNodes(_gltfList.indexOf(_node));
     }
+    
+    /**
+     * Create a default material. You would use this if you are not using a texture and you
+     * are specifying vertex colors.
+     * @return
+     */
+    public Material addDefaultMaterial() {
+        Material _material = createMaterial();
+        _material.setName("default");
+
+        int _idx = this._gltf.getMaterials().indexOf(_material);
+        LOG.debug("Default Material[{}]: idx=<{}> alpha=<{}>", _material.getName(), _idx, _material.getAlphaMode());
+        
+        return _material;
+    }
 
     /**
      * Add a material with optional texture. 
      * @param _imageFile The image to use for the texture or null if none.
      * @return
      */
-    public Material addMaterial(String _imageFile) {
+    public Material addTextureMaterial(String _imageFile) {
+        Material _material = createMaterial();
 
+        Sampler _sampler = new Sampler();
+        this._gltf.addSamplers(_sampler);
+        _sampler.setMagFilter(FILTER_LINEAR);
+        _sampler.setMinFilter(FILTER_LINEAR);
+        _sampler.setWrapS(WRAP_CLAMP_TO_EDGE);
+        _sampler.setWrapT(WRAP_CLAMP_TO_EDGE);
+        
+        Image _image = new Image();
+        this._gltf.addImages(_image);
+        _image.setName(_imageFile);
+        _image.setUri(_imageFile);
+
+        Texture _texture = new Texture();
+        this._gltf.addTextures(_texture);
+        _texture.setSampler(this._gltf.getSamplers().indexOf(_sampler));
+        _texture.setSource(this._gltf.getImages().indexOf(_image));
+        
+        TextureInfo _texInfo = new TextureInfo();
+        _texInfo.setIndex(this._gltf.getTextures().indexOf(_texture));
+        MaterialPbrMetallicRoughness _roughness = _material.getPbrMetallicRoughness();
+        _roughness.setBaseColorTexture(_texInfo);
+
+        _material.setName(_imageFile);
+
+        int _idx = this._gltf.getMaterials().indexOf(_material);
+        LOG.debug("Texture Material[{}]: idx=<{}> alpha=<{}>", _material.getName(), _idx, _material.getAlphaMode());
+        
+        return _material;
+    }
+    
+    private Material createMaterial() {
         Material _material = new Material();
         this._gltf.addMaterials(_material);
         
@@ -174,37 +221,6 @@ public class GltfWriter {
                 _roughness.setBaseColorFactor(new float[] {1f, 1f, 1f, 1f} );
                 break;
         }
-
-        if(_imageFile != null) {
-            Sampler _sampler = new Sampler();
-            this._gltf.addSamplers(_sampler);
-            _sampler.setMagFilter(FILTER_LINEAR);
-            _sampler.setMinFilter(FILTER_LINEAR);
-            _sampler.setWrapS(WRAP_CLAMP_TO_EDGE);
-            _sampler.setWrapT(WRAP_CLAMP_TO_EDGE);
-            
-            Image _image = new Image();
-            this._gltf.addImages(_image);
-            _image.setName(_imageFile);
-            _image.setUri(_imageFile);
-    
-            Texture _texture = new Texture();
-            this._gltf.addTextures(_texture);
-            _texture.setSampler(this._gltf.getSamplers().indexOf(_sampler));
-            _texture.setSource(this._gltf.getImages().indexOf(_image));
-            
-            TextureInfo _texInfo = new TextureInfo();
-            _texInfo.setIndex(this._gltf.getTextures().indexOf(_texture));
-            _roughness.setBaseColorTexture(_texInfo);
-    
-            _material.setName(_imageFile);
-        }
-        else {
-            _material.setName("default");
-        }
-
-        int _idx = this._gltf.getMaterials().indexOf(_material);
-        LOG.debug("New Material[{}]: idx=<{}> alpha=<{}>", _material.getName(), _idx, _material.getAlphaMode());
         
         return _material;
     }

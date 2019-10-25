@@ -83,7 +83,7 @@ public class TestShapeModels {
         this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
 
         // build the gltf buffers
-        final Material _material = this._geoWriter.addMaterial(TEST_TEXTURE_PNG);
+        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.build(this._geoWriter, _material);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
@@ -127,7 +127,7 @@ public class TestShapeModels {
         _meshBuilder.addLathe(_meshGrid, false);
 
         // generate gltf buffers
-        Material _material = this._geoWriter.addMaterial(null);
+        Material _material = this._geoWriter.addDefaultMaterial();
         _meshBuilder.build(this._geoWriter, _material);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
@@ -194,12 +194,12 @@ public class TestShapeModels {
         _meshBuilder.addLathe(_meshGrid, true);
 
         // generate gltf buffers for the cylindrical part
-        Material _material = this._geoWriter.addMaterial(TEST_TEXTURE_PNG);
-        _meshBuilder.build(this._geoWriter, _material);
+        Material _materialTexture = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        _meshBuilder.build(this._geoWriter, _materialTexture);
 
         // generate gltf buffers for the ends
-        Material _materialNull = this._geoWriter.addMaterial(null);
-        _meshBuilderEnds.build(this._geoWriter, _materialNull);
+        Material _materialDefault = this._geoWriter.addDefaultMaterial();
+        _meshBuilderEnds.build(this._geoWriter, _materialDefault);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
@@ -250,7 +250,7 @@ public class TestShapeModels {
         _meshBuilder.addManifold(_meshGrid, true);
 
         // generate gltf buffers
-        Material _material = this._geoWriter.addMaterial(TEST_TEXTURE_PNG);
+        Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.build(this._geoWriter, _material);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());

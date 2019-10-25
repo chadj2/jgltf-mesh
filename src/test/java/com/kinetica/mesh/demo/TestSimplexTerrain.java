@@ -80,7 +80,7 @@ public class TestSimplexTerrain {
         this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
 
         // build the gltf buffers
-        final Material _material = this._geoWriter.addMaterial(TEST_TEXTURE_PNG);
+        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.build(this._geoWriter, _material);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());

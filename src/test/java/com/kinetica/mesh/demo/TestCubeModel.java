@@ -38,9 +38,9 @@ public class TestCubeModel {
         _geoWriter.setBasePath(new File("src/test/resources"));
         
         // create materials for each of the textures
-        Material _kineticaMaterial = _geoWriter.addMaterial("kinetica_logo.png");
-        Material _gltfMaterial = _geoWriter.addMaterial("gltf_logo.png");
-        Material _uvGridMaterial = _geoWriter.addMaterial("uv_grid_512.png");
+        Material _kineticaMaterial = _geoWriter.addTextureMaterial("kinetica_logo.png");
+        Material _gltfMaterial = _geoWriter.addTextureMaterial("gltf_logo.png");
+        Material _uvGridMaterial = _geoWriter.addTextureMaterial("uv_grid_512.png");
         
         MeshBuilder _meshBuilder = null;
         
