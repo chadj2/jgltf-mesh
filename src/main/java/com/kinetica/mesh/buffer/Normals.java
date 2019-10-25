@@ -18,6 +18,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 
+/**
+ * Serializer for normal vector primitives.
+ * @author Chad Juliano
+ */
 public class Normals extends BaseBuffer {
 
     private final ArrayList<Vector3f> _vecList = new ArrayList<>();

@@ -33,9 +33,7 @@ import de.javagl.jgltf.impl.v2.Node;
 /**
  * Build 3D Geometry from triangles or squares. Tangents, indices, and normals are automatically
  * generated.
- * 
- * @author chadjuliano
- *
+ * @author Chad Juliano
  */
 public class GeometryBuilder {
     

@@ -15,10 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Generate 3D meshes based on 2D grid arrays.
- * 
- * @author chadjuliano
- *
+ * Fluent interface for generating 3D meshes based on 2D grid arrays.
+ * @author Chad Juliano
  */
 public class MeshBuilder extends GeometryBuilder {
 

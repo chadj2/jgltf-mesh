@@ -18,6 +18,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 
+/**
+ * Base class for primitive serializers.
+ * @author Chad Juliano
+ */
 public abstract class BaseBuffer {
     
     private final static Logger LOG = LoggerFactory.getLogger(BaseBuffer.class);

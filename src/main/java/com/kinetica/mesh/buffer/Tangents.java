@@ -18,6 +18,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 
+/**
+ * Serializer for Tangent primitives.
+ * @author Chad Juliano
+ */
 public class Tangents extends BaseBuffer {
     
     private final ArrayList<Vector4f> _vecList = new ArrayList<>();

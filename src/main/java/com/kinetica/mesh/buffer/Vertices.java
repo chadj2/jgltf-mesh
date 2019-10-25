@@ -18,6 +18,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 
+/**
+ * Serializer vertex primitives.
+ * @author Chad Juliano
+ */
 public class Vertices extends BaseBuffer {
     
     private final ArrayList<Point3f> _pointList = new ArrayList<>();

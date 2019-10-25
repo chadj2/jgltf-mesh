@@ -39,7 +39,7 @@ public class TestCubeModel {
         
         // create materials for each of the textures
         Material _kineticaMaterial = _geoWriter.addMaterial("kinetica_logo.png");
-        Material _nvidiaMaterial = _geoWriter.addMaterial("gltf_logo.png");
+        Material _gltfMaterial = _geoWriter.addMaterial("gltf_logo.png");
         Material _uvGridMaterial = _geoWriter.addMaterial("uv_grid_512.png");
         
         MeshBuilder _meshBuilder = null;
@@ -81,7 +81,7 @@ public class TestCubeModel {
         _vertexYZ1_1.setTexCoord(new Point2f(0, 1));
         _vertexYZ1_2.setTexCoord(new Point2f(1, 0));
         _vertexYZ1_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _nvidiaMaterial);
+        _meshBuilder.build(_geoWriter, _gltfMaterial);
         
         // face YZ2
         _meshBuilder = new MeshBuilder("face-YZ2");
@@ -94,7 +94,7 @@ public class TestCubeModel {
         _vertexYZ2_1.setTexCoord(new Point2f(0, 1));
         _vertexYZ2_2.setTexCoord(new Point2f(1, 0));
         _vertexYZ2_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _nvidiaMaterial);
+        _meshBuilder.build(_geoWriter, _gltfMaterial);
         
         // face top
         _meshBuilder = new MeshBuilder("face-Top");

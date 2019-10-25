@@ -17,6 +17,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 
+/**
+ * Serializer for triangle index primitives.
+ * @author Chad Juliano
+ */
 public class TriangleIndices extends BaseBuffer {
     
     private final ArrayList<Short> _list = new ArrayList<>();

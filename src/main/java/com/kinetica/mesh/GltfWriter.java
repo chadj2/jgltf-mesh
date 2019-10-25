@@ -40,91 +40,110 @@ import de.javagl.jgltf.model.io.v2.GltfAssetV2;
 import de.javagl.jgltf.model.v2.GltfModelV2;
 
 /**
- * Write content to a gltf file.
- * @author chadjuliano
- *
+ * Serialize added nodes to glTF format.
+ * @author Chad Juliano
  */
 public class GltfWriter {
     
-    private final static Logger LOG = LoggerFactory.getLogger(GltfWriter.class);
+    /**
+     * The AlphaMode is used when creating a Material.
+     */
+    public enum AlphaMode { 
+        /** 
+         * Mesh is opaque but invisible from one size.
+         */
+        OPAQUE,
+        
+        /**
+         * Mesh is opaque and double sided.
+         */
+        OPAQUE_DS,
+        
+        /**
+         * Texture contains a mask that makes certain sections transparent.
+         */
+        MASK, 
+        
+        /**
+         * Texture alpha channel is used to blend regions with the background.
+         */
+        BLEND }
     
-    public enum AlphaMode { OPAQUE, MASK, BLEND, OPAQUE_DS }
+    /**
+     * Indicates if the gltf metadata should be JSON or binary.
+     */
+    public enum GltfFormat { gltf, glb }
 
-    // sampler
+    private final static Logger LOG = LoggerFactory.getLogger(GltfWriter.class);
+
     private static final int FILTER_LINEAR = 9729;
     //private static final int FILTER_LINEAR_MIPMAP_LINEAR = 9987;
     private static final int WRAP_CLAMP_TO_EDGE = 33071;
     //private static final int WRAP_MIRRORED_REPEAT = 33648;
-    
-    private AlphaMode _alphaMode = AlphaMode.OPAQUE;
     private static final int MAX_BUFFER_SIZE = 50*1024*1024;
 
-    public static enum GltfFormat { gltf, glb }
-    
     public final GlTF _gltf = new GlTF();
     public final ByteBuffer _byteBuffer = Buffers.create(MAX_BUFFER_SIZE);
     private final Map<String, Object> _metaParams = new TreeMap<>();
-    private String _basePath = ".";
-    
     private final Scene _topScene = new Scene();
+    private AlphaMode _alphaMode = AlphaMode.OPAQUE;
+    private String _basePath = ".";
+    private String _copyright = "";
     
     public GltfWriter() {
         this._gltf.addScenes(this._topScene);
     }
     
+    /**
+     * Set path for resolving images.
+     * @param _path
+     */
     public void setBasePath(File _path) {
         this._basePath = _path.getPath();
     }
     
+    /** 
+     * Set the alpha mode to use when creating materials. If your mesh is visible from both sides
+     * then you shoudl set this to OPAQUE_DS.
+     * @param _alphaMode
+     */
     public void setAlphaMode(AlphaMode _alphaMode) {
         this._alphaMode = _alphaMode;
     }
     
+    /**
+     * Set extra metadata in the glTF Asset.
+     * @param _key
+     * @param _value
+     */
+    public void setMetaParam(String _key, Object _value) {
+        this._metaParams.put(_key, _value);
+    }
+    
+    /**
+     * Set the copyright in the glTF Asset.
+     * @param _value
+     */
+    public void setCopyright(String _value) {
+        this._copyright = _value;
+    }
+    
+    /**
+     * Add a node to the default Scene. This is the only way this class supports adding of 
+     * geometry.
+     * @param _node
+     */
     public void addNode(Node _node) {
         this._gltf.addNodes(_node);
         List<Node> _gltfList = this._gltf.getNodes();
         this._topScene.addNodes(_gltfList.indexOf(_node));
     }
-    
-    public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
-        GltfModelV2 _gltfModel = getGltfModel();
-        GltfModelWriter _gltfModelWriter = new GltfModelWriter();
-        
-        if(_format == GltfFormat.gltf) {
-            _gltfModelWriter.writeEmbedded(_gltfModel, _os);
-        }
-        else if(_format == GltfFormat.glb) {
-            _gltfModelWriter.writeBinary(_gltfModel, _os);
-        }
-        else {
-            throw new IOException("File extension not recognized: " + _format);
-        }
-    }
-    
-    public void writeGltf(File _outFile) throws Exception {
-        GltfModelV2 _gltfModel = getGltfModel();
-        GltfModelWriter _gltfModelWriter = new GltfModelWriter();
 
-        String _ext = FilenameUtils.getExtension(_outFile.getName());
-        GltfFormat _format = GltfFormat.valueOf(_ext);
-        
-        if(_format == GltfFormat.gltf) {
-            _gltfModelWriter.writeEmbedded(_gltfModel, _outFile);
-            GltfWriter.LOG.info("Wrote glTF: {}", _outFile.getAbsolutePath());
-        }
-        else if(_format == GltfFormat.glb) {
-            _gltfModelWriter.writeBinary(_gltfModel, _outFile);
-            GltfWriter.LOG.info("Wrote glb: {}", _outFile.getAbsolutePath());
-        }
-        else {
-            throw new IOException("File extension not recognized: " + _ext);
-        }
-    }
-    
-    public void setMetaParam(String _key, Object _value) {
-        this._metaParams.put(_key, _value);
-    }
-
+    /**
+     * Add a material with optional texture. 
+     * @param _imageFile The image to use for the texture or null if none.
+     * @return
+     */
     public Material addMaterial(String _imageFile) {
 
         Material _material = new Material();
@@ -190,6 +209,53 @@ public class GltfWriter {
         return _material;
     }
     
+    /**
+     * Write gltf to an OutputStream. Specify gltf or glb format.
+     * @param _os
+     * @param _format
+     * @throws Exception
+     */
+    public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
+        GltfModelV2 _gltfModel = getGltfModel();
+        GltfModelWriter _gltfModelWriter = new GltfModelWriter();
+        
+        if(_format == GltfFormat.gltf) {
+            _gltfModelWriter.writeEmbedded(_gltfModel, _os);
+        }
+        else if(_format == GltfFormat.glb) {
+            _gltfModelWriter.writeBinary(_gltfModel, _os);
+        }
+        else {
+            throw new IOException("File extension not recognized: " + _format);
+        }
+    }
+
+    /**
+     * Write a gltf to a file. The filename should have a gltf or glb extension to indicate 
+     * the type.
+     * @param _outFile
+     * @throws Exception
+     */
+    public void writeGltf(File _outFile) throws Exception {
+        GltfModelV2 _gltfModel = getGltfModel();
+        GltfModelWriter _gltfModelWriter = new GltfModelWriter();
+
+        String _ext = FilenameUtils.getExtension(_outFile.getName());
+        GltfFormat _format = GltfFormat.valueOf(_ext);
+        
+        if(_format == GltfFormat.gltf) {
+            _gltfModelWriter.writeEmbedded(_gltfModel, _outFile);
+            GltfWriter.LOG.info("Wrote glTF: {}", _outFile.getAbsolutePath());
+        }
+        else if(_format == GltfFormat.glb) {
+            _gltfModelWriter.writeBinary(_gltfModel, _outFile);
+            GltfWriter.LOG.info("Wrote glb: {}", _outFile.getAbsolutePath());
+        }
+        else {
+            throw new IOException("File extension not recognized: " + _ext);
+        }
+    }
+    
     private GltfModelV2 getGltfModel() throws Exception {
         GltfAssetV2 _gltfAsset = createGltfAsset();
         GltfModelV2 _gltfModel = new GltfModelV2(_gltfAsset);
@@ -200,8 +266,8 @@ public class GltfWriter {
         Asset _asset = new Asset();
         this._gltf.setAsset(_asset);
         _asset.setVersion("2.0");
-        _asset.setGenerator(this.getClass().getSimpleName());
-        _asset.setCopyright("2018 Kinetica DB");
+        _asset.setGenerator("jglTF-mesh");
+        _asset.setCopyright(this._copyright);
         _asset.setExtras(this._metaParams);
         
         this._metaParams.forEach((_k, _v) -> LOG.debug("attribute[{}] = {}", _k, _v));

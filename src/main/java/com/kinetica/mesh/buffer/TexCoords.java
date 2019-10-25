@@ -18,6 +18,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 
+/**
+ * Serializer for texture coordinate primitives.
+ * @author Chad Juliano
+ */
 public class TexCoords extends BaseBuffer {
     
     private final ArrayList<Point2f> _pointList = new ArrayList<>();

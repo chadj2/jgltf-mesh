@@ -17,9 +17,7 @@ import javax.vecmath.Vector4f;
 
 /**
  * Contains details for a vertex in a 3D mesh.
- * 
- * @author chadjuliano
- *
+ * @author Chad Juliano
  */
 public class MeshVertex {
 

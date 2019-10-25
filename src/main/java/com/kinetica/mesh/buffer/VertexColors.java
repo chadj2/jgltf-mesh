@@ -16,6 +16,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 
+/**
+ * Serializer for vertex color primitives.
+ * @author Chad Juliano
+ */
 public class VertexColors extends BaseBuffer {
 
     private final ArrayList<Color> _cList = new ArrayList<>();

@@ -29,6 +29,7 @@ public class TestShapeModels {
     private final static Logger LOG = LoggerFactory.getLogger(TestShapeModels.class);
     
     private final static String TEST_TEXTURE_PNG = "uv_grid_512.png";
+    private final static String OUT_PATH = "./demo";
     
     private final GltfWriter _geoWriter = new GltfWriter();
     
@@ -39,8 +40,7 @@ public class TestShapeModels {
     }
 
     public static File getFile(String _name) {
-        String _fileName = String.format("demo/%s.gltf", _name);
-        File _outFile = Paths.get(_fileName).toFile();
+        File _outFile = Paths.get(OUT_PATH, _name + ".gltf").toFile();
         _outFile.getParentFile().mkdirs();
         return _outFile;
     }
