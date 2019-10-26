@@ -11,12 +11,12 @@ package com.kinetica.mesh.noise;
  * Code modified for readability by Chad Juliano.
  * @author Ken Perlin
  */
-public final class PerlinNoise {
+public class PerlinNoise {
 
     // Doubled permutation to avoid overflow
-    private static final int PERM[] = new int[512];
+    private final int perm[] = new int[512];
     
-    static {
+    public PerlinNoise() {
         // Hash lookup table as defined by Ken Perlin.  This is a randomly
         // arranged array of all numbers from 0-255 inclusive.
         final int permutation[] = { 151, 160, 137, 91, 90, 15, 131, 13, 201, 95,
@@ -38,33 +38,8 @@ public final class PerlinNoise {
             67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180 };
         
         for (int i = 0; i < 256; i++) {
-            PERM[256 + i] = PERM[i] = permutation[i];
+            this.perm[256 + i] = this.perm[i] = permutation[i];
         }
-    }
-    
-    /**
-     * Generate perlin noise for multiple octaves.
-     * @param x 
-     * @param y
-     * @param z
-     * @param octaves Octaves to include
-     * @param persistence Values < 1.0 will smooth out the result
-     * @return
-     */
-    public static double noise(double x, double y, double z, int octaves, double persistence) {
-        double total = 0;
-        double frequency = 1;
-        double amplitude = 1;
-        double maxValue = 0; // Used for normalizing result to 0.0 - 1.0
-        
-        for(int i=0;i<octaves;i++) {
-            total += noise(x * frequency, y * frequency, z * frequency) * amplitude;
-            maxValue += amplitude;
-            amplitude *= persistence;
-            frequency *= 2;
-        }
-        
-        return total/maxValue;
     }
     
     /**
@@ -74,7 +49,7 @@ public final class PerlinNoise {
      * @param z
      * @return
      */
-    public static double noise(double x, double y, double z) {
+    public double noise(double x, double y, double z) {
         
         // Calculate the "unit cube" that the point asked will be located in
         // The left bound is ( |_x_|,|_y_|,|_z_| ) and the right bound is that
@@ -86,38 +61,38 @@ public final class PerlinNoise {
         final int hashY = (int) Math.floor(y) & 255;
         final int hashZ = (int) Math.floor(z) & 255;
         
+        // HASH COORDINATES OF THE 8 CUBE CORNERS
+        final int hashA  = this.perm[hashX]     + hashY;
+        final int hashB  = this.perm[hashX + 1] + hashY;
+        final int hashAA = this.perm[hashA]      + hashZ;
+        final int hashAB = this.perm[hashA + 1]  + hashZ; 
+        final int hashBA = this.perm[hashB]      + hashZ;
+        final int hashBB = this.perm[hashB + 1]  + hashZ;
+        
         // FIND RELATIVE X,Y,Z OF POINT IN CUBE.
         final double relX = x - Math.floor(x);
         final double relY = y - Math.floor(y);
         final double relZ = z - Math.floor(z);
-        
-        // COMPUTE FADE CURVES FOR EACH OF X,Y,Z.
-        final  double fadeX = fade(relX);
-        final double fadeY = fade(relY);
-        final double fadeZ = fade(relZ);
-        
-        // HASH COORDINATES OF THE 8 CUBE CORNERS
-        final int hashA  = PERM[hashX]     + hashY;
-        final int hashB  = PERM[hashX + 1] + hashY;
-        final int hashAA = PERM[hashA]      + hashZ;
-        final int hashAB = PERM[hashA + 1]  + hashZ; 
-        final int hashBA = PERM[hashB]      + hashZ;
-        final int hashBB = PERM[hashB + 1]  + hashZ;
 
         // The gradient function calculates the dot product between a pseudorandom
         // gradient vector and the vector from the input coordinate to the 8
         // surrounding points in its unit cube.
         // This is all then lerped together as a sort of weighted average based on the faded (u,v,w)
         // values we made earlier.
-        final double c000 = grad(PERM[hashAA], relX,     relY,     relZ);
-        final double c100 = grad(PERM[hashBA], relX - 1, relY,     relZ);
-        final double c010 = grad(PERM[hashAB], relX,     relY - 1, relZ);
-        final double c110 = grad(PERM[hashBB], relX - 1, relY - 1, relZ);
-        final double c001 = grad(PERM[hashAA + 1], relX,     relY,     relZ - 1);
-        final double c101 = grad(PERM[hashBA + 1], relX - 1, relY,     relZ - 1);
-        final double c011 = grad(PERM[hashAB + 1], relX,     relY - 1, relZ - 1);
-        final double c111 = grad(PERM[hashBB + 1], relX - 1, relY - 1, relZ - 1);
+        final double c000 = grad(this.perm[hashAA], relX,     relY,     relZ);
+        final double c100 = grad(this.perm[hashBA], relX - 1, relY,     relZ);
+        final double c010 = grad(this.perm[hashAB], relX,     relY - 1, relZ);
+        final double c110 = grad(this.perm[hashBB], relX - 1, relY - 1, relZ);
+        final double c001 = grad(this.perm[hashAA + 1], relX,     relY,     relZ - 1);
+        final double c101 = grad(this.perm[hashBA + 1], relX - 1, relY,     relZ - 1);
+        final double c011 = grad(this.perm[hashAB + 1], relX,     relY - 1, relZ - 1);
+        final double c111 = grad(this.perm[hashBB + 1], relX - 1, relY - 1, relZ - 1);
 
+        // COMPUTE FADE CURVES FOR EACH OF X,Y,Z.
+        final double fadeX = fade(relX);
+        final double fadeY = fade(relY);
+        final double fadeZ = fade(relZ);
+        
         // AND ADD BLENDED RESULTS FROM 8 CORNERS OF CUBE
         final double blend1 = lerp(fadeY, lerp(fadeX, c000, c100), lerp(fadeX, c010, c110));
         final double blend2 = lerp(fadeY,  lerp(fadeX, c001, c101), lerp(fadeX, c011, c111));
@@ -178,15 +153,15 @@ public final class PerlinNoise {
       
         final double v1;
         if(hash2 < b0100) {
-            // If the first and second significant bits are 0 set v = y
+            // If the first and second significant bits are 0
             v1 = y;
         }
         else if(hash2 == b1100 || hash2 == b1110) {
-            // If the first or second significant bits are 1 set v = x
+            // If the first or second significant bits are 1
             v1 = x;
         }
         else {
-            // If the first and second significant bits are not equal (0/1, 1/0) set v = z
+            // If the first and second significant bits are not equal (0/1, 1/0)
             v1 = z;
         }
         
