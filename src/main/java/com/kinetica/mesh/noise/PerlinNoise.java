@@ -82,45 +82,45 @@ public final class PerlinNoise {
         // We also fade the location to smooth the result.
         
         // FIND UNIT CUBE THAT CONTAINS POINT.
-        int hashX = (int) Math.floor(x) & 255;
-        int hashY = (int) Math.floor(y) & 255;
-        int hashZ = (int) Math.floor(z) & 255;
+        final int hashX = (int) Math.floor(x) & 255;
+        final int hashY = (int) Math.floor(y) & 255;
+        final int hashZ = (int) Math.floor(z) & 255;
         
         // FIND RELATIVE X,Y,Z OF POINT IN CUBE.
-        double relX = x - Math.floor(x);
-        double relY = y - Math.floor(y);
-        double relZ = z - Math.floor(z);
+        final double relX = x - Math.floor(x);
+        final double relY = y - Math.floor(y);
+        final double relZ = z - Math.floor(z);
         
         // COMPUTE FADE CURVES FOR EACH OF X,Y,Z.
-        double fadeX = fade(relX);
-        double fadeY = fade(relY);
-        double fadeZ = fade(relZ);
+        final  double fadeX = fade(relX);
+        final double fadeY = fade(relY);
+        final double fadeZ = fade(relZ);
         
         // HASH COORDINATES OF THE 8 CUBE CORNERS
-        int hashA  = PERM[hashX]     + hashY;
-        int hashB  = PERM[hashX + 1] + hashY;
-        int hashAA = PERM[hashA]      + hashZ;
-        int hashAB = PERM[hashA + 1]  + hashZ; 
-        int hashBA = PERM[hashB]      + hashZ;
-        int hashBB = PERM[hashB + 1]  + hashZ;
+        final int hashA  = PERM[hashX]     + hashY;
+        final int hashB  = PERM[hashX + 1] + hashY;
+        final int hashAA = PERM[hashA]      + hashZ;
+        final int hashAB = PERM[hashA + 1]  + hashZ; 
+        final int hashBA = PERM[hashB]      + hashZ;
+        final int hashBB = PERM[hashB + 1]  + hashZ;
 
         // The gradient function calculates the dot product between a pseudorandom
         // gradient vector and the vector from the input coordinate to the 8
         // surrounding points in its unit cube.
         // This is all then lerped together as a sort of weighted average based on the faded (u,v,w)
         // values we made earlier.
-        double c000 = grad(PERM[hashAA], relX,     relY,     relZ);
-        double c100 = grad(PERM[hashBA], relX - 1, relY,     relZ);
-        double c010 = grad(PERM[hashAB], relX,     relY - 1, relZ);
-        double c110 = grad(PERM[hashBB], relX - 1, relY - 1, relZ);
-        double c001 = grad(PERM[hashAA + 1], relX,     relY,     relZ - 1);
-        double c101 = grad(PERM[hashBA + 1], relX - 1, relY,     relZ - 1);
-        double c011 = grad(PERM[hashAB + 1], relX,     relY - 1, relZ - 1);
-        double c111 = grad(PERM[hashBB + 1], relX - 1, relY - 1, relZ - 1);
+        final double c000 = grad(PERM[hashAA], relX,     relY,     relZ);
+        final double c100 = grad(PERM[hashBA], relX - 1, relY,     relZ);
+        final double c010 = grad(PERM[hashAB], relX,     relY - 1, relZ);
+        final double c110 = grad(PERM[hashBB], relX - 1, relY - 1, relZ);
+        final double c001 = grad(PERM[hashAA + 1], relX,     relY,     relZ - 1);
+        final double c101 = grad(PERM[hashBA + 1], relX - 1, relY,     relZ - 1);
+        final double c011 = grad(PERM[hashAB + 1], relX,     relY - 1, relZ - 1);
+        final double c111 = grad(PERM[hashBB + 1], relX - 1, relY - 1, relZ - 1);
 
         // AND ADD BLENDED RESULTS FROM 8 CORNERS OF CUBE
-        double blend1 = lerp(fadeY, lerp(fadeX, c000, c100), lerp(fadeX, c010, c110));
-        double blend2 = lerp(fadeY,  lerp(fadeX, c001, c101), lerp(fadeX, c011, c111));
+        final double blend1 = lerp(fadeY, lerp(fadeX, c000, c100), lerp(fadeX, c010, c110));
+        final double blend2 = lerp(fadeY,  lerp(fadeX, c001, c101), lerp(fadeX, c011, c111));
         return lerp(fadeZ, blend1, blend2);
     }
 

@@ -47,9 +47,7 @@ public class TestTerrainNoise {
 
         final MeshBuilder _meshBuilder = new MeshBuilder("test_simplex");
         
-        // length of a size
         final int _gridPoints = 100;
-        
         final float _gridSize = 5f;
         
         // grid to hold mesh points
@@ -94,10 +92,10 @@ public class TestTerrainNoise {
 
         final MeshBuilder _meshBuilder = new MeshBuilder("test_perlin");
         
-        // length of a size
         final int _gridPoints = 100;
-        
-        final float _gridSize = 5f;
+        final float _gridSize = 3f;
+        final int _octaves = 5;
+        final double _persistence = 0.4;
         
         // grid to hold mesh points
         final MeshVertex[][] _meshGrid = new MeshVertex[_gridPoints][_gridPoints];
@@ -111,7 +109,7 @@ public class TestTerrainNoise {
                 final float _zPos = MeshBuilder.interpFloat(_gridPoints, _gridSize, _yIdx) - _gridSize/2f;
                 
                 // get the terrain value
-                final float _yPos = (float)PerlinNoise.noise(_xPos, _zPos, 0, 4, 0.3)*2f;
+                final float _yPos = (float)PerlinNoise.noise(_xPos, _zPos, 0, _octaves, _persistence);
 
                 // add the point in the mesh
                 Point3f _point = new Point3f(-1*_xPos, _yPos, _zPos);
