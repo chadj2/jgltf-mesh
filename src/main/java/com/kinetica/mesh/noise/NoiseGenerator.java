@@ -62,8 +62,8 @@ public abstract class NoiseGenerator {
     }
     
     private double lacunarity = 2;
-    private int octaves = 3;
-    private double persistence = 0.5;
+    private int octaves = 5;
+    private double persistence = 0.4;
     
     public NoiseGenerator() {
     }
@@ -77,7 +77,7 @@ public abstract class NoiseGenerator {
     }
     
     /**
-     * Set the persistance. If values lower than 1.0 will smooth out higher octaves 
+     * Set the persistance. If values lower than 1.0 will reduce higher octaves 
      * leading to a smoother surface.
      * @param _value
      */

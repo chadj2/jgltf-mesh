@@ -50,7 +50,7 @@ public class TestTerrainNoise {
         final int _gridPoints = 100;
         final float _gridSize = 4f;
         
-        extracted(_gridPoints, _gridSize, _noise, "test_perlin");
+        createTerrain(_gridPoints, _gridSize, _noise, "test_perlin");
     }
 
     /**
@@ -67,11 +67,11 @@ public class TestTerrainNoise {
         final int _gridPoints = 100;
         final float _gridSize = 4f;
         
-        extracted(_gridPoints, _gridSize, _noise, "test_simplex");
+        createTerrain(_gridPoints, _gridSize, _noise, "test_simplex");
     }
 
 
-    private void extracted(final int _gridPoints, final float _gridSize, NoiseGenerator _noise, String _name)
+    private void createTerrain(final int _gridPoints, final float _gridSize, NoiseGenerator _noise, String _name)
             throws Exception {
         final MeshBuilder _meshBuilder = new MeshBuilder(_name);
         
