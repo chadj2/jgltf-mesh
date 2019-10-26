@@ -1,4 +1,4 @@
-package com.kinetica.mesh;
+package com.kinetica.mesh.noise;
 
 /*
  * OpenSimplex Noise in Java.
