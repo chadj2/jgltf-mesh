@@ -15,11 +15,16 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Contains details for a vertex in a 3D mesh.
  * @author Chad Juliano
  */
 public class MeshVertex {
+    
+    private final static Logger LOG = LoggerFactory.getLogger(MeshVertex.class);
 
     // 3D location of this vertex
     private final Point3f _vertex;
@@ -112,6 +117,13 @@ public class MeshVertex {
         }
         
         _avgNormal.normalize();
+        
+        if(Float.isNaN(_avgNormal.x) || Float.isNaN(_avgNormal.y) || Float.isNaN(_avgNormal.z)) {
+            LOG.debug("Could not calculate average normal for vertex: {}", this.getIndex());
+            // create a fake normal
+            _avgNormal = new Vector3f(1f, 1f, 1f);
+            _avgNormal.normalize();
+        }
         return _avgNormal;
     }
     
