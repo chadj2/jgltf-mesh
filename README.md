@@ -94,6 +94,30 @@ will add triangles to the mesh.
 
 ## Internals
 
+### Normals Algorithm
+
+The `MeshBuilder` class has the capability to automatically compute normals for any type of geometry without effort from the user. Normals are vectors that point perpendicular to the plane at each vertex and are necessary for the renderer to properly calculate  shading interpolations for a surface. This interpolation gives the appearance of a smooth surface when the wireframe has limited detail. 
+
+Below is an exmaple of the of the same wireframe with and without vertex normals. Without the normals the renderer is lacking information about the surface and has no option except to simulate normals independently for each triangle.
+
+![Terrain With Normals](images/terrain_with_normals.jpg)
+
+![Terrain No Normals](images/terrain_no_normals.jpg)
+
+Some apporaches to computing the normals involve [manually calculating the derivative][DERIVATIVE] of the surface which requires considerable effort. The `MeshBuilder` uses a relatively simple algorithm where normals for each vertex are calcuated from the average contribution of each triangle that includes it.
+
+![Grid Cell](images/grid_cell.jpg)
+
+Above we can see an example of a minimal grid with 3x3 vertices, 2x2 square cells, and 8 triangles. The vertex in the center is shared by 6 triangles and its normal can be calculated by averaging the normals of each of its surrounding triangles. In this case the north/south and east/west contributions of the triangle normals will cancel and the vertex normal will point directly up.
+
+The normals calculation requires that all triangles are added to the wireframe before the normals are calculated. The steps are as follows:
+
+1. Any time a shape is added with the MeshBuilder it will eventually call `GeometryBuilder.addTriangle()` for every triangle to be added. 
+2. `GeometryBuilder.addTriangle()` will calculate the normal of the triangle and it to a list of normals in `MeshVertex` for each of the 3 vertices.
+3. Afer all triangles are added `GeometryBuilder.build()` will average the normals for each `MeshVertex` to calculate the normals.
+
+[DERIVATIVE]: <https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/perlin-noise-part-2/perlin-noise-computing-derivatives>
+
 ### Buffer Serialization
 
 The MeshBuilder leverages the [JglTF][JGLTF] library which can manipulate metadata but JglTF has no functionality to manipulate the glTF buffer which contains the geometry. The lower level functions of the MeshBuilder fill this gap by allowing for geometry primitives to be set and serialized the buffer.
@@ -130,33 +154,6 @@ Except for `TriangleIndices` each of the serializers should have N values where 
 The serializers are populated with data from the MeshVertex list. Next their `BaseBuffer.build()` is called which will serialize contents to the buffer and add necessary JSON metadata.
 
 [GLTF_SPEC]: <https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md>
-
-### Normals Algorithm
-
-The MeshBuilder class has the capability to automatically compute normals for any type of geometry without effort from the user. Normals are vectors that point perpendicular to the plane at each vertex and are necessary for the renderer to properly calculate  shading interpolations for a surface. This interpolation gives the appearance of a smooth surface when the wireframe has limited detail. 
-
-Below is an exmaple of the of the same wireframe with and without vertex normals. Without the normals the renderer is lacking information about the surface and has no option except to simulate normals independently for each triangle.
-
-![Terrain With Normals](images/terrain_with_normals.jpg)
-
-![Terrain No Normals](images/terrain_no_normals.jpg)
-
-Some apporaches to computing the normals involve [manually calculating the derivative][DERIVATIVE] of the surface which requires considerable effort. The `MeshBuilder` uses a relatively simple algorithm where normals for each vertex are calcuated from the average contribution of each triangle that includes it.
-
-![Grid Cell](images/grid_cell.jpg)
-
-Above we can see an example of a minimal grid with 3x3 vertices, 2x2 square cells, and 8 triangles. The vertex in the center is shared by 6 triangles and its normal can be calculated by averaging the normals of each of its surrounding triangles. In this case the north/south and east/west contributions of the triangle normals will cancel and the vertex normal will point directly up.
-
-The normals calculation requires that all triangles are added to the wireframe before the normals are calculated. The steps are as follows:
-
-1. Any time a shape is added with the MeshBuilder it will eventually call `GeometryBuilder.addTriangle()` for every triangle to be added. 
-2. `GeometryBuilder.addTriangle()` will calculate the normal of the triangle and it to a list of normals in `MeshVertex` for each of the 3 vertices.
-3. Afer all triangles are added `GeometryBuilder.build()` will average the normals for each `MeshVertex` to calculate the normals.
-
-
-
-
-[DERIVATIVE]: <https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/perlin-noise-part-2/perlin-noise-computing-derivatives>
 
 ## API Summary
 
