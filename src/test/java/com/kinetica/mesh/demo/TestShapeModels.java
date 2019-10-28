@@ -53,19 +53,22 @@ public class TestShapeModels {
     public void testPlane() throws Exception {
         final MeshBuilder _meshBuilder = new MeshBuilder("test_plane");
         
-        // length of a size
+        // size of grid
         final int _length = 30;
+        
+        // size of coordinates
+        final float _coordLength = 4f;
         
         // grid to hold mesh points
         final MeshVertex[][] _meshGrid = new MeshVertex[_length][_length];
         
         for(int _xIdx = 0; _xIdx < _length; _xIdx++) {
             // interpolate to within the range [-2,2]
-            final float _xPos = MeshBuilder.interpFloat(_length, 4, _xIdx) - 2f;
+            final float _xPos = MeshBuilder.interpFloat(_length, _coordLength, _xIdx) - _coordLength/2f;
             
             for(int _yIdx = 0; _yIdx < _length; _yIdx++) {
                 // interpolate to within the range [-2,2]
-                final float _zPos = MeshBuilder.interpFloat(_length, 4, _yIdx) - 2f;
+                final float _zPos = MeshBuilder.interpFloat(_length, _coordLength, _yIdx) - _coordLength/2f;
                 
                 // calculate the function 2*x*exp(-(x^2 + y^2))
                 final float _yPos = (float)(2*_xPos*Math.exp(-1*(_xPos*_xPos + _zPos*_zPos)));
@@ -257,4 +260,56 @@ public class TestShapeModels {
         this._geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
+    
+    @Test 
+    public void testMinimalGrid() throws Exception {
+        final MeshBuilder _meshBuilder = new MeshBuilder("test_minimal_grid");
+
+        // size of grid
+        final int _length = 3;
+
+        // size of coordinates
+        final float _coordLength = 4f;
+        
+        final MeshVertex[][] _meshGrid = new MeshVertex[_length][_length];
+        
+        // setup an flat white plane
+        for(int _xIdx = 0; _xIdx < _length; _xIdx++) {
+            final float _xPos = MeshBuilder.interpFloat(_length, _coordLength, _xIdx) - _coordLength/2f;
+            
+            for(int _yIdx = 0; _yIdx < _length; _yIdx++) {
+                final float _zPos = MeshBuilder.interpFloat(_length, _coordLength, _yIdx) - _coordLength/2f;
+                
+                Point3f _point = new Point3f(-1*_xPos, 0, _zPos);
+                MeshVertex _vertex = _meshBuilder.newVertex(_point);
+                _meshGrid[_xIdx][_yIdx] = _vertex;
+                _vertex.setColor(Color.WHITE);
+            }
+        }
+        
+        // add elevations at the edges and center.
+        _meshGrid[0][1].getVertex().y = 0.25f;
+        _meshGrid[1][0].getVertex().y = 0.25f;
+        _meshGrid[1][2].getVertex().y = 0.25f;
+        _meshGrid[2][1].getVertex().y = 0.25f;
+        _meshGrid[1][1].getVertex().y = 1f;
+        
+        // disable normals
+        _meshBuilder.setNormals(false);
+        
+        // render the vertices in the grid
+        _meshBuilder.addPlane(_meshGrid, true);
+        
+        // Set rendering for both sides of the plane
+        this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
+
+        // build the gltf buffers
+        final Material _material = this._geoWriter.addDefaultMaterial();
+        _meshBuilder.build(this._geoWriter, _material);
+
+        File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
+        this._geoWriter.writeGltf(_outFile);
+        LOG.info("Finished generating: {}", _outFile);
+    }
 }
+

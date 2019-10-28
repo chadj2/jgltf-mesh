@@ -26,7 +26,7 @@ import de.javagl.jgltf.impl.v2.Material;
 public class TestTerrainNoise {
 
     private final static Logger LOG = LoggerFactory.getLogger(TestShapeModels.class);
-    private final static String TEST_TEXTURE_PNG = "uv_grid_512.png";
+    private final static String TEST_TEXTURE_PNG = "gltf_logo.png";
     
     private final GltfWriter _geoWriter = new GltfWriter();
     
@@ -44,7 +44,7 @@ public class TestTerrainNoise {
     public void testPerlinTerrain() throws Exception {
         
         NoiseGenerator _noise = new NoiseGenerator.Perlin();
-        _noise.setOctaves(5);
+        _noise.setOctaves(3);
         _noise.setPersistence(0.4);
         
         final int _gridPoints = 100;
@@ -61,7 +61,7 @@ public class TestTerrainNoise {
     public void testSimplexTerrain() throws Exception {
         
         NoiseGenerator _noise = new NoiseGenerator.OpenSimplex();
-        _noise.setOctaves(5);
+        _noise.setOctaves(3);
         _noise.setPersistence(0.4);
         
         final int _gridPoints = 100;

@@ -52,6 +52,8 @@ public class GeometryBuilder {
     // indices keep track of connectivity between vertices.
     protected final TriangleIndices _indices;
     
+    private boolean _hasNormals = true;
+    
     // Transform scale and offset
     private final Matrix4f _transform = new Matrix4f();
     
@@ -116,6 +118,14 @@ public class GeometryBuilder {
         
         // invert the X axis
         this._transform.m00 *= INVERT_X;
+    }
+    
+    /**
+b    * Enable or disable normals.
+     * @param _hasNormals
+     */
+    public void setNormals(boolean _hasNormals) {
+        this._hasNormals = _hasNormals;
     }
     
     /**
@@ -320,16 +330,18 @@ public class GeometryBuilder {
                 _colors.add(_color);
             }
             
-            // it is important to calculate normals here after all neighboring vertices
-            // have been added.
-            Vector3f _normal = _meshVertex.getNormal();
-            if(_normal == null) {
-                LOG.warn("Vertex is not part of a triangle: " + _meshVertex.getIndex());
-                // create a fake normal
-                _normal = new Vector3f(1f, 1f, 1f);
-                _normal.normalize();
+            if(this._hasNormals) {
+                // it is important to calculate normals here after all neighboring vertices
+                // have been added.
+                Vector3f _normal = _meshVertex.getNormal();
+                if(_normal == null) {
+                    LOG.warn("Vertex is not part of a triangle: " + _meshVertex.getIndex());
+                    // create a fake normal
+                    _normal = new Vector3f(1f, 1f, 1f);
+                    _normal.normalize();
+                }
+                _normals.add(_normal);
             }
-            _normals.add(_normal);
             
             // leave out tangents for now.
             //this._tangents.add(_meshVertex.getTangent());
