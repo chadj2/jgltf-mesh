@@ -49,6 +49,10 @@ public abstract class NoiseGenerator {
         public OpenSimplex() {
             this._noise = new OpenSimplexNoise();
         }
+        
+        public OpenSimplex(long _seed) {
+            this._noise = new OpenSimplexNoise(_seed);
+        }
 
         @Override
         protected double getNoiseInternal(double x, double y, double z) {

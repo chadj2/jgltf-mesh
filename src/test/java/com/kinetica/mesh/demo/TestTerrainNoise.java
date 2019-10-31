@@ -60,7 +60,7 @@ public class TestTerrainNoise {
     @Test 
     public void testSimplexTerrain() throws Exception {
         
-        NoiseGenerator _noise = new NoiseGenerator.OpenSimplex();
+        NoiseGenerator _noise = new NoiseGenerator.OpenSimplex(999);
         _noise.setOctaves(3);
         _noise.setPersistence(0.4);
         
