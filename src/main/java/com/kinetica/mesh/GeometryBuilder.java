@@ -194,6 +194,46 @@ b    * Enable or disable normals.
     /**
      * This method should be called when all shapes have added. It will serialize the MeshVertex
      * list and indices to buffers.
+     *
+     * @param _geoWriter
+     * @param _texture
+     * @param _meshPrimitive
+     * @return
+     * @throws Exception
+     */
+    public Node build(GltfWriter _geoWriter, Material _texture, MeshPrimitive _meshPrimitive) throws Exception {
+
+        if(this._vertexList.size() == 0) {
+            throw new Exception("No vertices to build!");
+        }
+
+        Mesh _mesh = new Mesh();
+        _geoWriter._gltf.addMeshes(_mesh);
+        _mesh.setName(this._name + "-mesh");
+        int _meshIdx = _geoWriter._gltf.getMeshes().indexOf(_mesh);
+
+        _mesh.addPrimitives(_meshPrimitive);
+
+        if(_texture != null) {
+            int _materialIdx = _geoWriter._gltf.getMaterials().indexOf(_texture);
+            _meshPrimitive.setMaterial(_materialIdx);
+        }
+
+        buildBuffers(_geoWriter, _meshPrimitive);
+
+        LOG.debug("New Mesh[{}]: idx=<{}>", _mesh.getName(), _meshIdx);
+
+        Node _node = new Node();
+        _geoWriter.addNode(_node);
+        _node.setMesh(_meshIdx);
+        _node.setName(this._name + "-node");
+
+        return _node;
+    }
+
+    /**
+     * This method should be called when all shapes have added. It will serialize the MeshVertex
+     * list and indices to buffers.
      * 
      * @param _geoWriter
      * @param _texture
@@ -201,34 +241,8 @@ b    * Enable or disable normals.
      * @throws Exception
      */
     public Node build(GltfWriter _geoWriter, Material _texture) throws Exception {
-        
-        if(this._vertexList.size() == 0) {
-            throw new Exception("No vertices to build!");
-        }
-        
-        Mesh _mesh = new Mesh();
-        _geoWriter._gltf.addMeshes(_mesh);
-        _mesh.setName(this._name + "-mesh");
-        int _meshIdx = _geoWriter._gltf.getMeshes().indexOf(_mesh);
-        
         MeshPrimitive _meshPrimitive = new MeshPrimitive();
-        _mesh.addPrimitives(_meshPrimitive);
-
-        if(_texture != null) {
-            int _materialIdx = _geoWriter._gltf.getMaterials().indexOf(_texture);
-            _meshPrimitive.setMaterial(_materialIdx);
-        }
-        
-        buildBuffers(_geoWriter, _meshPrimitive);
-        
-        LOG.debug("New Mesh[{}]: idx=<{}>", _mesh.getName(), _meshIdx);
-        
-        Node _node = new Node();
-        _geoWriter.addNode(_node);
-        _node.setMesh(_meshIdx);
-        _node.setName(this._name + "-node");
-
-        return _node;
+        return build(_geoWriter, _texture, _meshPrimitive);
     }
     
     /**
