@@ -34,10 +34,12 @@ Below is a summary of the JUnit tests. These can be executed with `maven test`.
 | [TestShapeModels.testHelix()][DEMO_SHAPES] | Generate a textured helix with addLathe(). |
 | [TestShapeModels.testTorus()][DEMO_SHAPES] | Generate a textured torus with addManifold(). |
 | [TestCubeModel.testBox()][DEMO_CUBE] | Generate a cube with textures on all sides. |
+| [TestLineModel.testLineModel()][DEMO_LINE] | Generate lines with different colors. |
 
 [VIEWER]: <https://gltf-viewer.donmccurdy.com/>
 [DEMO_SHAPES]: <src/test/java/com/kinetica/mesh/demo/TestShapeModels.java>
 [DEMO_CUBE]: <src/test/java/com/kinetica/mesh/demo/TestCubeModel.java>
+[DEMO_LINE]: <src/test/java/com/kinetica/mesh/demo/TestLineModel.java>
 
 ### Plane
 
@@ -68,6 +70,12 @@ The torus is constructed with `Meshbuilder.addManifold()` that will join the x-a
 The cube gives an example of how to generate models using more primitive API's. Each vertex is created using `Meshbuilder.newVertex()`. These are passed to `Meshbuilder.addSquare()` to generate each of the 6 faces. Because it does not call one of the mesh generator routines It must manually add texture coordinates with `MeshVertex.setTexCoord()`; however, normals are still generated automatically.
 
 ![Cube](images/cube.jpg)
+
+### Line
+
+Lines can be constructed with help of the mesh mode. `GeometryBuidler.build` method has a parameter in order to switch this attribute; `_meshPrimitive`.
+
+![Line](images/line.png)
 
 ## MeshBuilder Workflow
 
