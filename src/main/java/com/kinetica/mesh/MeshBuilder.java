@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * Fluent interface for generating 3D meshes based on 2D grid arrays.
  * @author Chad Juliano
  */
-public class MeshBuilder extends GeometryBuilder {
+public class MeshBuilder extends TriangleBuilder {
 
     private final static Logger LOG = LoggerFactory.getLogger(MeshBuilder.class);
     
@@ -144,9 +144,9 @@ public class MeshBuilder extends GeometryBuilder {
             
             // Suppress generation of normals because we want to use the normals from the original
             // grid. We render the mesh with no wrapping because the start and end points overlap.
-            this._suppressNormals = true;
+            this.supressNormals(true);
             renderMesh(_texGrid, false, false);
-            this._suppressNormals = false;
+            this.supressNormals(false);
         }
     }
 

@@ -42,14 +42,11 @@ public class TestTerrainNoise {
      */
     @Test 
     public void testPerlinTerrain() throws Exception {
-        
         NoiseGenerator _noise = new NoiseGenerator.Perlin();
         _noise.setOctaves(3);
         _noise.setPersistence(0.4);
-        
         final int _gridPoints = 100;
         final float _gridSize = 4f;
-        
         createTerrain(_gridPoints, _gridSize, _noise, "test_perlin");
     }
 
@@ -59,14 +56,11 @@ public class TestTerrainNoise {
      */
     @Test 
     public void testSimplexTerrain() throws Exception {
-        
         NoiseGenerator _noise = new NoiseGenerator.OpenSimplex(999);
         _noise.setOctaves(3);
         _noise.setPersistence(0.4);
-        
         final int _gridPoints = 100;
         final float _gridSize = 4f;
-        
         createTerrain(_gridPoints, _gridSize, _noise, "test_simplex");
     }
 
@@ -74,6 +68,8 @@ public class TestTerrainNoise {
     private void createTerrain(final int _gridPoints, final float _gridSize, NoiseGenerator _noise, String _name)
             throws Exception {
         final MeshBuilder _meshBuilder = new MeshBuilder(_name);
+        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        _meshBuilder.setMaterial(_material);
         
         // grid to hold mesh points
         final MeshVertex[][] _meshGrid = new MeshVertex[_gridPoints][_gridPoints];
@@ -102,8 +98,7 @@ public class TestTerrainNoise {
         this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
 
         // build the gltf buffers
-        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
-        _meshBuilder.build(this._geoWriter, _material);
+        _meshBuilder.build(this._geoWriter);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);

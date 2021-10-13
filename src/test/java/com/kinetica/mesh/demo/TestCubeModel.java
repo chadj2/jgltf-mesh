@@ -50,8 +50,9 @@ public class TestCubeModel {
         _meshGrid[1][0] = _meshBuilder.newVertex(new Point3f(0, 1, 0));
         _meshGrid[0][1] = _meshBuilder.newVertex(new Point3f(1, 0, 0));
         _meshGrid[1][1] = _meshBuilder.newVertex(new Point3f(0, 0, 0));
+        _meshBuilder.setMaterial(_kineticaMaterial);
         _meshBuilder.addPlane(_meshGrid, true);
-        _meshBuilder.build(_geoWriter, _kineticaMaterial);
+        _meshBuilder.build(_geoWriter);
 
         _meshBuilder = new MeshBuilder("face-XY2");
         _meshGrid = new MeshVertex[2][2];
@@ -59,8 +60,9 @@ public class TestCubeModel {
         _meshGrid[1][0] = _meshBuilder.newVertex(new Point3f(1, 1, -1));
         _meshGrid[0][1] = _meshBuilder.newVertex(new Point3f(0, 0, -1));
         _meshGrid[1][1] = _meshBuilder.newVertex(new Point3f(1, 0, -1));
+        _meshBuilder.setMaterial(_kineticaMaterial);
         _meshBuilder.addPlane(_meshGrid, true);
-        _meshBuilder.build(_geoWriter, _kineticaMaterial);
+        _meshBuilder.build(_geoWriter);
 
         _meshBuilder = new MeshBuilder("face-YZ1");
         _meshGrid = new MeshVertex[2][2];
@@ -68,8 +70,9 @@ public class TestCubeModel {
         _meshGrid[1][0] = _meshBuilder.newVertex(new Point3f(0, 1, -1));
         _meshGrid[0][1] = _meshBuilder.newVertex(new Point3f(0, 0, 0));
         _meshGrid[1][1] = _meshBuilder.newVertex(new Point3f(0, 0, -1));
+        _meshBuilder.setMaterial(_gltfMaterial);
         _meshBuilder.addPlane(_meshGrid, true);
-        _meshBuilder.build(_geoWriter, _gltfMaterial);
+        _meshBuilder.build(_geoWriter);
         
         _meshBuilder = new MeshBuilder("face-YZ2");
         _meshGrid = new MeshVertex[2][2];
@@ -77,8 +80,9 @@ public class TestCubeModel {
         _meshGrid[1][0] = _meshBuilder.newVertex(new Point3f(1, 1, 0));
         _meshGrid[0][1] = _meshBuilder.newVertex(new Point3f(1, 0, -1));
         _meshGrid[1][1] = _meshBuilder.newVertex(new Point3f(1, 0, 0));
+        _meshBuilder.setMaterial(_gltfMaterial);
         _meshBuilder.addPlane(_meshGrid, true);
-        _meshBuilder.build(_geoWriter, _gltfMaterial);
+        _meshBuilder.build(_geoWriter);
         
         _meshBuilder = new MeshBuilder("face-Top");
         _meshGrid = new MeshVertex[2][2];
@@ -86,8 +90,9 @@ public class TestCubeModel {
         _meshGrid[1][0] = _meshBuilder.newVertex(new Point3f(1, 1, -1));
         _meshGrid[0][1] = _meshBuilder.newVertex(new Point3f(0, 1, 0));
         _meshGrid[1][1] = _meshBuilder.newVertex(new Point3f(0, 1, -1));
+        _meshBuilder.setMaterial(_uvGridMaterial);
         _meshBuilder.addPlane(_meshGrid, true);
-        _meshBuilder.build(_geoWriter, _uvGridMaterial);
+        _meshBuilder.build(_geoWriter);
         
         _meshBuilder = new MeshBuilder("face-Bottom");
         _meshGrid = new MeshVertex[2][2];
@@ -95,10 +100,11 @@ public class TestCubeModel {
         _meshGrid[1][0] = _meshBuilder.newVertex(new Point3f(1, 0, 0));
         _meshGrid[0][1] = _meshBuilder.newVertex(new Point3f(0, 0, -1));
         _meshGrid[1][1] = _meshBuilder.newVertex(new Point3f(0, 0, 0));
+        _meshBuilder.setMaterial(_uvGridMaterial);
         _meshBuilder.addPlane(_meshGrid, true);
-        _meshBuilder.build(_geoWriter, _uvGridMaterial);
+        _meshBuilder.build(_geoWriter);
 
-        File _outFile = TestShapeModels.getFile("test_cube2");
+        File _outFile = TestShapeModels.getFile("test_cube");
         _geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
@@ -131,7 +137,8 @@ public class TestCubeModel {
         _vertexXY1_1.setTexCoord(new Point2f(0, 1));
         _vertexXY1_2.setTexCoord(new Point2f(1, 0));
         _vertexXY1_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _kineticaMaterial);
+        _meshBuilder.setMaterial(_kineticaMaterial);
+        _meshBuilder.build(_geoWriter);
 
         _meshBuilder = new MeshBuilder("face-XY2");
         MeshVertex _vertexXY2_0 = _meshBuilder.newVertex(new Point3f(1, 0, -1));
@@ -143,7 +150,8 @@ public class TestCubeModel {
         _vertexXY2_1.setTexCoord(new Point2f(0, 1));
         _vertexXY2_2.setTexCoord(new Point2f(1, 0));
         _vertexXY2_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _kineticaMaterial);
+        _meshBuilder.setMaterial(_kineticaMaterial);
+        _meshBuilder.build(_geoWriter);
         
         _meshBuilder = new MeshBuilder("face-YZ1");
         MeshVertex _vertexYZ1_0 = _meshBuilder.newVertex(new Point3f(0, 0, -1));
@@ -155,7 +163,8 @@ public class TestCubeModel {
         _vertexYZ1_1.setTexCoord(new Point2f(0, 1));
         _vertexYZ1_2.setTexCoord(new Point2f(1, 0));
         _vertexYZ1_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _gltfMaterial);
+        _meshBuilder.setMaterial(_gltfMaterial);
+        _meshBuilder.build(_geoWriter);
         
         _meshBuilder = new MeshBuilder("face-YZ2");
         MeshVertex _vertexYZ2_0 = _meshBuilder.newVertex(new Point3f(1, 0, 0));
@@ -167,7 +176,8 @@ public class TestCubeModel {
         _vertexYZ2_1.setTexCoord(new Point2f(0, 1));
         _vertexYZ2_2.setTexCoord(new Point2f(1, 0));
         _vertexYZ2_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _gltfMaterial);
+        _meshBuilder.setMaterial(_gltfMaterial);
+        _meshBuilder.build(_geoWriter);
         
         _meshBuilder = new MeshBuilder("face-Top");
         MeshVertex _vertexTop_0 = _meshBuilder.newVertex(new Point3f(0, 1, 0));
@@ -179,7 +189,8 @@ public class TestCubeModel {
         _vertexTop_1.setTexCoord(new Point2f(0, 1));
         _vertexTop_2.setTexCoord(new Point2f(1, 0));
         _vertexTop_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _uvGridMaterial);
+        _meshBuilder.setMaterial(_uvGridMaterial);
+        _meshBuilder.build(_geoWriter);
         
         _meshBuilder = new MeshBuilder("face-Bottom");
         MeshVertex _vertexBottom_0 = _meshBuilder.newVertex(new Point3f(0, 0, 0));
@@ -191,9 +202,10 @@ public class TestCubeModel {
         _vertexBottom_1.setTexCoord(new Point2f(0, 1));
         _vertexBottom_2.setTexCoord(new Point2f(1, 0));
         _vertexBottom_3.setTexCoord(new Point2f(0, 0));
-        _meshBuilder.build(_geoWriter, _uvGridMaterial);
+        _meshBuilder.setMaterial(_uvGridMaterial);
+        _meshBuilder.build(_geoWriter);
 
-        File _outFile = TestShapeModels.getFile("test_cube");
+        File _outFile = TestShapeModels.getFile("test_cube2");
         _geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }

@@ -51,7 +51,12 @@ public class TestShapeModels {
      */
     @Test 
     public void testPlane() throws Exception {
+        // Set rendering for both sides of the plane
+        this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
+        
         final MeshBuilder _meshBuilder = new MeshBuilder("test_plane");
+        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        _meshBuilder.setMaterial(_material);
         
         // size of grid
         final int _length = 30;
@@ -78,16 +83,12 @@ public class TestShapeModels {
                 _meshGrid[_xIdx][_yIdx] = _meshBuilder.newVertex(_point);
             }
         }
-        
+
         // render the vertices in the grid
         _meshBuilder.addPlane(_meshGrid, true);
         
-        // Set rendering for both sides of the plane
-        this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
-
         // build the gltf buffers
-        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
-        _meshBuilder.build(this._geoWriter, _material);
+        _meshBuilder.build(this._geoWriter);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
@@ -101,6 +102,8 @@ public class TestShapeModels {
     @Test
     public void testDiamond() throws Exception {
         final MeshBuilder _meshBuilder = new MeshBuilder("test_diamond");
+        Material _material = this._geoWriter.addDefaultMaterial();
+        _meshBuilder.setMaterial(_material);
 
         // number of sides around the tube
         final int _sides = 12;
@@ -125,13 +128,12 @@ public class TestShapeModels {
             // add a circle that is part of the tube
             _meshGrid[_yIdx] = _meshBuilder.addCircleVerticesXZ(_circlePos, _radius, _sides, _color);
         }
-
+        
         // join the ends of the surface to create a tube
         _meshBuilder.addLathe(_meshGrid, false);
 
         // generate gltf buffers
-        Material _material = this._geoWriter.addDefaultMaterial();
-        _meshBuilder.build(this._geoWriter, _material);
+        _meshBuilder.build(this._geoWriter);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
@@ -144,11 +146,16 @@ public class TestShapeModels {
      */
     @Test
     public void testHelix() throws Exception {
-        
         // we create separate meshes for the textured helix and the ends
         // because we can't mix textured and non-textured.
+        
         MeshBuilder _meshBuilder = new MeshBuilder("test_helix");
+        Material _materialTexture = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        _meshBuilder.setMaterial(_materialTexture);
+        
         MeshBuilder _meshBuilderEnds = new MeshBuilder("ends");
+        Material _materialDefault = this._geoWriter.addDefaultMaterial();
+        _meshBuilderEnds.setMaterial(_materialDefault);
 
         // height of the helix
         final float _ySize = 6f;
@@ -197,12 +204,10 @@ public class TestShapeModels {
         _meshBuilder.addLathe(_meshGrid, true);
 
         // generate gltf buffers for the cylindrical part
-        Material _materialTexture = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
-        _meshBuilder.build(this._geoWriter, _materialTexture);
+        _meshBuilder.build(this._geoWriter);
 
         // generate gltf buffers for the ends
-        Material _materialDefault = this._geoWriter.addDefaultMaterial();
-        _meshBuilderEnds.build(this._geoWriter, _materialDefault);
+        _meshBuilderEnds.build(this._geoWriter);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
@@ -216,6 +221,8 @@ public class TestShapeModels {
     @Test 
     public void testTorus() throws Exception {
         MeshBuilder _meshBuilder = new MeshBuilder("test_torus");
+        Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        _meshBuilder.setMaterial(_material);
         
         // sides of each circle in the vertical axis
         final int _sizesVertical = 24;
@@ -253,8 +260,7 @@ public class TestShapeModels {
         _meshBuilder.addManifold(_meshGrid, true);
 
         // generate gltf buffers
-        Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
-        _meshBuilder.build(this._geoWriter, _material);
+        _meshBuilder.build(this._geoWriter);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
@@ -263,7 +269,12 @@ public class TestShapeModels {
     
     @Test 
     public void testMinimalGrid() throws Exception {
+        // Set rendering for both sides of the plane
+        this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
+        
         final MeshBuilder _meshBuilder = new MeshBuilder("test_minimal_grid");
+        final Material _material = this._geoWriter.addDefaultMaterial();
+        _meshBuilder.setMaterial(_material);
 
         // size of grid
         final int _length = 3;
@@ -295,17 +306,13 @@ public class TestShapeModels {
         _meshGrid[1][1].getVertex().y = 1f;
         
         // disable normals
-        _meshBuilder.setNormals(false);
+        _meshBuilder.supressNormals(false);
         
         // render the vertices in the grid
         _meshBuilder.addPlane(_meshGrid, true);
-        
-        // Set rendering for both sides of the plane
-        this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
 
         // build the gltf buffers
-        final Material _material = this._geoWriter.addDefaultMaterial();
-        _meshBuilder.build(this._geoWriter, _material);
+        _meshBuilder.build(this._geoWriter);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
