@@ -267,14 +267,16 @@ public class TestShapeModels {
         LOG.info("Finished generating: {}", _outFile);
     }
     
+    /**
+     * Create the smallest possible grid to see how it is structured.
+     * @throws Exception
+     */
     @Test 
     public void testMinimalGrid() throws Exception {
-        // Set rendering for both sides of the plane
-        this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
-        
         final MeshBuilder _meshBuilder = new MeshBuilder("test_minimal_grid");
-        final Material _material = this._geoWriter.addDefaultMaterial();
-        _meshBuilder.setMaterial(_material);
+
+        // disable normals
+        _meshBuilder.supressNormals(true);
 
         // size of grid
         final int _length = 3;
@@ -304,9 +306,6 @@ public class TestShapeModels {
         _meshGrid[1][2].getVertex().y = 0.25f;
         _meshGrid[2][1].getVertex().y = 0.25f;
         _meshGrid[1][1].getVertex().y = 1f;
-        
-        // disable normals
-        _meshBuilder.supressNormals(false);
         
         // render the vertices in the grid
         _meshBuilder.addPlane(_meshGrid, true);

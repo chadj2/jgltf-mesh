@@ -276,12 +276,12 @@ public class MeshBuilder extends TriangleBuilder {
         return _result;
     }
     
-    public static float interpFloat(double _xMax, double _yMax, double _xPos) {
-        return (float)(_xPos*_yMax/_xMax);
+    public static float interpFloat(double _max, double _part, double _idx) {
+        return (float)(_idx*_part/_max);
     }
 
-    public static int interpInt(float _xMax, float _yMax, float _xPos) {
-        return Math.round(_xPos*_yMax/_xMax);
+    public static int interpInt(float _max, float _part, float _idx) {
+        return Math.round(_idx*_part/_max);
     }
     
 }

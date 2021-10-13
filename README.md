@@ -33,10 +33,12 @@ Below is a summary of the JUnit tests. These can be executed with `maven test`.
 | [TestShapeModels.testDiamond()][DEMO_SHAPES] | Generate a diamond shape  addPlane(). |
 | [TestShapeModels.testHelix()][DEMO_SHAPES] | Generate a textured helix with addLathe(). |
 | [TestShapeModels.testTorus()][DEMO_SHAPES] | Generate a textured torus with addManifold(). |
+| [TestLineModels.testLineStrip()][DEMO_LINES] | Generate a sphere outline with LINE_STRIP topology. |
 | [TestCubeModel.testCube()][DEMO_CUBE] | Generate a cube with textures on all sides. |
 
 [VIEWER]: <https://gltf-viewer.donmccurdy.com/>
 [DEMO_SHAPES]: <src/test/java/com/kinetica/mesh/demo/TestShapeModels.java>
+[DEMO_LINES]: <src/test/java/com/kinetica/mesh/demo/TestLineModels.java>
 [DEMO_CUBE]: <src/test/java/com/kinetica/mesh/demo/TestCubeModel.java>
 
 ### Plane
@@ -69,17 +71,23 @@ The cube gives an example of how to generate models using more primitive API's. 
 
 ![Cube](images/cube.jpg)
 
+### Lines
+
+The sphere in this example is generated with a single line using `TopologyMode.LINE_STRIP` mode in combination with `TopologyBuilder.newVertex()`. This mode does not support surface pirimitaves and will write only vertexes and colors to the file.
+
+![Cube](images/line-strip.jpg)
+
 ## MeshBuilder Workflow
 
 This section describes the basic process of using the MeshBuilder. The process involves creating a 2D array of vertex objects that represent points on the grid. See the JUnit test cases below for more details.
 
 1. Create one or more a `MeshBuilder` objects. Each of these will result in a single glTF mesh. Name is a required parameter for the `MeshBuilder` and will be referenced in the logs and the resulting file.
 
-1. Optionally call `MeshBuilder.setCenter()`, `MeshBuilder.setScale()`, or `MeshBuilder.setTransform()` to transform the size and position of the resulting geometry. These methods will cause points to be transformed as they are added and do not use any glTF transform API.
+1. Optionally call `TopologyBuilder.setCenter()`, `TopologyBuilder.setScale()`, or `TopologyBuilder.setTransform()` to transform the size and position of the resulting geometry. These methods will cause points to be transformed as they are added and do not use any glTF transform API.
 
 1. Create an empty 2D array of `MeshVertex` objects. Each vertex represents a point on a rectangular grid that will be curved in 3D space.
 
-1. Populate the `MeshVertex` array with values. Call `MeshBuilder.newVertex()` to create the points. You can optionally assign a color to the vertex if the mesh will not be textured.
+1. Populate the `MeshVertex` array with values. Call `TopologyBuilder.newVertex()` to create the points. You can optionally assign a color to the vertex if the mesh will not be textured.
 
 1. Call `MeshBuilder.addPlane()`, `MeshBuilder.addLathe()`, or `MeshBuilder.addManifold()` to populate the mesh with geometry. At the lowest level this 
 will add triangles to the mesh.
@@ -112,9 +120,9 @@ Above we can see an example of a minimal grid with 3x3 vertices, 2x2 square cell
 
 The normals calculation requires that all triangles are added to the wireframe before the normals are calculated. The steps are as follows:
 
-1. Any time a shape is added with the MeshBuilder it will eventually call `GeometryBuilder.addTriangle()` for every triangle to be added. 
-2. `GeometryBuilder.addTriangle()` will calculate the normal of the triangle and it to a list of normals in `MeshVertex` for each of the 3 vertices.
-3. Afer all triangles are added `GeometryBuilder.build()` will average the normals for each `MeshVertex` to calculate the normals.
+1. Any time a shape is added with the MeshBuilder it will eventually call `TriangleBuilder.addTriangle()` for every triangle to be added. 
+2. `TriangleBuilder.addTriangle()` will calculate the normal of the triangle and it to a list of normals in `MeshVertex` for each of the 3 vertices.
+3. Afer all triangles are added `TopologyBuilder.build()` will average the normals for each `MeshVertex` to calculate the normals.
 
 [DERIVATIVE]: <https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/perlin-noise-part-2/perlin-noise-computing-derivatives>
 
@@ -162,7 +170,8 @@ High level classes that generate 3D models:
 | Class Name | Description |
 | :--- | :--- |
 | mesh.GltfWriter | Generate glTF binary and JSON encoded files |
-| mesh.GeometryBulder | Generate meshes based on shape primitives. |
+| mesh.TopolobyBuilder | Base class for builders. Supports only basic vertex pirimitives. |
+| mesh.TriangleBuilder | Generate meshes based on shape primitives using `TopologyMode.TRIANGLES`. |
 | mesh.MeshBuilder | Generate 3D surfaces from an array of MeshVertex objects. |
 | mesh.MeshVertex | Contains all information to describe a point in a mesh. |
 
