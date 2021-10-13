@@ -170,7 +170,7 @@ High level classes that generate 3D models:
 | Class Name | Description |
 | :--- | :--- |
 | mesh.GltfWriter | Generate glTF binary and JSON encoded files |
-| mesh.TopolobyBuilder | Base class for builders. Supports only basic vertex pirimitives. |
+| mesh.TopologyBuilder | Base class for builders. Supports only basic vertex pirimitives. |
 | mesh.TriangleBuilder | Generate meshes based on shape primitives using `TopologyMode.TRIANGLES`. |
 | mesh.MeshBuilder | Generate 3D surfaces from an array of MeshVertex objects. |
 | mesh.MeshVertex | Contains all information to describe a point in a mesh. |
