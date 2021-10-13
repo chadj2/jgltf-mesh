@@ -33,7 +33,7 @@ Below is a summary of the JUnit tests. These can be executed with `maven test`.
 | [TestShapeModels.testDiamond()][DEMO_SHAPES] | Generate a diamond shape  addPlane(). |
 | [TestShapeModels.testHelix()][DEMO_SHAPES] | Generate a textured helix with addLathe(). |
 | [TestShapeModels.testTorus()][DEMO_SHAPES] | Generate a textured torus with addManifold(). |
-| [TestCubeModel.testBox()][DEMO_CUBE] | Generate a cube with textures on all sides. |
+| [TestCubeModel.testCube()][DEMO_CUBE] | Generate a cube with textures on all sides. |
 | [TestLineModel.testLineModel()][DEMO_LINE] | Generate lines with different colors. |
 
 [VIEWER]: <https://gltf-viewer.donmccurdy.com/>

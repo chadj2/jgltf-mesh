@@ -49,24 +49,16 @@ public class GltfWriter {
      * The AlphaMode is used when creating a Material.
      */
     public enum AlphaMode { 
-        /** 
-         * Mesh is opaque but invisible from one size.
-         */
+        /** Mesh is opaque but invisible from one size. */
         OPAQUE,
         
-        /**
-         * Mesh is opaque and double sided.
-         */
+        /** Mesh is opaque and double sided. */
         OPAQUE_DS,
         
-        /**
-         * Texture contains a mask that makes certain sections transparent.
-         */
+        /** Texture contains a mask that makes certain sections transparent. */
         MASK, 
         
-        /**
-         * Texture alpha channel is used to blend regions with the background.
-         */
+        /** Texture alpha channel is used to blend regions with the background. */
         BLEND }
     
     /**
@@ -205,6 +197,10 @@ public class GltfWriter {
             case OPAQUE:
                 _material.setAlphaMode("OPAQUE");
                 break;
+            case OPAQUE_DS: 
+                _material.setAlphaMode("OPAQUE");
+                _material.setDoubleSided(true);
+                break;
             case MASK:
                 _material.setAlphaMode("MASK");
                 _material.setAlphaCutoff(0.5f);
@@ -213,11 +209,6 @@ public class GltfWriter {
             case BLEND:
                 _material.setAlphaMode("BLEND");
                 _material.setDoubleSided(true);
-                _roughness.setBaseColorFactor(new float[] {1f, 1f, 1f, 1f} );
-                break;
-            case OPAQUE_DS: 
-                _material.setDoubleSided(true);
-                _material.setAlphaMode("OPAQUE");
                 _roughness.setBaseColorFactor(new float[] {1f, 1f, 1f, 1f} );
                 break;
         }
