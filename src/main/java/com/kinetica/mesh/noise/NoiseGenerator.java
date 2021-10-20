@@ -74,7 +74,6 @@ public abstract class NoiseGenerator {
     
     /**
      * Set number of octaves. Each additional octave adds finer detail.
-     * @param _value
      */
     public void setOctaves(int _value) {
         this.octaves = _value;
@@ -83,7 +82,6 @@ public abstract class NoiseGenerator {
     /**
      * Set the persistance. If values lower than 1.0 will reduce higher octaves 
      * leading to a smoother surface.
-     * @param _value
      */
     public void setPersistence(double _value) {
         this.persistence = _value;
@@ -91,10 +89,6 @@ public abstract class NoiseGenerator {
     
     /**
      * Get a 3D noise value.
-     * @param x
-     * @param y
-     * @param z
-     * @return
      */
     public double getNoise(double x, double y, double z) {
         double xVal = x;
@@ -117,10 +111,7 @@ public abstract class NoiseGenerator {
     }
     
     /**
-     * Get a 3D noise value
-     * @param x
-     * @param y
-     * @return
+     * Get a 2D noise value
      */
     public double getNoise(double x, double y) {
         double xVal = x;

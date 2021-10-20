@@ -53,7 +53,6 @@ b    * Enable or disable suppression of normals.
     
     /**
      * Set a Material that will be used when generating the mesh.
-     * @param _material
      */
     public void setMaterial(Material _material) {
         this._material = _material;
@@ -63,9 +62,6 @@ b    * Enable or disable suppression of normals.
      * This method should be called when all shapes have added. It will serialize the MeshVertex
      * list and indices to buffers.
      * <p> Use {@link #setMaterial(Material)} instead.
-     * @param _geoWriter
-     * @return
-     * @throws Exception
      */
     @Deprecated
     public Node build(GltfWriter _geoWriter, Material _texture) throws Exception {
@@ -75,10 +71,7 @@ b    * Enable or disable suppression of normals.
     
     /**
      * Add a 3D triangle specified by 3 vertices. All triangles should be added through this
-     * method so that normals can be calculated. 
-     * @param _vtx0
-     * @param _vtx1
-     * @param _vtx2
+     * method so that normals can be calculated.
      */
     public void addTriangle(MeshVertex _vtx0, MeshVertex _vtx1, MeshVertex _vtx2) {
         // add indices
@@ -114,10 +107,6 @@ b    * Enable or disable suppression of normals.
     /**
      * Add a 3D square represented by 4 vertices. All squares should be added though this method
      * so that normals can be calculated. Points common to both triangles are 1 and 2.
-     * @param _vtx0
-     * @param _vtx1
-     * @param _vtx2
-     * @param _vtx3
      */
     public void addSquare(MeshVertex _vtx0, MeshVertex _vtx1, MeshVertex _vtx2, MeshVertex _vtx3) {
         // We need to connect the points with counter-clockwise triangles.

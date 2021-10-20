@@ -28,7 +28,6 @@ public class MeshBuilder extends TriangleBuilder {
     
     /**
      * Create a an elevated surface from a 2D array.
-     * @param _meshGrid
      * @param _isTextured Indicates if this mesh will have a texture.
      */
     public void addPlane(MeshVertex[][] _meshGrid, boolean _isTextured) {
@@ -38,7 +37,6 @@ public class MeshBuilder extends TriangleBuilder {
     /**
      * Join the ends of a 2D surface along the y-axis to create a cylindrical shape as if 
      * cut from a lathe.
-     * @param _meshGrid
      * @param _isTextured Indicates if this mesh will have a texture.
      */
     public void addLathe(MeshVertex[][] _meshGrid, boolean _isTextured) {
@@ -47,7 +45,6 @@ public class MeshBuilder extends TriangleBuilder {
     
     /**
      * Join the ends of a 2D surface along the x-axis and y-axis to create a closed manifold.
-     * @param _meshGrid
      * @param _isTextured Indicates if this mesh will have a texture.
      */
     public void addManifold(MeshVertex[][] _meshGrid, boolean _isTextured) {
@@ -193,12 +190,6 @@ public class MeshBuilder extends TriangleBuilder {
 
     /**
      * Add a 3D cylinder oriented in XZ.
-     * 
-     * @param _position
-     * @param _radius
-     * @param _height
-     * @param _sides
-     * @param _color
      */
     public void addCylinderMeshXZ(Point3f _position, float _radius, float _height, int _sides, 
             Color _color) {
@@ -218,11 +209,6 @@ public class MeshBuilder extends TriangleBuilder {
     
     /**
      * Add a solid disc oriented in XZ.
-     * 
-     * @param _position
-     * @param _radius
-     * @param _sides
-     * @param _color
      */
     public void addDiscXZ(Point3f _position, float _radius, int _sides, Color _color) {
         // add center point
@@ -248,7 +234,6 @@ public class MeshBuilder extends TriangleBuilder {
      * @param _radius Radius of the circle.
      * @param _sides Number of sides.
      * @param _color Color of the vertices.
-     * @return
      */
     public MeshVertex[] addCircleVerticesXZ(Point3f _position, float _radius, int _sides, 
             Color _color) {

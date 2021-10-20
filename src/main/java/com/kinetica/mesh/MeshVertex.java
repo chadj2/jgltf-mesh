@@ -51,8 +51,6 @@ public class MeshVertex {
     
     /**
      * Create copy of a vertex
-     * @param _index
-     * @param _mv
      */
     protected MeshVertex(int _index, MeshVertex _mv) {
         this._idx = _index;
@@ -101,8 +99,6 @@ public class MeshVertex {
     
     /**
      * Calculate the average of the normal vectors.
-     * @return
-     * @throws Exception
      */
     protected Vector3f getNormal() throws Exception {
         if(this._normals.size() == 0) {
@@ -128,9 +124,7 @@ public class MeshVertex {
     }
     
     /**
-     * Calculate the average of teh tangent vector. 
-     * @return
-     * @throws Exception
+     * Calculate the average of the tangent vector. 
      */
     protected Vector4f getTangent() throws Exception {
         if(this._normals.size() == 0) {

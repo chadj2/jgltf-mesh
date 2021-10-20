@@ -145,7 +145,6 @@ public class TopologyBuilder {
      * Create a new vertex and apply the current offset and scale. This vertex will be assigned
      * an unique index that will be referenced when adding squares or triangles.
      * @param _vertex 3D location of this vertex.
-     * @return
      */
     public MeshVertex newVertex(Point3f _vertex) {
         Point3f _newVertex = new Point3f(_vertex);
@@ -160,8 +159,6 @@ public class TopologyBuilder {
     
     /**
      * Make a distinct copy of the vertex.
-     * @param _vertex
-     * @return
      */
     public MeshVertex copyVertex(MeshVertex _vertex) {
         if(_vertex == null) {
@@ -177,9 +174,6 @@ public class TopologyBuilder {
     /**
      * This method should be called when all shapes have added. It will serialize the MeshVertex
      * list and indices to buffers.
-     * @param _geoWriter
-     * @return
-     * @throws Exception
      */
     public Node build(GltfWriter _geoWriter) throws Exception {
         MeshPrimitive _meshPrimitive = new MeshPrimitive();
@@ -205,9 +199,6 @@ public class TopologyBuilder {
     
     /**
      * Generate primitive lists from the MeshVertex list and serialize to buffers.
-     * @param _geoWriter
-     * @param _meshPrimitive
-     * @throws Exception
      */
     protected void buildBuffers(GltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
         if(this._vertexList.size() == 0) {

@@ -88,7 +88,6 @@ public class GltfWriter {
     
     /**
      * Set path for resolving images.
-     * @param _path
      */
     public void setBasePath(File _path) {
         this._basePath = _path.getPath();
@@ -96,8 +95,7 @@ public class GltfWriter {
     
     /** 
      * Set the alpha mode to use when creating materials. If your mesh is visible from both sides
-     * then you shoudl set this to OPAQUE_DS.
-     * @param _alphaMode
+     * then you should set this to OPAQUE_DS.
      */
     public void setAlphaMode(AlphaMode _alphaMode) {
         this._alphaMode = _alphaMode;
@@ -105,8 +103,6 @@ public class GltfWriter {
     
     /**
      * Set extra metadata in the glTF Asset.
-     * @param _key
-     * @param _value
      */
     public void setMetaParam(String _key, Object _value) {
         this._metaParams.put(_key, _value);
@@ -114,7 +110,6 @@ public class GltfWriter {
     
     /**
      * Set the copyright in the glTF Asset.
-     * @param _value
      */
     public void setCopyright(String _value) {
         this._copyright = _value;
@@ -123,7 +118,6 @@ public class GltfWriter {
     /**
      * Add a node to the default Scene. This is the only way this class supports adding of 
      * geometry.
-     * @param _node
      */
     public void addNode(Node _node) {
         this._gltf.addNodes(_node);
@@ -134,7 +128,6 @@ public class GltfWriter {
     /**
      * Create a default material. You would use this if you are not using a texture and you
      * are specifying vertex colors.
-     * @return
      */
     public Material addDefaultMaterial() {
         Material _material = createMaterial();
@@ -149,7 +142,6 @@ public class GltfWriter {
     /**
      * Add a material with optional texture. 
      * @param _imageFile The image to use for the texture or null if none.
-     * @return
      */
     public Material addTextureMaterial(String _imageFile) {
         Material _material = createMaterial();
@@ -218,9 +210,6 @@ public class GltfWriter {
     
     /**
      * Write gltf to an OutputStream. Specify gltf or glb format.
-     * @param _os
-     * @param _format
-     * @throws Exception
      */
     public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
         GltfModelV2 _gltfModel = getGltfModel();
@@ -240,8 +229,6 @@ public class GltfWriter {
     /**
      * Write a gltf to a file. The filename should have a gltf or glb extension to indicate 
      * the type.
-     * @param _outFile
-     * @throws Exception
      */
     public void writeGltf(File _outFile) throws Exception {
         GltfModelV2 _gltfModel = getGltfModel();

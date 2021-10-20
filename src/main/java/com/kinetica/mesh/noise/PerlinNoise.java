@@ -44,10 +44,6 @@ public class PerlinNoise {
     
     /**
      * Generate perlin nose for a single octave.
-     * @param x
-     * @param y
-     * @param z
-     * @return
      */
     public double noise(double x, double y, double z) {
         
