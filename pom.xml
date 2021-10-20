@@ -8,7 +8,7 @@
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Java glTF Meshbuilder</name>
+  <name>Java glTF MeshBuilder</name>
   <description>Build geometry and meshes for glTF formats.</description>
   <url>https://github.com/chadj2/jgltf-mesh</url>
 
