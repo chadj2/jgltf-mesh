@@ -30,7 +30,7 @@ public class TriangleBuilder extends TopologyBuilder {
     
     private final static Logger LOG = LoggerFactory.getLogger(TriangleBuilder.class);
     
-    /** indices keep track of connectivity between vertices. */
+    /** The indices keep track of connectivity between triangle vertices. */
     protected final TriangleIndices _indices;
     
     /** Suppress additions of normal vectors  */
@@ -48,7 +48,7 @@ public class TriangleBuilder extends TopologyBuilder {
     }
     
     /**
-b    * Enable or disable suppression of normals.
+     * Enable or disable suppression of normals.
      */
     public void supressNormals(boolean _isEnabled) {
         this._supressNormals = _isEnabled;
