@@ -2,12 +2,10 @@
 package com.kinetica.mesh.noise;
 
 /**
- * Improved Noise reference implementation 
- * COPYRIGHT 2002 KEN PERLIN.
- * 
- * Originally from: https://mrl.nyu.edu/~perlin/noise/
- * Also see SIGGRAPH 2002 paper: http://mrl.nyu.edu/~perlin/paper445.pdf
- * 
+ * Improved Noise reference implementation. <p>
+ * COPYRIGHT 2002 KEN PERLIN. <p>
+ * Originally from: <a href="https://mrl.nyu.edu/~perlin/noise">mproved Noise reference implementation</a>. <p>
+ * Also see <a href="http://mrl.nyu.edu/~perlin/paper445.pdf">SIGGRAPH 2002 paper</a>. <p>
  * Code modified for readability by Chad Juliano.
  * @author Ken Perlin
  */

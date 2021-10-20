@@ -7,16 +7,14 @@
 package com.kinetica.mesh.noise;
 
 /**
- * Wrapper for Noise generators.
- * @author chadjuliano
- *
+ * Common base class for noise generators.
+ * @author Chad Juliano
  */
 public abstract class NoiseGenerator {
     
     /**
      * Wrapper for PerlinNoise generator.
-     * @author chadjuliano
-     *
+     * @see PerlinNoise
      */
     public static class Perlin extends NoiseGenerator {
 
@@ -39,8 +37,7 @@ public abstract class NoiseGenerator {
     
     /**
      * Wrapper for OpenSimplexNoise generator.
-     * @author chadjuliano
-     *
+     * @see OpenSimplexNoise
      */
     public static class OpenSimplex extends NoiseGenerator {
 
@@ -69,23 +66,28 @@ public abstract class NoiseGenerator {
     private int octaves = 5;
     private double persistence = 0.4;
     
-    public NoiseGenerator() {
-    }
+    public NoiseGenerator() { }
+
+    /**
+     * To be implemented by the subclass.
+     */
+    protected abstract double getNoiseInternal(double x, double y, double z);
+
+    /**
+     * To be implemented by the subclass.
+     */
+    protected abstract double getNoiseInternal(double x, double y);
     
     /**
      * Set number of octaves. Each additional octave adds finer detail.
      */
-    public void setOctaves(int _value) {
-        this.octaves = _value;
-    }
+    public void setOctaves(int _octaves) {  this.octaves = _octaves; }
     
     /**
      * Set the persistance. If values lower than 1.0 will reduce higher octaves 
      * leading to a smoother surface.
      */
-    public void setPersistence(double _value) {
-        this.persistence = _value;
-    }
+    public void setPersistence(double _persistence) { this.persistence = _persistence; }
     
     /**
      * Get a 3D noise value.
@@ -130,8 +132,4 @@ public abstract class NoiseGenerator {
 
         return sum / max;
     }
-    
-    protected abstract double getNoiseInternal(double x, double y, double z);
-
-    protected abstract double getNoiseInternal(double x, double y);
 }

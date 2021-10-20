@@ -26,7 +26,7 @@ import de.javagl.jgltf.impl.v2.Node;
 
 /**
  * Base class for constructing glTF Mesh geometry.
- * @author chadjuliano
+ * @author Chad Juliano
  */
 public class TopologyBuilder {
 
@@ -59,13 +59,20 @@ public class TopologyBuilder {
     /** Indicates if the X axis should be inverted. This is necessary to correct orientations for Cesium. */
     private static final int INVERT_X = -1;
 
+    /** minimum bounds of the vertices. */
     private Point3f _minBounds;
+    
+    /** maximum bounds of the vertices. */
     private Point3f _maxBounds;
     
     /** Topology mode for MeshPrimitive. This indicates the type of data that will be output by the builder
      * and it can't be altered at runtime. */
     private final TopologyMode _topologyMode;
     
+    /**
+     * @param _name Name of the mesh that will be populated in the glTF.
+     * @param _topologyMode Indicates how buffers are interpreted by glTF.
+     */
     public TopologyBuilder(String _name, TopologyMode _topologyMode) {
         this._name = _name;
         this._topologyMode = _topologyMode;
@@ -75,47 +82,35 @@ public class TopologyBuilder {
     /**
      * Returns true if no triangles have been added.
      */
-    public boolean isEmpty() {
-        return this._vertexList.size() == 0;
-    }
+    public boolean isEmpty() { return this._vertexList.size() == 0; }
 
     /**
      * Return the mesh name.
      */
-    public String getName() {
-        return this._name;
-    }
-
-    /**
-     * Set the transform used for offset and scale
-     */
-    public void setTransform(Matrix4f _transform) {
-        this._transform.set(_transform);
-    }
-    
-    /**
-     * Get the transformation matrix.
-     */
-    public Matrix4f getTransform() {
-        return this._transform;
-    }
+    public String getName() { return this._name; }
     
     /**
      * Get the minimum bounds of all vertices. Should only be called after build().
      */
-    public Point3f getMinBounds() {
-        return this._minBounds;
-    }
+    public Point3f getMinBounds() { return this._minBounds; }
     
     /**
      * Get the maximum bounds of all vertices. Should only be called after build().
      */
-    public Point3f getMaxBounds() {
-        return this._maxBounds;
-    }
+    public Point3f getMaxBounds() { return this._maxBounds; }
+
+    /**
+     * Set the transform used for offset and scale. This will replace any existing translations.
+     */
+    public void setTransform(Matrix4f _transform) { this._transform.set(_transform); }
     
     /**
-     * Center all vertices about a point.
+     * Get the transformation matrix.
+     */
+    public Matrix4f getTransform() { return this._transform; }
+    
+    /**
+     * Center all vertices about a point. This will update the transformation matrix.
      */
     public void setCenter(Vector3f _offset) {
         Vector3f _vec = new Vector3f(_offset);
@@ -130,7 +125,7 @@ public class TopologyBuilder {
     }
     
     /**
-     * Scale all vertices in X/Y/Z.
+     * Scale all vertices in X/Y/Z. This will update the transformation matrix.
      */
     public void setScale(Vector3f _scale) {
         this._transform.m00 = _scale.x;
@@ -159,6 +154,7 @@ public class TopologyBuilder {
     
     /**
      * Make a distinct copy of the vertex.
+     * @see #newVertex
      */
     public MeshVertex copyVertex(MeshVertex _vertex) {
         if(_vertex == null) {
@@ -172,8 +168,10 @@ public class TopologyBuilder {
     }
 
     /**
-     * This method should be called when all shapes have added. It will serialize the MeshVertex
-     * list and indices to buffers.
+     * Serialize the MeshVertex list and indices to buffers.
+     * This method should be called when all shapes have added.
+     * @param _geoWriter Instance of writer class.
+     * @return Node containing the mesh.
      */
     public Node build(GltfWriter _geoWriter) throws Exception {
         MeshPrimitive _meshPrimitive = new MeshPrimitive();
@@ -182,9 +180,9 @@ public class TopologyBuilder {
         buildBuffers(_geoWriter, _meshPrimitive);
 
         Mesh _mesh = new Mesh();
-        _geoWriter._gltf.addMeshes(_mesh);
+        _geoWriter.getGltf().addMeshes(_mesh);
         _mesh.setName(this.getName() + "-mesh");
-        int _meshIdx = _geoWriter._gltf.getMeshes().indexOf(_mesh);
+        int _meshIdx = _geoWriter.getGltf().getMeshes().indexOf(_mesh);
         LOG.debug("New Mesh[{}]: idx=<{}>", _mesh.getName(), _meshIdx);
         
         _mesh.addPrimitives(_meshPrimitive);
@@ -199,6 +197,8 @@ public class TopologyBuilder {
     
     /**
      * Generate primitive lists from the MeshVertex list and serialize to buffers.
+     * @param _geoWriter Instance of writer class.
+     * @param _meshPrimitive The glTF section containing serialized buffers.
      */
     protected void buildBuffers(GltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
         if(this._vertexList.size() == 0) {

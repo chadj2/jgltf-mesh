@@ -38,7 +38,7 @@ public class TestTerrainNoise {
     
     /**
      * Generate terrain with Perlin Noise
-     * @throws Exception
+     * @see com.kinetica.mesh.noise.NoiseGenerator.Perlin
      */
     @Test 
     public void testPerlinTerrain() throws Exception {
@@ -52,7 +52,7 @@ public class TestTerrainNoise {
 
     /**
      * Use the OpenSimplexNoise generator to create a terrain surface.
-     * @throws Exception
+     * @see com.kinetica.mesh.noise.NoiseGenerator.OpenSimplex
      */
     @Test 
     public void testSimplexTerrain() throws Exception {
@@ -68,7 +68,7 @@ public class TestTerrainNoise {
     private void createTerrain(final int _gridPoints, final float _gridSize, NoiseGenerator _noise, String _name)
             throws Exception {
         final MeshBuilder _meshBuilder = new MeshBuilder(_name);
-        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        final Material _material = this._geoWriter.newTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.setMaterial(_material);
         
         // grid to hold mesh points

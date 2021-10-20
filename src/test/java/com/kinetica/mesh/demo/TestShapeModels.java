@@ -47,7 +47,7 @@ public class TestShapeModels {
     
     /**
      * Create a plane with the function y = 2*x*exp(-(x^2 + y^2)) using addPlane().
-     * @throws Exception
+     * @see MeshBuilder#addPlane
      */
     @Test 
     public void testPlane() throws Exception {
@@ -55,7 +55,7 @@ public class TestShapeModels {
         this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
         
         final MeshBuilder _meshBuilder = new MeshBuilder("test_plane");
-        final Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        final Material _material = this._geoWriter.newTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.setMaterial(_material);
         
         // size of grid
@@ -97,12 +97,12 @@ public class TestShapeModels {
     
     /**
      * Generate a rainbow colored diamond shape using addLathe().
-     * @throws Exception
+     * @see MeshBuilder#addLathe
      */
     @Test
     public void testDiamond() throws Exception {
         final MeshBuilder _meshBuilder = new MeshBuilder("test_diamond");
-        Material _material = this._geoWriter.addDefaultMaterial();
+        Material _material = this._geoWriter.newDefaultMaterial();
         _meshBuilder.setMaterial(_material);
 
         // number of sides around the tube
@@ -142,7 +142,7 @@ public class TestShapeModels {
 
     /**
      * Generate a textured helix with addLathe().
-     * @throws Exception
+     * @see MeshBuilder#addLathe
      */
     @Test
     public void testHelix() throws Exception {
@@ -150,11 +150,11 @@ public class TestShapeModels {
         // because we can't mix textured and non-textured.
         
         MeshBuilder _meshBuilder = new MeshBuilder("test_helix");
-        Material _materialTexture = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        Material _materialTexture = this._geoWriter.newTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.setMaterial(_materialTexture);
         
         MeshBuilder _meshBuilderEnds = new MeshBuilder("ends");
-        Material _materialDefault = this._geoWriter.addDefaultMaterial();
+        Material _materialDefault = this._geoWriter.newDefaultMaterial();
         _meshBuilderEnds.setMaterial(_materialDefault);
 
         // height of the helix
@@ -216,12 +216,12 @@ public class TestShapeModels {
     
     /**
      * Generate a textured torus using addManifold().
-     * @throws Exception
+     * @see MeshBuilder#addManifold
      */
     @Test 
     public void testTorus() throws Exception {
         MeshBuilder _meshBuilder = new MeshBuilder("test_torus");
-        Material _material = this._geoWriter.addTextureMaterial(TEST_TEXTURE_PNG);
+        Material _material = this._geoWriter.newTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.setMaterial(_material);
         
         // sides of each circle in the vertical axis
@@ -269,7 +269,7 @@ public class TestShapeModels {
     
     /**
      * Create the smallest possible grid to see how it is structured.
-     * @throws Exception
+     * @see MeshBuilder#addPlane
      */
     @Test 
     public void testMinimalGrid() throws Exception {

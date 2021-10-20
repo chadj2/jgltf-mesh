@@ -53,7 +53,7 @@ public abstract class BaseBuffer {
             return null;
         }
         
-        int _positionIdx = _geoWriter._gltf.getAccessors().indexOf(_vertexAccessor);
+        int _positionIdx = _geoWriter.getGltf().getAccessors().indexOf(_vertexAccessor);
         _meshPirimitive.addAttributes(_attribute, _positionIdx);
         return _vertexAccessor;
     }
@@ -63,8 +63,8 @@ public abstract class BaseBuffer {
             return null;
         }
         
-        BufferView _texCoordBuf = this.addBufferView(_geoWriter._gltf, _geoWriter._byteBuffer);
-        Accessor _vertexAccessor = this.addAccessor(_geoWriter._gltf, _texCoordBuf);
+        BufferView _texCoordBuf = this.addBufferView(_geoWriter.getGltf(), _geoWriter.getBuffer());
+        Accessor _vertexAccessor = this.addAccessor(_geoWriter.getGltf(), _texCoordBuf);
         return _vertexAccessor;
     }
     
