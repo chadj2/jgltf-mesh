@@ -11,7 +11,7 @@
 
     <logger name="org.apache" level="info" />
     
-    <logger name="com.kinetica.mesh" level="debug" />
+    <logger name="com.kinetica.mesh" level="info" />
     <logger name="com.kinetica.mesh.buffer" level="info" />
     
     <root level="info">

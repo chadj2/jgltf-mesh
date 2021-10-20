@@ -72,14 +72,28 @@ public class GltfWriter {
     //private static final int FILTER_LINEAR_MIPMAP_LINEAR = 9987;
     private static final int WRAP_CLAMP_TO_EDGE = 33071;
     //private static final int WRAP_MIRRORED_REPEAT = 33648;
+    
+    /** Largest size of byte buffer we will support. */
     private static final int MAX_BUFFER_SIZE = 50*1024*1024;
 
-    public final GlTF _gltf = new GlTF();
-    public final ByteBuffer _byteBuffer = Buffers.create(MAX_BUFFER_SIZE);
+    /** Buffer used for primitive serialization. */
+    private final ByteBuffer _byteBuffer = Buffers.create(MAX_BUFFER_SIZE);
+
+    private final GlTF _gltf = new GlTF();
+    
+    /** Contains metadata for the glTF Asset type */
     private final Map<String, Object> _metaParams = new TreeMap<>();
+    
+    /** The one and only Scene. */
     private final Scene _topScene = new Scene();
+    
+    /** Alpha mode used for creating materials. */
     private AlphaMode _alphaMode = AlphaMode.OPAQUE;
+    
+    /** Path for finding texture files. */
     private String _basePath = ".";
+    
+    /** Copyright for glTF Asset type */
     private String _copyright = "";
     
     public GltfWriter() {
@@ -88,42 +102,38 @@ public class GltfWriter {
     
     /**
      * Set path for resolving images.
-     * @param _path
      */
-    public void setBasePath(File _path) {
-        this._basePath = _path.getPath();
-    }
+    public void setBasePath(File _path) { this._basePath = _path.getPath(); }
     
     /** 
      * Set the alpha mode to use when creating materials. If your mesh is visible from both sides
-     * then you shoudl set this to OPAQUE_DS.
-     * @param _alphaMode
+     * then you should set this to OPAQUE_DS.
      */
-    public void setAlphaMode(AlphaMode _alphaMode) {
-        this._alphaMode = _alphaMode;
-    }
+    public void setAlphaMode(AlphaMode _alphaMode) { this._alphaMode = _alphaMode; }
+    
+    /**
+     * Get the buffer used for serializing primitives.
+     */
+    public ByteBuffer getBuffer() { return this._byteBuffer; }
+    
+    /**
+     * Get the GlTF used for writing metadata.
+     */
+    public GlTF getGltf() { return this._gltf; }
     
     /**
      * Set extra metadata in the glTF Asset.
-     * @param _key
-     * @param _value
      */
-    public void setMetaParam(String _key, Object _value) {
-        this._metaParams.put(_key, _value);
-    }
+    public void setMetaParam(String _key, Object _value) { this._metaParams.put(_key, _value); }
     
     /**
      * Set the copyright in the glTF Asset.
-     * @param _value
      */
-    public void setCopyright(String _value) {
-        this._copyright = _value;
-    }
+    public void setCopyright(String _value) { this._copyright = _value; }
     
     /**
      * Add a node to the default Scene. This is the only way this class supports adding of 
      * geometry.
-     * @param _node
      */
     public void addNode(Node _node) {
         this._gltf.addNodes(_node);
@@ -134,10 +144,9 @@ public class GltfWriter {
     /**
      * Create a default material. You would use this if you are not using a texture and you
      * are specifying vertex colors.
-     * @return
      */
-    public Material addDefaultMaterial() {
-        Material _material = createMaterial();
+    public Material newDefaultMaterial() {
+        Material _material = newMaterial();
         _material.setName("default");
 
         int _idx = this._gltf.getMaterials().indexOf(_material);
@@ -149,10 +158,9 @@ public class GltfWriter {
     /**
      * Add a material with optional texture. 
      * @param _imageFile The image to use for the texture or null if none.
-     * @return
      */
-    public Material addTextureMaterial(String _imageFile) {
-        Material _material = createMaterial();
+    public Material newTextureMaterial(String _imageFile) {
+        Material _material = newMaterial();
 
         Sampler _sampler = new Sampler();
         this._gltf.addSamplers(_sampler);
@@ -184,7 +192,7 @@ public class GltfWriter {
         return _material;
     }
     
-    private Material createMaterial() {
+    private Material newMaterial() {
         Material _material = new Material();
         this._gltf.addMaterials(_material);
         
@@ -218,9 +226,7 @@ public class GltfWriter {
     
     /**
      * Write gltf to an OutputStream. Specify gltf or glb format.
-     * @param _os
-     * @param _format
-     * @throws Exception
+     * @param _format Indicates if this is JSON or binary format.
      */
     public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
         GltfModelV2 _gltfModel = getGltfModel();
@@ -240,8 +246,6 @@ public class GltfWriter {
     /**
      * Write a gltf to a file. The filename should have a gltf or glb extension to indicate 
      * the type.
-     * @param _outFile
-     * @throws Exception
      */
     public void writeGltf(File _outFile) throws Exception {
         GltfModelV2 _gltfModel = getGltfModel();
@@ -264,12 +268,12 @@ public class GltfWriter {
     }
     
     private GltfModelV2 getGltfModel() throws Exception {
-        GltfAssetV2 _gltfAsset = createGltfAsset();
+        GltfAssetV2 _gltfAsset = newGltfAsset();
         GltfModelV2 _gltfModel = new GltfModelV2(_gltfAsset);
         return _gltfModel;
     }
     
-    private GltfAssetV2 createGltfAsset() throws Exception {
+    private GltfAssetV2 newGltfAsset() throws Exception {
         Asset _asset = new Asset();
         this._gltf.setAsset(_asset);
         _asset.setVersion("2.0");

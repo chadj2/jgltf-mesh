@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Fluent interface for generating 3D meshes based on 2D grid arrays.
+ * Generate 3D meshes for glTF based on 2D grid arrays
  * @author Chad Juliano
  */
 public class MeshBuilder extends TriangleBuilder {
@@ -28,8 +28,8 @@ public class MeshBuilder extends TriangleBuilder {
     
     /**
      * Create a an elevated surface from a 2D array.
-     * @param _meshGrid
-     * @param _isTextured Indicates if this mesh will have a texture.
+     * @param _meshGrid 2D array containing vertices
+     * @param _isTextured Indicates if this mesh will have a texture
      */
     public void addPlane(MeshVertex[][] _meshGrid, boolean _isTextured) {
         addGrid(_meshGrid, _isTextured, false, false);
@@ -38,8 +38,8 @@ public class MeshBuilder extends TriangleBuilder {
     /**
      * Join the ends of a 2D surface along the y-axis to create a cylindrical shape as if 
      * cut from a lathe.
-     * @param _meshGrid
-     * @param _isTextured Indicates if this mesh will have a texture.
+     * @param _meshGrid 2D array containing vertices
+     * @param _isTextured Indicates if this mesh will have a texture
      */
     public void addLathe(MeshVertex[][] _meshGrid, boolean _isTextured) {
         addGrid(_meshGrid, _isTextured, true, false);
@@ -47,8 +47,8 @@ public class MeshBuilder extends TriangleBuilder {
     
     /**
      * Join the ends of a 2D surface along the x-axis and y-axis to create a closed manifold.
-     * @param _meshGrid
-     * @param _isTextured Indicates if this mesh will have a texture.
+     * @param _meshGrid 2D array containing vertices
+     * @param _isTextured Indicates if this mesh will have a texture
      */
     public void addManifold(MeshVertex[][] _meshGrid, boolean _isTextured) {
         addGrid(_meshGrid, _isTextured, true, true);
@@ -193,12 +193,11 @@ public class MeshBuilder extends TriangleBuilder {
 
     /**
      * Add a 3D cylinder oriented in XZ.
-     * 
-     * @param _position
-     * @param _radius
-     * @param _height
-     * @param _sides
-     * @param _color
+     * @param _position Base of the cylinder
+     * @param _radius Cylinder radius
+     * @param _height Cylinder height
+     * @param _sides Number of vertices for the sides
+     * @param _color Cylinder color
      */
     public void addCylinderMeshXZ(Point3f _position, float _radius, float _height, int _sides, 
             Color _color) {
@@ -218,11 +217,10 @@ public class MeshBuilder extends TriangleBuilder {
     
     /**
      * Add a solid disc oriented in XZ.
-     * 
-     * @param _position
-     * @param _radius
-     * @param _sides
-     * @param _color
+     * @param _position Center of the disc
+     * @param _radius Disc radius
+     * @param _sides Number of vertices for the sides
+     * @param _color Disc color
      */
     public void addDiscXZ(Point3f _position, float _radius, int _sides, Color _color) {
         // add center point
@@ -243,12 +241,10 @@ public class MeshBuilder extends TriangleBuilder {
     
     /**
      * Generate a vertex array for a circle oriented in XZ.
-     * 
-     * @param _position Location of the center of the circle.
-     * @param _radius Radius of the circle.
-     * @param _sides Number of sides.
-     * @param _color Color of the vertices.
-     * @return
+     * @param _position Location of the center of the circle
+     * @param _radius Radius of the circle
+     * @param _sides Number of sides
+     * @param _color Color of the vertices
      */
     public MeshVertex[] addCircleVerticesXZ(Point3f _position, float _radius, int _sides, 
             Color _color) {
@@ -276,10 +272,24 @@ public class MeshBuilder extends TriangleBuilder {
         return _result;
     }
     
+    /**
+     * Helper function for interpolation between bounds returning a float.
+     * @param _max Maximum bound
+     * @param _part Number of parts
+     * @param _idx Part index
+     * @return float representing position given by the index.
+     */
     public static float interpFloat(double _max, double _part, double _idx) {
         return (float)(_idx*_part/_max);
     }
 
+    /**
+     * Helper function for interpolation between bounds returning an int.
+     * @param _max Maximum bound
+     * @param _part Number of parts
+     * @param _idx Part index
+     * @return rounded integer representing position given by the index.
+     */
     public static int interpInt(float _max, float _part, float _idx) {
         return Math.round(_idx*_part/_max);
     }

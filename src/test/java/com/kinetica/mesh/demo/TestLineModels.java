@@ -28,7 +28,7 @@ public class TestLineModels {
     
     /**
      * Draw a sphere using the line strip topology.
-     * @throws Exception
+     * @see TopologyMode
      */
     @Test 
     public void testLineStrip() throws Exception {

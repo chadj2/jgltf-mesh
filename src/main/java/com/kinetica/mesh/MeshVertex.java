@@ -26,22 +26,22 @@ public class MeshVertex {
     
     private final static Logger LOG = LoggerFactory.getLogger(MeshVertex.class);
 
-    // 3D location of this vertex
+    /** 3D location of this vertex */
     private final Point3f _vertex;
     
-    // index to be used in the indices list.
+    /** index to be used in the indices list. */
     private final int _idx;
     
-    // position of this vertex within the texture
+    /** position of this vertex within the texture */
     private Point2f _texCoord = null;
     
-    // optional color for this vertex
+    /** optional color for this vertex */
     private Color _color = null;
     
-    // list of normals that will be averaged during build()
+    /** list of normals that will be averaged during build() */
     private List<Vector3f> _normals = new ArrayList<Vector3f>();
     
-    // list of tangents that will be averaged during build()
+    /** list of tangents that will be averaged during build() */
     private List<Vector3f> _tangents = new ArrayList<Vector3f>();
     
     protected MeshVertex(int _index, Point3f _vertex) {
@@ -49,10 +49,18 @@ public class MeshVertex {
         this._vertex = _vertex;
     }
     
+    @Override 
+    public String toString() {
+        return String.format("idx=[%d] vtx=(%.6f,%.6f,%.6f) normals<%d>", 
+                this._idx, 
+                this._vertex.x, this._vertex.y, this._vertex.z, 
+                this._normals.size());
+    }
+    
     /**
      * Create copy of a vertex
-     * @param _index
-     * @param _mv
+     * @param _index Index of new vertex
+     * @param _mv Vertex to copy
      */
     protected MeshVertex(int _index, MeshVertex _mv) {
         this._idx = _index;
@@ -75,34 +83,50 @@ public class MeshVertex {
         }
     }
     
+    /**
+     * Get the position of this vertex.
+     */
     public Point3f getVertex() { return this._vertex; }
     
+    /**
+     * Get the index of this vertex for use in TriangleIndices.
+     */
     public int getIndex() { return this._idx; }
     
+    /**
+     * Get the vertex color.
+     * @return null if no color
+     */
     public Color getColor() { return this._color; }
     
+    /**
+     * Set the vertex color.
+     */
     public void setColor(Color _color) {  this._color = _color; }
     
+    /**
+     * Get the texture coordinate of this vertex.
+     * @return null if no coordinate
+     */
     public Point2f getTexCoord() { return this._texCoord; }
     
+    /**
+     * Set the texture coordinate of this vertex.
+     */
     public void setTexCoord(Point2f _coord) { this._texCoord = _coord; }
     
-    @Override 
-    public String toString() {
-        return String.format("idx=[%d] vtx=(%.6f,%.6f,%.6f) normals<%d>", 
-                this._idx, 
-                this._vertex.x, this._vertex.y, this._vertex.z, 
-                this._normals.size());
-    }
-    
+    /**
+     * Add a neighboring normal for use when calculating the average normal.
+     */
     protected void addNormal(Vector3f _vec) { this._normals.add(_vec); }
     
+    /**
+     * Add a neighboring tangent for use when calculating the average normal.
+     */
     protected void addTangent(Vector3f _vec) { this._tangents.add(_vec); }
     
     /**
      * Calculate the average of the normal vectors.
-     * @return
-     * @throws Exception
      */
     protected Vector3f getNormal() throws Exception {
         if(this._normals.size() == 0) {
@@ -128,9 +152,7 @@ public class MeshVertex {
     }
     
     /**
-     * Calculate the average of teh tangent vector. 
-     * @return
-     * @throws Exception
+     * Calculate the average of the tangent vectors. 
      */
     protected Vector4f getTangent() throws Exception {
         if(this._normals.size() == 0) {

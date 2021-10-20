@@ -39,6 +39,9 @@ public class TriangleBuilder extends TopologyBuilder {
     /** Material for the mesh */
     private Material _material = null;
 
+    /**
+     * @param _name Name of the glTF mesh node.
+     */
     public TriangleBuilder(String _name) {
         super(_name, TopologyMode.TRIANGLES);
         this._indices = new TriangleIndices(_name);
@@ -47,13 +50,14 @@ public class TriangleBuilder extends TopologyBuilder {
     /**
 b    * Enable or disable suppression of normals.
      */
-    public void supressNormals(boolean _supressNormals) {
-        this._supressNormals = _supressNormals;
+    public void supressNormals(boolean _isEnabled) {
+        this._supressNormals = _isEnabled;
     }
     
     /**
      * Set a Material that will be used when generating the mesh.
-     * @param _material
+     * @param _material Material from the GltfWriter
+     * @see GltfWriter#newTextureMaterial(String)
      */
     public void setMaterial(Material _material) {
         this._material = _material;
@@ -62,23 +66,20 @@ b    * Enable or disable suppression of normals.
     /**
      * This method should be called when all shapes have added. It will serialize the MeshVertex
      * list and indices to buffers.
-     * <p> Use {@link #setMaterial(Material)} instead.
-     * @param _geoWriter
-     * @return
-     * @throws Exception
+     * @param _material Material from the GltfWriter
+     * @see GltfWriter#newTextureMaterial(String)
+     * @deprecated Use {@link #setMaterial(Material)} instead
      */
     @Deprecated
-    public Node build(GltfWriter _geoWriter, Material _texture) throws Exception {
-        this.setMaterial(_texture);
+    public Node build(GltfWriter _geoWriter, Material _material) throws Exception {
+        this.setMaterial(_material);
         return build(_geoWriter);
     }
     
     /**
      * Add a 3D triangle specified by 3 vertices. All triangles should be added through this
-     * method so that normals can be calculated. 
-     * @param _vtx0
-     * @param _vtx1
-     * @param _vtx2
+     * method so that normals can be calculated.
+     * @see TopologyBuilder#newVertex
      */
     public void addTriangle(MeshVertex _vtx0, MeshVertex _vtx1, MeshVertex _vtx2) {
         // add indices
@@ -112,12 +113,13 @@ b    * Enable or disable suppression of normals.
     }
 
     /**
-     * Add a 3D square represented by 4 vertices. All squares should be added though this method
-     * so that normals can be calculated. Points common to both triangles are 1 and 2.
-     * @param _vtx0
-     * @param _vtx1
-     * @param _vtx2
-     * @param _vtx3
+     * Add a 3D square represented by 4 vertices specified counter clockwise. 
+     * All squares should be added though this method so that normals can be calculated.
+     * @param _vtx0 Start of square
+     * @param _vtx1 common to both triangles
+     * @param _vtx2 common to both triangles
+     * @param _vtx3 End of square
+     * @see TopologyBuilder#newVertex
      */
     public void addSquare(MeshVertex _vtx0, MeshVertex _vtx1, MeshVertex _vtx2, MeshVertex _vtx3) {
         // We need to connect the points with counter-clockwise triangles.
@@ -142,7 +144,7 @@ b    * Enable or disable suppression of normals.
         super.buildBuffers(_geoWriter, _meshPrimitive);
         
         if(this._material != null) {
-            int _materialIdx = _geoWriter._gltf.getMaterials().indexOf(this._material);
+            int _materialIdx = _geoWriter.getGltf().getMaterials().indexOf(this._material);
             _meshPrimitive.setMaterial(_materialIdx);
         }
 
