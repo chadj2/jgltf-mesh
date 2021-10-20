@@ -23,7 +23,7 @@ The [GltfWriter][WRITER] leverages the [JglTF][JGLTF] library to hide some compl
 
 ## Demo Models
 
-JUnit tests in `com.kinetica.mesh.demo` provide examples for generating glTF models using various methods with and without textures. You can generate the models by running `maven test` or by launching the JUnit tests from eclipse. Generated files will be placed in `./demo`. You can see the results with an online [glTF Viewer][VIEWER].
+JUnit tests in `io.github.chadj2.mesh.demo` provide examples for generating glTF models using various methods with and without textures. You can generate the models by running `maven test` or by launching the JUnit tests from eclipse. Generated files will be placed in `./demo`. You can see the results with an online [glTF Viewer][VIEWER].
 
 Below is a summary of the JUnit tests. These can be executed with `maven test`.
 
