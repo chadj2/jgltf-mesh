@@ -10,9 +10,8 @@
     </appender>
 
     <logger name="org.apache" level="info" />
-    
-    <logger name="com.kinetica.mesh" level="info" />
-    <logger name="com.kinetica.mesh.buffer" level="info" />
+    <logger name="io.github.chadj2.mesh" level="info" />
+    <logger name="io.github.chadj2.mesh.buffer" level="info" />
     
     <root level="info">
         <appender-ref ref="CONSOLE" />
