@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.kinetica.mesh;
+package io.github.chadj2.mesh;
 
 import java.io.File;
 import java.io.IOException;

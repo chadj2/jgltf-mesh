@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.kinetica.mesh;
+package io.github.chadj2.mesh;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
@@ -12,10 +12,10 @@ import javax.vecmath.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kinetica.mesh.buffer.Normals;
-import com.kinetica.mesh.buffer.Tangents;
-import com.kinetica.mesh.buffer.TexCoords;
-import com.kinetica.mesh.buffer.TriangleIndices;
+import io.github.chadj2.mesh.buffer.Normals;
+import io.github.chadj2.mesh.buffer.Tangents;
+import io.github.chadj2.mesh.buffer.TexCoords;
+import io.github.chadj2.mesh.buffer.TriangleIndices;
 
 import de.javagl.jgltf.impl.v2.Material;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;

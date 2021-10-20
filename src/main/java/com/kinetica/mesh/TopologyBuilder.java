@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.kinetica.mesh;
+package io.github.chadj2.mesh;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ import javax.vecmath.Vector3f;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kinetica.mesh.buffer.VertexColors;
-import com.kinetica.mesh.buffer.Vertices;
+import io.github.chadj2.mesh.buffer.VertexColors;
+import io.github.chadj2.mesh.buffer.Vertices;
 
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;

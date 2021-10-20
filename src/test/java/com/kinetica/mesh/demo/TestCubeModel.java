@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.kinetica.mesh.demo;
+package io.github.chadj2.mesh.demo;
 
 import java.io.File;
 
@@ -15,9 +15,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kinetica.mesh.GltfWriter;
-import com.kinetica.mesh.MeshBuilder;
-import com.kinetica.mesh.MeshVertex;
+import io.github.chadj2.mesh.GltfWriter;
+import io.github.chadj2.mesh.MeshBuilder;
+import io.github.chadj2.mesh.MeshVertex;
 
 import de.javagl.jgltf.impl.v2.Material;
 

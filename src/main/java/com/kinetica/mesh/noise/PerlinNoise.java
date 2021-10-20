@@ -1,5 +1,5 @@
 
-package com.kinetica.mesh.noise;
+package io.github.chadj2.mesh.noise;
 
 /**
  * Improved Noise reference implementation 

@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.kinetica.mesh.buffer;
+package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kinetica.mesh.GltfWriter;
+import io.github.chadj2.mesh.GltfWriter;
 
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;

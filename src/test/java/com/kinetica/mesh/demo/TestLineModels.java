@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package com.kinetica.mesh.demo;
+package io.github.chadj2.mesh.demo;
 
 import java.awt.Color;
 import java.io.File;
@@ -15,10 +15,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.kinetica.mesh.GltfWriter;
-import com.kinetica.mesh.MeshVertex;
-import com.kinetica.mesh.TopologyBuilder;
-import com.kinetica.mesh.TopologyBuilder.TopologyMode;
+import io.github.chadj2.mesh.GltfWriter;
+import io.github.chadj2.mesh.MeshVertex;
+import io.github.chadj2.mesh.TopologyBuilder;
+import io.github.chadj2.mesh.TopologyBuilder.TopologyMode;
 
 public class TestLineModels {
     
