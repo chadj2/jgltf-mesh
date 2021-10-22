@@ -5,8 +5,13 @@
 /.settings/
 /.classpath
 
+# intelij
+.idea/
+
 # maven
 /target/
 
 # test output
 /demo/
+
+jgltf-mesh.iml
