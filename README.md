@@ -77,6 +77,20 @@ The sphere in this example is generated with a single line using `TopologyMode.L
 
 ![Cube](images/line-strip.jpg)
 
+## Usage
+
+This project is now available on [Maven Central][MAVEN]. You can add it to your `pom.xml` with this dependency:
+
+```xml
+<dependency>
+  <groupId>io.github.chadj2</groupId>
+  <artifactId>jgltf-mesh</artifactId>
+  <version>1.0</version>
+</dependency>
+```
+
+[MAVEN]: https://search.maven.org/artifact/io.github.chadj2/jgltf-mesh
+
 ## MeshBuilder Workflow
 
 This section describes the basic process of using the MeshBuilder. The process involves creating a 2D array of vertex objects that represent points on the grid. See the JUnit test cases below for more details.
