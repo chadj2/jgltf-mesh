@@ -17,8 +17,8 @@ The builder will assume that points in the array should be connected in a square
 
 The [GltfWriter][WRITER] leverages the [JglTF][JGLTF] library to hide some complexities of generating glTF files.
 
-[MESHBUILDER]: <src/main/java/com/kinetica/mesh/MeshBuilder.java>
-[WRITER]: <src/main/java/com/kinetica/mesh/GltfWriter.java>
+[MESHBUILDER]: <src/main/java/io/github/chadj2/mesh/MeshBuilder.java>
+[WRITER]: <src/main/java/io/github/chadj2/mesh/GltfWriter.java>
 [JGLTF]: <https://github.com/javagl/JglTF>
 
 ## Demo Models
@@ -37,9 +37,9 @@ Below is a summary of the JUnit tests. These can be executed with `maven test`.
 | [TestCubeModel.testCube()][DEMO_CUBE] | Generate a cube with textures on all sides. |
 
 [VIEWER]: <https://gltf-viewer.donmccurdy.com/>
-[DEMO_SHAPES]: <src/test/java/com/kinetica/mesh/demo/TestShapeModels.java>
-[DEMO_LINES]: <src/test/java/com/kinetica/mesh/demo/TestLineModels.java>
-[DEMO_CUBE]: <src/test/java/com/kinetica/mesh/demo/TestCubeModel.java>
+[DEMO_SHAPES]: <src/test/java/io/github/chadj2/mesh/demo/TestShapeModels.java>
+[DEMO_LINES]: <src/test/java/io/github/chadj2/mesh/demo/TestLineModels.java>
+[DEMO_CUBE]: <src/test/java/io/github/chadj2/demo/TestCubeModel.java>
 
 ### Plane
 
