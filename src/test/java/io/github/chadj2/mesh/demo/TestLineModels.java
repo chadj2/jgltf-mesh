@@ -11,6 +11,8 @@ import java.io.File;
 
 import javax.vecmath.Point3f;
 
+import de.javagl.jgltf.impl.v2.Mesh;
+import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +56,10 @@ public class TestLineModels {
             final Color _color = Color.getHSBColor((float)_part, 0.6f, 0.5f);
             _vertex.setColor(_color);
         }
-        
-        _meshBuilder.build(this._geoWriter);
+
+        MeshPrimitive _meshPrimitive=new MeshPrimitive();
+        _meshPrimitive.setExtras(new String[]{"some","additional","data"});
+        _meshBuilder.build(this._geoWriter,_meshPrimitive);
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);

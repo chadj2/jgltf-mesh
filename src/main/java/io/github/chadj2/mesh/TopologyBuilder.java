@@ -171,12 +171,12 @@ public class TopologyBuilder {
      * Serialize the MeshVertex list and indices to buffers.
      * This method should be called when all shapes have added.
      * @param _geoWriter Instance of writer class.
+     * @param _meshPrimitive Instnace of mesh primitive.
      * @return Node containing the mesh.
      */
-    public Node build(GltfWriter _geoWriter) throws Exception {
-        MeshPrimitive _meshPrimitive = new MeshPrimitive();
+    public Node build(GltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
         _meshPrimitive.setMode(this._topologyMode.ordinal());
-        
+
         buildBuffers(_geoWriter, _meshPrimitive);
 
         Mesh _mesh = new Mesh();
@@ -184,15 +184,26 @@ public class TopologyBuilder {
         _mesh.setName(this.getName() + "-mesh");
         int _meshIdx = _geoWriter.getGltf().getMeshes().indexOf(_mesh);
         LOG.debug("New Mesh[{}]: idx=<{}>", _mesh.getName(), _meshIdx);
-        
+
         _mesh.addPrimitives(_meshPrimitive);
-        
+
         Node _node = new Node();
         _geoWriter.addNode(_node);
         _node.setMesh(_meshIdx);
         _node.setName(this.getName() + "-node");
 
         return _node;
+    }
+
+    /**
+     * Serialize the MeshVertex list and indices to buffers.
+     * This method should be called when all shapes have added.
+     * @param _geoWriter Instance of writer class.
+     * @return Node containing the mesh.
+     */
+    public Node build(GltfWriter _geoWriter) throws Exception {
+        MeshPrimitive _meshPrimitive = new MeshPrimitive();
+        return build(_geoWriter, _meshPrimitive);
     }
     
     /**
