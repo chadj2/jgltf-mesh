@@ -15,6 +15,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.javagl.jgltf.impl.v2.Mesh;
+import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.GltfWriter;
 import io.github.chadj2.mesh.MeshVertex;
 import io.github.chadj2.mesh.TopologyBuilder;
@@ -55,7 +58,14 @@ public class TestLineModels {
             _vertex.setColor(_color);
         }
         
-        _meshBuilder.build(this._geoWriter);
+        Node _node = _meshBuilder.build(this._geoWriter);
+        
+        // example of adding custom data to MeshPrimitive
+        int _meshIdx = _node.getMesh();
+        Mesh _mesh = this._geoWriter.getGltf().getMeshes().get(_meshIdx);
+        MeshPrimitive _primitive = _mesh.getPrimitives().get(0);
+        _primitive.setExtras(new String[]{"some","additional","data"});
+        
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
