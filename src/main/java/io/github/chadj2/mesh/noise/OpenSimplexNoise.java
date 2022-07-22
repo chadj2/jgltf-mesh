@@ -44,11 +44,11 @@ public class OpenSimplexNoise {
 	
 	public OpenSimplexNoise(short[] perm) {
 		this.perm = perm;
-		permGradIndex3D = new short[256];
+		this.permGradIndex3D = new short[256];
 		
 		for (int i = 0; i < 256; i++) {
 			//Since 3D has 24 gradients, simple bitmask won't work, so precompute modulo array.
-			permGradIndex3D[i] = (short)((perm[i] % (gradients3D.length / 3)) * 3);
+			this.permGradIndex3D[i] = (short)((perm[i] % (gradients3D.length / 3)) * 3);
 		}
 	}
 	
@@ -56,8 +56,8 @@ public class OpenSimplexNoise {
 	//Generates a proper permutation (i.e. doesn't merely perform N successive pair swaps on a base array)
 	//Uses a simple 64-bit LCG.
 	public OpenSimplexNoise(long seed) {
-		perm = new short[256];
-		permGradIndex3D = new short[256];
+		this.perm = new short[256];
+		this.permGradIndex3D = new short[256];
 		short[] source = new short[256];
 		for (short i = 0; i < 256; i++)
 			source[i] = i;
@@ -69,8 +69,8 @@ public class OpenSimplexNoise {
 			int r = (int)((seed + 31) % (i + 1));
 			if (r < 0)
 				r += (i + 1);
-			perm[i] = source[r];
-			permGradIndex3D[i] = (short)((perm[i] % (gradients3D.length / 3)) * 3);
+			this.perm[i] = source[r];
+			this.permGradIndex3D[i] = (short)((this.perm[i] % (gradients3D.length / 3)) * 3);
 			source[r] = source[i];
 		}
 	}
@@ -2067,14 +2067,14 @@ public class OpenSimplexNoise {
 	
 	private double extrapolate(int xsb, int ysb, double dx, double dy)
 	{
-		int index = perm[(perm[xsb & 0xFF] + ysb) & 0xFF] & 0x0E;
+		int index = this.perm[(this.perm[xsb & 0xFF] + ysb) & 0xFF] & 0x0E;
 		return gradients2D[index] * dx
 			+ gradients2D[index + 1] * dy;
 	}
 	
 	private double extrapolate(int xsb, int ysb, int zsb, double dx, double dy, double dz)
 	{
-		int index = permGradIndex3D[(perm[(perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF];
+		int index = this.permGradIndex3D[(this.perm[(this.perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF];
 		return gradients3D[index] * dx
 			+ gradients3D[index + 1] * dy
 			+ gradients3D[index + 2] * dz;
@@ -2082,7 +2082,7 @@ public class OpenSimplexNoise {
 	
 	private double extrapolate(int xsb, int ysb, int zsb, int wsb, double dx, double dy, double dz, double dw)
 	{
-		int index = perm[(perm[(perm[(perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF] + wsb) & 0xFF] & 0xFC;
+		int index = this.perm[(this.perm[(this.perm[(this.perm[xsb & 0xFF] + ysb) & 0xFF] + zsb) & 0xFF] + wsb) & 0xFF] & 0xFC;
 		return gradients4D[index] * dx
 			+ gradients4D[index + 1] * dy
 			+ gradients4D[index + 2] * dz

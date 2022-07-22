@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.chadj2.mesh.GltfWriter;
+import io.github.chadj2.mesh.IcoSphereBuilder;
 import io.github.chadj2.mesh.GltfWriter.AlphaMode;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
@@ -317,5 +318,28 @@ public class TestShapeModels {
         this._geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
+    
+    /**
+     * Create an IcoSphere.
+     * @throws Exception
+     */
+    @Test
+    public void testIcoBuilder() throws Exception {
+        IcoSphereBuilder builder = new IcoSphereBuilder("icosphere");
+        
+        builder.setColor(Color.CYAN);
+        builder.setIsPatterned(true);
+        builder.setMaxDetail(3);
+        builder.addIcosphere();
+        
+        // build the gltf buffers
+        builder.build(this._geoWriter);
+
+        File _outFile = getFile(builder.getName());
+        this._geoWriter.writeGltf(_outFile);
+        LOG.info("Finished generating: {}", _outFile);
+        
+    }
+    
 }
 
