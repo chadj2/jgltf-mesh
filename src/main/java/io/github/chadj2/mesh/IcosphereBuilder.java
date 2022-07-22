@@ -13,10 +13,13 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 /**
- * Generate 3d IcoSphere of various sizes and colors.
+ * Generate 3d Icosphere of various sizes and colors.
+ * 
+ * @see <a href="http://www.songho.ca/opengl/gl_sphere.html">OpenGL Sphere</a>
+ * 
  * @author Chad Juliano
  */
-public class IcoSphereBuilder extends TriangleBuilder {
+public class IcosphereBuilder extends TriangleBuilder {
 
     // don't change these
     private static final int IDX_TOP = 10;
@@ -47,7 +50,7 @@ public class IcoSphereBuilder extends TriangleBuilder {
     private final HashMap<String, MeshVertex> _midpointMap = new HashMap<>();
     
     
-    public IcoSphereBuilder(String _name) {
+    public IcosphereBuilder(String _name) {
         super(_name);
         this.setColor(Color.WHITE);
         
@@ -56,7 +59,7 @@ public class IcoSphereBuilder extends TriangleBuilder {
     }
 
     /**
-     * Set the Color of the IcoSphere.
+     * Set the Color of the Icosphere.
      * @param color
      */
     public void setColor(Color color) {
@@ -73,7 +76,7 @@ public class IcoSphereBuilder extends TriangleBuilder {
     }
     
     /**
-     * Set the radius of the IcoSphere.
+     * Set the radius of the Icosphere.
      * @param radius
      */
     public void setRadius(double radius) {
@@ -81,7 +84,7 @@ public class IcoSphereBuilder extends TriangleBuilder {
     }
     
     /**
-     * Color vertices in a pattern that reveals the IcoSphere structure.
+     * Color vertices in a pattern that reveals the Icosphere structure.
      * @param isPatterned
      */
     public void setIsPatterned(boolean isPatterned) {
@@ -98,7 +101,7 @@ public class IcoSphereBuilder extends TriangleBuilder {
     }
     
     /**
-     * Add geometry for an IcoSphere.
+     * Add geometry for an Icosphere.
      * @param _maxDetail
      */
     public void addIcosphere() {

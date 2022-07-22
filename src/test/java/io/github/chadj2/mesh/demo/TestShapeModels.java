@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.IcoSphereBuilder;
+import io.github.chadj2.mesh.IcosphereBuilder;
 import io.github.chadj2.mesh.GltfWriter.AlphaMode;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
@@ -325,7 +325,7 @@ public class TestShapeModels {
      */
     @Test
     public void testIcoBuilder() throws Exception {
-        IcoSphereBuilder builder = new IcoSphereBuilder("icosphere");
+        IcosphereBuilder builder = new IcosphereBuilder("icosphere");
         
         builder.setColor(Color.CYAN);
         builder.setIsPatterned(true);
