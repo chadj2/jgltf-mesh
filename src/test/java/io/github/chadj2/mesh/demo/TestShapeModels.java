@@ -24,6 +24,7 @@ import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 
 import de.javagl.jgltf.impl.v2.Material;
+import de.javagl.jgltf.impl.v2.Node;
 
 public class TestShapeModels {
 
@@ -320,7 +321,7 @@ public class TestShapeModels {
     }
     
     /**
-     * Create an IcoSphere.
+     * Create an IcoSphere template and create multiple nodes from it.
      * @throws Exception
      */
     @Test
@@ -333,12 +334,24 @@ public class TestShapeModels {
         builder.addIcosphere();
         
         // build the gltf buffers
-        builder.build(this._geoWriter);
+        int meshIdx = builder.buildMesh(this._geoWriter);
+
+        Node node1 = new Node();
+        int nodeIdx1 = this._geoWriter.addNode(node1);
+        node1.setName(String.format("mesh%d-node%d", meshIdx, nodeIdx1));
+        node1.setMesh(meshIdx);
+        
+        Node node2 = new Node();
+        int nodeIdx2 = this._geoWriter.addNode(node2);
+        node2.setName(String.format("mesh%d-node%d", meshIdx, nodeIdx2));
+        node2.setMesh(meshIdx);
+        
+        float[] translation = new float[] { 2f, 0f, 0f};
+        node2.setTranslation(translation);
 
         File _outFile = getFile(builder.getName());
         this._geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
-        
     }
     
 }
