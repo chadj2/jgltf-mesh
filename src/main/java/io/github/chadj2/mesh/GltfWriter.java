@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -134,11 +136,11 @@ public class GltfWriter {
     /**
      * Add a node to the default Scene. This is the only way this class supports adding of 
      * geometry.
+     * @returns index of the node
      */
-    public void addNode(Node _node) {
+    public int addNode(Node _node) {
         this._gltf.addNodes(_node);
-        List<Node> _gltfList = this._gltf.getNodes();
-        this._topScene.addNodes(_gltfList.indexOf(_node));
+        return this._gltf.getNodes().indexOf(_node);
     }
     
     /**
@@ -225,10 +227,26 @@ public class GltfWriter {
     }
     
     /**
+     * Called before a write operation
+     */
+    private void prepareWrite() {
+        // create a list of indexes for all the nodes
+        List<Node> _gltfList = this._gltf.getNodes();
+        
+        List<Integer> rangeList = IntStream.range(0, _gltfList.size())
+                .boxed()
+                .collect(Collectors.toList());
+        
+        this._topScene.setNodes(rangeList);
+    }
+    
+    /**
      * Write gltf to an OutputStream. Specify gltf or glb format.
      * @param _format Indicates if this is JSON or binary format.
      */
     public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
+        prepareWrite();
+        
         GltfModelV2 _gltfModel = getGltfModel();
         GltfModelWriter _gltfModelWriter = new GltfModelWriter();
         
@@ -248,6 +266,8 @@ public class GltfWriter {
      * the type.
      */
     public void writeGltf(File _outFile) throws Exception {
+        prepareWrite();
+        
         GltfModelV2 _gltfModel = getGltfModel();
         GltfModelWriter _gltfModelWriter = new GltfModelWriter();
 

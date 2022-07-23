@@ -174,25 +174,37 @@ public class TopologyBuilder {
      * @return Node containing the mesh.
      */
     public Node build(GltfWriter _geoWriter) throws Exception {
+        int _meshIdx = buildMesh(_geoWriter);
+        
+        Node _node = new Node();
+        _node.setMesh(_meshIdx);
+        _node.setName(this.getName() + "-node");
+        
+        _geoWriter.addNode(_node);
+        return _node;
+    }
+    
+    /**
+     * Build a Mesh and return its index.
+     * @param _geoWriter
+     * @return
+     * @throws Exception
+     */
+    public int buildMesh(GltfWriter _geoWriter) throws Exception {
         MeshPrimitive _meshPrimitive = new MeshPrimitive();
         _meshPrimitive.setMode(this._topologyMode.ordinal());
         
         buildBuffers(_geoWriter, _meshPrimitive);
 
         Mesh _mesh = new Mesh();
-        _geoWriter.getGltf().addMeshes(_mesh);
         _mesh.setName(this.getName() + "-mesh");
+        _mesh.addPrimitives(_meshPrimitive);
+
+        _geoWriter.getGltf().addMeshes(_mesh);
         int _meshIdx = _geoWriter.getGltf().getMeshes().indexOf(_mesh);
         LOG.debug("New Mesh[{}]: idx=<{}>", _mesh.getName(), _meshIdx);
         
-        _mesh.addPrimitives(_meshPrimitive);
-        
-        Node _node = new Node();
-        _geoWriter.addNode(_node);
-        _node.setMesh(_meshIdx);
-        _node.setName(this.getName() + "-node");
-
-        return _node;
+        return _meshIdx;
     }
     
     /**
