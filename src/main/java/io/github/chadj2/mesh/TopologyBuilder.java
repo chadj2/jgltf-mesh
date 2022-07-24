@@ -70,6 +70,21 @@ public class TopologyBuilder {
     private final TopologyMode _topologyMode;
     
     /**
+     * Helper function for generating HSB colors with alpha transparency.
+     * @param hue
+     * @param sat
+     * @param val
+     * @param alpha
+     * @return
+     */
+    public static Color createHsbColor(float hue, float sat, float val, float alpha) {
+        Color color = Color.getHSBColor(hue, sat, val);
+        int alphaInt = Math.round(alpha*256);
+        Color alColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), alphaInt);
+        return alColor;
+    }
+    
+    /**
      * @param _name Name of the mesh that will be populated in the glTF.
      * @param _topologyMode Indicates how buffers are interpreted by glTF.
      */

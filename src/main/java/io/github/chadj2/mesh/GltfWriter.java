@@ -208,19 +208,19 @@ public class GltfWriter {
 
         switch(this._alphaMode) {
             case OPAQUE:
-                _material.setAlphaMode("OPAQUE");
+                _material.setAlphaMode(AlphaMode.OPAQUE.name());
                 break;
             case OPAQUE_DS: 
-                _material.setAlphaMode("OPAQUE");
+                _material.setAlphaMode(AlphaMode.OPAQUE.name());
                 _material.setDoubleSided(true);
                 break;
             case MASK:
-                _material.setAlphaMode("MASK");
+                _material.setAlphaMode(AlphaMode.MASK.name());
                 _material.setAlphaCutoff(0.5f);
                 _material.setDoubleSided(true);
                 break;
             case BLEND:
-                _material.setAlphaMode("BLEND");
+                _material.setAlphaMode(AlphaMode.BLEND.name());
                 _material.setDoubleSided(true);
                 _roughness.setBaseColorFactor(new float[] {1f, 1f, 1f, 1f} );
                 break;

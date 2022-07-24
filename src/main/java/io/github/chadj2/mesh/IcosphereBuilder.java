@@ -13,10 +13,8 @@ import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 /**
- * Generate 3d Icosphere of various sizes and colors.
- * 
+ * Generate 3d Icosphere.
  * @see <a href="http://www.songho.ca/opengl/gl_sphere.html">OpenGL Sphere</a>
- * 
  * @author Chad Juliano
  */
 public class IcosphereBuilder extends TriangleBuilder {
@@ -35,14 +33,16 @@ public class IcosphereBuilder extends TriangleBuilder {
     /**
      * Indicates if the sphere will be covered in a hexagonal pattern.
      */
-    private boolean isPatterned = false;
+    private boolean _isPatterned = false;
     
     /**
      * HSB color values.
      */
-    private float[] hsbVals;
+    private float[] _hsbVals;
     
-    private double radius = 1d;
+    private Color _color;
+    
+    private double _radius = 1d;
     
     /**
      * index of midpoints used for de-duplication.
@@ -69,29 +69,32 @@ public class IcosphereBuilder extends TriangleBuilder {
      * Set the radius of the Icosphere.
      * @param radius
      */
-    public void setRadius(double radius) { this.radius = radius; }
+    public void setRadius(double radius) { this._radius = radius; }
     
     /**
      * Color vertices in a pattern that reveals the Icosphere structure.
      * @param isPatterned
      */
-    public void setIsPatterned(boolean isPatterned) { this.isPatterned = isPatterned; }
+    public void setIsPatterned(boolean isPatterned) { this._isPatterned = isPatterned; }
 
     /**
      * Set the Color of the Icosphere.
      * @param color
      */
     public void setColor(Color color) {
-        this.hsbVals = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        this._hsbVals = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        this._color = color;
     }
     
+    public Color getColor() { return this._color; }
+    
     private Color getColor(int lod) {
-        float val = this.hsbVals[2];
-        if(this.isPatterned) {
-            val /= (lod+1f);
+        if(!this._isPatterned) {
+            return this._color;
         }
         
-        return Color.getHSBColor(this.hsbVals[0], this.hsbVals[1], val);
+        float val = this._hsbVals[2]/(lod+1f);
+        return Color.getHSBColor(this._hsbVals[0], this._hsbVals[1], val);
     }
     
     /**
@@ -148,8 +151,8 @@ public class IcosphereBuilder extends TriangleBuilder {
      */
     private MeshVertex[] getIcosahedronVertices() {
         final double vAngle = Math.atan(1.0d/2);  // 26.565 degrees
-        final double zPos = this.radius * Math.sin(vAngle);
-        final double xyPos = this.radius * Math.cos(vAngle);
+        final double zPos = this._radius * Math.sin(vAngle);
+        final double xyPos = this._radius * Math.cos(vAngle);
         final double hAngle = (2d*Math.PI)/ICO_SIDES; // 72 degrees
         
         final MeshVertex[] vertices = new MeshVertex[12];
@@ -179,11 +182,11 @@ public class IcosphereBuilder extends TriangleBuilder {
         }
         
         // top vertex
-        vertices[IDX_TOP] = newVertex(new Point3f(0f, 0f, (float)this.radius));
+        vertices[IDX_TOP] = newVertex(new Point3f(0f, 0f, (float)this._radius));
         vertices[IDX_TOP].setColor(getColor(0));
         
         // bottom vertex
-        vertices[IDX_BOTTOM] = newVertex(new Point3f(0f, 0f, (float)-this.radius));
+        vertices[IDX_BOTTOM] = newVertex(new Point3f(0f, 0f, (float)-this._radius));
         vertices[IDX_BOTTOM].setColor(getColor(0));
         
         return vertices;
@@ -247,7 +250,7 @@ public class IcosphereBuilder extends TriangleBuilder {
 
         // new vertex must be resized, so the length is equal to the radius
         p3.normalize();
-        p3.scale((float)this.radius);
+        p3.scale((float)this._radius);
         
         Point3f newPoint = new Point3f(p3);
         newMv = newVertex(newPoint);

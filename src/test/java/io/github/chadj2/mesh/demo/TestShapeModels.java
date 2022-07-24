@@ -23,6 +23,7 @@ import io.github.chadj2.mesh.GltfWriter.AlphaMode;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 import io.github.chadj2.mesh.SphereFactory;
+import io.github.chadj2.mesh.TopologyBuilder;
 import de.javagl.jgltf.impl.v2.Material;
 import de.javagl.jgltf.impl.v2.Node;
 
@@ -321,26 +322,59 @@ public class TestShapeModels {
     }
     
     /**
-     * Create an IcoSphere template and create multiple nodes from it.
+     * Create a 10x10 grid of spheres with varying color and radius.
+     * @throws Exception
+     */
+    @Test
+    public void testSphereFactory() throws Exception {
+        SphereFactory factory = new SphereFactory(this._writer);
+        factory.setMaxDetail(2);
+        
+        final int gridSize = 10;
+        
+        for(int xIdx = 0; xIdx < gridSize; xIdx++) {
+            // first loop will vary the color
+            float xInterp = (float)xIdx/((float)gridSize);
+            Color color = TopologyBuilder.createHsbColor(xInterp, 1f, 1f, 0.5f);
+            float xPos = xInterp*20f;
+            factory.setColor(color);
+            
+            for(int yIdx = gridSize; yIdx > 0; yIdx--) {
+                float yInterp = (float)yIdx/((float)gridSize);
+                float yPos = yInterp*20f;
+                factory.setScale(yInterp);
+                
+                // add the sphere
+                factory.addSphere(xPos, yPos, 0f);
+            }
+        }
+
+        File _outFile = getFile("sphere_factory_test");
+        this._writer.writeGltf(_outFile);
+        LOG.info("Finished generating: {}", _outFile);
+    }
+    
+    /**
+     * Create 2 IcoSpheres with vertex patterns.
      * @throws Exception
      */
     @Test
     public void testIcoBuilder() throws Exception {
         IcosphereBuilder builder = new IcosphereBuilder("icosphere_test");
         
+        // add a Cyan sphere
         builder.setColor(Color.CYAN);
         builder.setIsPatterned(true);
         builder.setMaxDetail(3);
-        
         builder.addIcosphere();
         int meshIdx = builder.buildMesh(this._writer);
-        
         
         Node node1 = new Node();
         int nodeIdx1 = this._writer.addNode(node1);
         node1.setName(String.format("mesh%d-node%d", meshIdx, nodeIdx1));
         node1.setMesh(meshIdx);
 
+        // add a Green sphere offset on the x-axis 
         builder.setColor(Color.GREEN);
         builder.setIsPatterned(true);
         
@@ -354,26 +388,10 @@ public class TestShapeModels {
         
         float[] translation = new float[] { 2f, 0f, 0f};
         node2.setTranslation(translation);
-
+        
+        // write the file
         File _outFile = getFile(builder.getName());
         this._writer.writeGltf(_outFile);
     }
-    
-    @Test
-    public void testSphereFactory() throws Exception {
-        SphereFactory factory = new SphereFactory(this._writer);
-        
-        factory.setColor(Color.GREEN);
-        factory.addSphere(0f, 0f, 0f);
-
-        factory.setColor(Color.CYAN);
-        factory.setScale(0.5f);
-        factory.addSphere(2f, 0f, 0f);
-
-        File _outFile = getFile("sphere_factory_test");
-        this._writer.writeGltf(_outFile);
-        LOG.info("Finished generating: {}", _outFile);
-    }
-    
 }
 
