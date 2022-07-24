@@ -6,6 +6,10 @@
 
 package io.github.chadj2.mesh;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
@@ -31,7 +35,7 @@ public class TriangleBuilder extends TopologyBuilder {
     private final static Logger LOG = LoggerFactory.getLogger(TriangleBuilder.class);
     
     /** The indices keep track of connectivity between triangle vertices. */
-    protected final TriangleIndices _indices;
+    protected final List<Integer> _indicesList = new ArrayList<Integer>();
     
     /** Suppress additions of normal vectors  */
     private boolean _supressNormals = false;
@@ -44,7 +48,6 @@ public class TriangleBuilder extends TopologyBuilder {
      */
     public TriangleBuilder(String _name) {
         super(_name, TopologyMode.TRIANGLES);
-        this._indices = new TriangleIndices(_name);
     }
     
     /**
@@ -62,6 +65,9 @@ public class TriangleBuilder extends TopologyBuilder {
     public void setMaterial(Material _material) {
         this._material = _material;
     }
+    
+    @Override
+    public void clear() { this._indicesList.clear(); }
     
     /**
      * This method should be called when all shapes have added. It will serialize the MeshVertex
@@ -83,7 +89,9 @@ public class TriangleBuilder extends TopologyBuilder {
      */
     public void addTriangle(MeshVertex _vtx0, MeshVertex _vtx1, MeshVertex _vtx2) {
         // add indices
-        this._indices.add(_vtx0.getIndex(), _vtx1.getIndex(), _vtx2.getIndex());
+        this._indicesList.add(_vtx0.getIndex());
+        this._indicesList.add(_vtx1.getIndex());
+        this._indicesList.add(_vtx2.getIndex());
         
         if(!this._supressNormals) {
             // calculate normal with cross product
@@ -148,7 +156,7 @@ public class TriangleBuilder extends TopologyBuilder {
             _meshPrimitive.setMaterial(_materialIdx);
         }
 
-        if(this._indices.size() == 0) {
+        if(this._indicesList.size() == 0) {
             throw new Exception("Mesh has no indices: " + this.getName());
         }
         
@@ -179,10 +187,19 @@ public class TriangleBuilder extends TopologyBuilder {
             throw new Exception("Each Vertex must have a texCoord");
         }
         
+        // copy triangles to the buffer
+        TriangleIndices indices  = new TriangleIndices(this.getName());
+        Iterator<Integer> iter = this._indicesList.iterator();
+        while(iter.hasNext()) {
+            indices.add(iter.next(), iter.next(), iter.next());
+        }
+        
         // flush all buffers to the primitive
-        this._indices.build(_geoWriter, _meshPrimitive);
+        indices.build(_geoWriter, _meshPrimitive);
         _texCoords.build(_geoWriter, _meshPrimitive);
         _normals.build(_geoWriter, _meshPrimitive);
         _tangents.build(_geoWriter, _meshPrimitive);
+        
+        this._indicesList.clear();
     }
 }

@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -98,6 +99,9 @@ public class GltfWriter {
     /** Copyright for glTF Asset type */
     private String _copyright = "";
     
+    /** These nodes will get added to the GlTF object at write time */
+    private final List<Node> _nodes = new ArrayList<>();
+    
     public GltfWriter() {
         this._gltf.addScenes(this._topScene);
     }
@@ -134,13 +138,12 @@ public class GltfWriter {
     public void setCopyright(String _value) { this._copyright = _value; }
     
     /**
-     * Add a node to the default Scene. This is the only way this class supports adding of 
-     * geometry.
+     * Add a node to the default Scene.
      * @returns index of the node
      */
     public int addNode(Node _node) {
-        this._gltf.addNodes(_node);
-        return this._gltf.getNodes().indexOf(_node);
+        this._nodes.add(_node);
+        return this._nodes.indexOf(_node);
     }
     
     /**
@@ -227,13 +230,12 @@ public class GltfWriter {
     }
     
     /**
-     * Called before a write operation
+     * Called before a write operation.
      */
     private void prepareWrite() {
-        // create a list of indexes for all the nodes
-        List<Node> _gltfList = this._gltf.getNodes();
+        this._gltf.setNodes(this._nodes);
         
-        List<Integer> rangeList = IntStream.range(0, _gltfList.size())
+        List<Integer> rangeList = IntStream.range(0, this._nodes.size())
                 .boxed()
                 .collect(Collectors.toList());
         

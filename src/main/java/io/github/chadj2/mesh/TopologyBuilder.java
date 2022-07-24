@@ -48,7 +48,7 @@ public class TopologyBuilder {
     }
     
     /** Mesh name used in metadata descriptions */
-    private final String _name;
+    private String _name;
 
     /** List of vertices being added to this mesh */
     protected final List<MeshVertex> _vertexList = new ArrayList<MeshVertex>();
@@ -78,6 +78,12 @@ public class TopologyBuilder {
         this._topologyMode = _topologyMode;
         setScale(new Vector3f(1,1,1));
     }
+    
+    /** 
+     * Change the name of this builder.
+     * @param _name
+     */
+    public void setName(String _name) { this._name = _name; }
     
     /**
      * Returns true if no triangles have been added.
@@ -123,6 +129,11 @@ public class TopologyBuilder {
         
         this._transform.setTranslation(_vec);
     }
+
+    /**
+     * Clear out any added geometry.
+     */
+    public void clear() { this._vertexList.clear(); }
     
     /**
      * Scale all vertices in X/Y/Z. This will update the transformation matrix.
@@ -193,16 +204,19 @@ public class TopologyBuilder {
     public int buildMesh(GltfWriter _geoWriter) throws Exception {
         MeshPrimitive _meshPrimitive = new MeshPrimitive();
         _meshPrimitive.setMode(this._topologyMode.ordinal());
-        
-        buildBuffers(_geoWriter, _meshPrimitive);
 
         Mesh _mesh = new Mesh();
+        _geoWriter.getGltf().addMeshes(_mesh);
+        int _meshIdx = _geoWriter.getGltf().getMeshes().indexOf(_mesh);
+        
+        //this._name = String.format("%s", this.getName());
         _mesh.setName(this.getName() + "-mesh");
         _mesh.addPrimitives(_meshPrimitive);
 
-        _geoWriter.getGltf().addMeshes(_mesh);
-        int _meshIdx = _geoWriter.getGltf().getMeshes().indexOf(_mesh);
+        buildBuffers(_geoWriter, _meshPrimitive);
+
         LOG.debug("New Mesh[{}]: idx=<{}>", _mesh.getName(), _meshIdx);
+        this.clear();
         
         return _meshIdx;
     }
@@ -238,5 +252,6 @@ public class TopologyBuilder {
         this._maxBounds = _vertices.getMaxBounds();
         _vertices.build(_geoWriter, _meshPrimitive);
         _colors.build(_geoWriter, _meshPrimitive);
+        
     }
 }

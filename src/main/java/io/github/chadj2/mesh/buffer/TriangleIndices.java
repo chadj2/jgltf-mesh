@@ -37,7 +37,6 @@ public class TriangleIndices extends BaseBuffer {
     @Override
     public void clear() {
         this._list.clear();
-        this._list.clear();
     }
     
     @Override

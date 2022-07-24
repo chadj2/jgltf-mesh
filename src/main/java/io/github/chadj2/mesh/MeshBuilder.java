@@ -87,7 +87,7 @@ public class MeshBuilder extends TriangleBuilder {
             
             // here we clear the vertices while preserving the normals. We want to keep the normals
             // and regenerate the grid.
-            this._indices.clear();
+            this._indicesList.clear();
             
 
             // create a new grid and extend it by a row or column if it is wrapped.

@@ -59,36 +59,30 @@ public class IcosphereBuilder extends TriangleBuilder {
     }
 
     /**
-     * Set the Color of the Icosphere.
-     * @param color
-     */
-    public void setColor(Color color) {
-        this.hsbVals = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
-    }
-    
-    /**
      * Set the maximum level of detail where zero is minimum. Higher levels of detail will
      * generate more vertices.
      * @param maxDetail
      */
-    public void setMaxDetail(int maxDetail) {
-        this._maxDetail = maxDetail;
-    }
+    public void setMaxDetail(int maxDetail) { this._maxDetail = maxDetail; }
     
     /**
      * Set the radius of the Icosphere.
      * @param radius
      */
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
+    public void setRadius(double radius) { this.radius = radius; }
     
     /**
      * Color vertices in a pattern that reveals the Icosphere structure.
      * @param isPatterned
      */
-    public void setIsPatterned(boolean isPatterned) {
-        this.isPatterned = isPatterned;
+    public void setIsPatterned(boolean isPatterned) { this.isPatterned = isPatterned; }
+
+    /**
+     * Set the Color of the Icosphere.
+     * @param color
+     */
+    public void setColor(Color color) {
+        this.hsbVals = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
     }
     
     private Color getColor(int lod) {
@@ -105,7 +99,6 @@ public class IcosphereBuilder extends TriangleBuilder {
      * @param _maxDetail
      */
     public void addIcosphere() {
-        this._midpointMap.clear();
         
         // get the 12 vertices of the Icosahedron
         MeshVertex[] vertices = getIcosahedronVertices();
@@ -145,6 +138,8 @@ public class IcosphereBuilder extends TriangleBuilder {
                     vertices[row2Idx], 
                     vertices[row2Next]);
         }
+        
+        this._midpointMap.clear();
     }
 
     /**

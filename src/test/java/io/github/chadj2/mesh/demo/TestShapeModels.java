@@ -22,7 +22,7 @@ import io.github.chadj2.mesh.IcosphereBuilder;
 import io.github.chadj2.mesh.GltfWriter.AlphaMode;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
-
+import io.github.chadj2.mesh.SphereFactory;
 import de.javagl.jgltf.impl.v2.Material;
 import de.javagl.jgltf.impl.v2.Node;
 
@@ -33,12 +33,12 @@ public class TestShapeModels {
     private final static String TEST_TEXTURE_PNG = "uv_grid_512.png";
     private final static String OUT_PATH = "./demo";
     
-    private final GltfWriter _geoWriter = new GltfWriter();
+    private final GltfWriter _writer = new GltfWriter();
     
     @Before
     public void setup() {
         // set the path where the texture files will be found
-        this._geoWriter.setBasePath(new File("src/test/resources"));
+        this._writer.setBasePath(new File("src/test/resources"));
     }
 
     public static File getFile(String _name) {
@@ -54,10 +54,10 @@ public class TestShapeModels {
     @Test 
     public void testPlane() throws Exception {
         // Set rendering for both sides of the plane
-        this._geoWriter.setAlphaMode(AlphaMode.OPAQUE_DS);
+        this._writer.setAlphaMode(AlphaMode.OPAQUE_DS);
         
         final MeshBuilder _meshBuilder = new MeshBuilder("test_plane");
-        final Material _material = this._geoWriter.newTextureMaterial(TEST_TEXTURE_PNG);
+        final Material _material = this._writer.newTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.setMaterial(_material);
         
         // size of grid
@@ -90,10 +90,10 @@ public class TestShapeModels {
         _meshBuilder.addPlane(_meshGrid, true);
         
         // build the gltf buffers
-        _meshBuilder.build(this._geoWriter);
+        _meshBuilder.build(this._writer);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
-        this._geoWriter.writeGltf(_outFile);
+        this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
     
@@ -104,7 +104,7 @@ public class TestShapeModels {
     @Test
     public void testDiamond() throws Exception {
         final MeshBuilder _meshBuilder = new MeshBuilder("test_diamond");
-        Material _material = this._geoWriter.newDefaultMaterial();
+        Material _material = this._writer.newDefaultMaterial();
         _meshBuilder.setMaterial(_material);
 
         // number of sides around the tube
@@ -135,10 +135,10 @@ public class TestShapeModels {
         _meshBuilder.addLathe(_meshGrid, false);
 
         // generate gltf buffers
-        _meshBuilder.build(this._geoWriter);
+        _meshBuilder.build(this._writer);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
-        this._geoWriter.writeGltf(_outFile);
+        this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
 
@@ -152,11 +152,11 @@ public class TestShapeModels {
         // because we can't mix textured and non-textured.
         
         MeshBuilder _meshBuilder = new MeshBuilder("test_helix");
-        Material _materialTexture = this._geoWriter.newTextureMaterial(TEST_TEXTURE_PNG);
+        Material _materialTexture = this._writer.newTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.setMaterial(_materialTexture);
         
         MeshBuilder _meshBuilderEnds = new MeshBuilder("ends");
-        Material _materialDefault = this._geoWriter.newDefaultMaterial();
+        Material _materialDefault = this._writer.newDefaultMaterial();
         _meshBuilderEnds.setMaterial(_materialDefault);
 
         // height of the helix
@@ -206,13 +206,13 @@ public class TestShapeModels {
         _meshBuilder.addLathe(_meshGrid, true);
 
         // generate gltf buffers for the cylindrical part
-        _meshBuilder.build(this._geoWriter);
+        _meshBuilder.build(this._writer);
 
         // generate gltf buffers for the ends
-        _meshBuilderEnds.build(this._geoWriter);
+        _meshBuilderEnds.build(this._writer);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
-        this._geoWriter.writeGltf(_outFile);
+        this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
     
@@ -223,7 +223,7 @@ public class TestShapeModels {
     @Test 
     public void testTorus() throws Exception {
         MeshBuilder _meshBuilder = new MeshBuilder("test_torus");
-        Material _material = this._geoWriter.newTextureMaterial(TEST_TEXTURE_PNG);
+        Material _material = this._writer.newTextureMaterial(TEST_TEXTURE_PNG);
         _meshBuilder.setMaterial(_material);
         
         // sides of each circle in the vertical axis
@@ -262,10 +262,10 @@ public class TestShapeModels {
         _meshBuilder.addManifold(_meshGrid, true);
 
         // generate gltf buffers
-        _meshBuilder.build(this._geoWriter);
+        _meshBuilder.build(this._writer);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
-        this._geoWriter.writeGltf(_outFile);
+        this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
     
@@ -313,10 +313,10 @@ public class TestShapeModels {
         _meshBuilder.addPlane(_meshGrid, true);
 
         // build the gltf buffers
-        _meshBuilder.build(this._geoWriter);
+        _meshBuilder.build(this._writer);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
-        this._geoWriter.writeGltf(_outFile);
+        this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
     
@@ -326,31 +326,52 @@ public class TestShapeModels {
      */
     @Test
     public void testIcoBuilder() throws Exception {
-        IcosphereBuilder builder = new IcosphereBuilder("icosphere");
+        IcosphereBuilder builder = new IcosphereBuilder("icosphere_test");
         
         builder.setColor(Color.CYAN);
         builder.setIsPatterned(true);
         builder.setMaxDetail(3);
-        builder.addIcosphere();
         
-        // build the gltf buffers
-        int meshIdx = builder.buildMesh(this._geoWriter);
-
+        builder.addIcosphere();
+        int meshIdx = builder.buildMesh(this._writer);
+        
+        
         Node node1 = new Node();
-        int nodeIdx1 = this._geoWriter.addNode(node1);
+        int nodeIdx1 = this._writer.addNode(node1);
         node1.setName(String.format("mesh%d-node%d", meshIdx, nodeIdx1));
         node1.setMesh(meshIdx);
+
+        builder.setColor(Color.GREEN);
+        builder.setIsPatterned(true);
+        
+        builder.addIcosphere();
+        int meshIdx2 = builder.buildMesh(this._writer);
         
         Node node2 = new Node();
-        int nodeIdx2 = this._geoWriter.addNode(node2);
-        node2.setName(String.format("mesh%d-node%d", meshIdx, nodeIdx2));
-        node2.setMesh(meshIdx);
+        int nodeIdx2 = this._writer.addNode(node2);
+        node2.setName(String.format("mesh%d-node%d", meshIdx2, nodeIdx2));
+        node2.setMesh(meshIdx2);
         
         float[] translation = new float[] { 2f, 0f, 0f};
         node2.setTranslation(translation);
 
         File _outFile = getFile(builder.getName());
-        this._geoWriter.writeGltf(_outFile);
+        this._writer.writeGltf(_outFile);
+    }
+    
+    @Test
+    public void testSphereFactory() throws Exception {
+        SphereFactory factory = new SphereFactory(this._writer);
+        
+        factory.setColor(Color.GREEN);
+        factory.addSphere(0f, 0f, 0f);
+
+        factory.setColor(Color.CYAN);
+        factory.setScale(0.5f);
+        factory.addSphere(2f, 0f, 0f);
+
+        File _outFile = getFile("sphere_factory_test");
+        this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
     
