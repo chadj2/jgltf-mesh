@@ -17,15 +17,15 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.javagl.jgltf.impl.v2.Material;
+import de.javagl.jgltf.impl.v2.Node;
+import io.github.chadj2.mesh.BaseBuilder;
 import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.IcosphereBuilder;
 import io.github.chadj2.mesh.GltfWriter.AlphaMode;
+import io.github.chadj2.mesh.IcosphereBuilder;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 import io.github.chadj2.mesh.SphereFactory;
-import io.github.chadj2.mesh.TopologyBuilder;
-import de.javagl.jgltf.impl.v2.Material;
-import de.javagl.jgltf.impl.v2.Node;
 
 public class TestShapeModels {
 
@@ -335,17 +335,17 @@ public class TestShapeModels {
         for(int xIdx = 0; xIdx < gridSize; xIdx++) {
             // first loop will vary the color
             float xInterp = (float)xIdx/((float)gridSize);
-            Color color = TopologyBuilder.createHsbColor(xInterp, 1f, 1f, 0.5f);
+            Color color = BaseBuilder.createHsbColor(xInterp, 1f, 1f, 0.5f);
             float xPos = xInterp*20f;
             factory.setColor(color);
             
             for(int yIdx = gridSize; yIdx > 0; yIdx--) {
                 float yInterp = (float)yIdx/((float)gridSize);
                 float yPos = yInterp*20f;
-                factory.setScale(yInterp);
+                factory.setRadius(yInterp);
                 
                 // add the sphere
-                factory.addSphere(xPos, yPos, 0f);
+                factory.addSphere(new Point3f(xPos, yPos, 0f));
             }
         }
 

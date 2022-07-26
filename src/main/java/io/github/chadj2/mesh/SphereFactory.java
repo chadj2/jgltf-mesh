@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.vecmath.Point3f;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +26,7 @@ import io.github.chadj2.mesh.GltfWriter.AlphaMode;
  * Spheres of the same color will get reused to reduce the file size. 
  * @author Chad Juliano
  */
-public class SphereFactory {
+public class SphereFactory extends BaseBuilder {
     
     private final static Logger LOG = LoggerFactory.getLogger(SphereFactory.class);
     
@@ -36,9 +38,10 @@ public class SphereFactory {
      */
     private final Map<Color, Integer> _meshMap = new HashMap<>();
     
-    private float[] _scale = { 1f, 1f, 1f};
+    private float[] _radius = { 1f, 1f, 1f};
     
     public SphereFactory(GltfWriter _writer) {
+        super("sphere");
         this._builder.setIsPatterned(false);
         this._builder.setMaxDetail(2);
         
@@ -48,14 +51,25 @@ public class SphereFactory {
         this._builder.setMaterial(material);
         
         this._writer = _writer;
+        
+        this._minBounds = new Point3f();
+        this._minBounds.x = Float.POSITIVE_INFINITY;
+        this._minBounds.y = Float.POSITIVE_INFINITY;
+        this._minBounds.z = Float.POSITIVE_INFINITY;
+
+        this._maxBounds = new Point3f();
+        this._maxBounds.x = Float.NEGATIVE_INFINITY;
+        this._maxBounds.y = Float.NEGATIVE_INFINITY;
+        this._maxBounds.z = Float.NEGATIVE_INFINITY;
+        
     }
     
     public void setMaxDetail(int val) { this._builder.setMaxDetail(val); }
     
     public void setColor(Color color) { this._builder.setColor(color); }
     
-    public void setScale(float scale) { this._scale = new float[] { scale, scale, scale }; }
-
+    public void setRadius(float radius) { this._radius = new float[] { radius, radius, radius }; }
+    
     /**
      * Add a sphere at the given position.
      * @param xPos
@@ -63,18 +77,29 @@ public class SphereFactory {
      * @param zPos
      * @throws Exception
      */
-    public void addSphere(float xPos, float yPos, float zPos) throws Exception {
+    public void addSphere(Point3f pos) throws Exception {
         Integer meshIdx = getMesh();
         
         Node node = new Node();
         this._writer.addNode(node);
         node.setMesh(meshIdx);
         
-        node.setName(String.format("sphere[%d]-node", meshIdx));
-        node.setScale(this._scale);
+        node.setName(String.format("%s[%d]-node", getName(), meshIdx));
+        node.setScale(this._radius);
+
+        getTransform().transform(pos);
         
-        float[] translation = { xPos, yPos, zPos }; 
+        float[] translation = {pos.x, pos.y, pos.z}; 
         node.setTranslation(translation);
+
+        this._minBounds.x = Math.min(this._minBounds.x, pos.x);
+        this._maxBounds.x = Math.max(this._maxBounds.x, pos.x);
+        
+        this._minBounds.y = Math.min(this._minBounds.y, pos.y);
+        this._maxBounds.y = Math.max(this._maxBounds.y, pos.y);
+        
+        this._minBounds.z = Math.min(this._minBounds.z, pos.z);
+        this._maxBounds.z = Math.max(this._maxBounds.z, pos.z);
     }
     
     /**
@@ -101,7 +126,7 @@ public class SphereFactory {
         
         // set the name of the builder so that all objects in the JSON can be
         // identified with this sphere
-        String name = String.format("sphere[%d]", meshIdx);
+        String name = String.format("%s[%d]", getName(), meshIdx);
         this._builder.setName(name);
         meshIdx = this._builder.buildMesh(this._writer);
         

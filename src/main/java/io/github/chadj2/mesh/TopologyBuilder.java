@@ -10,25 +10,22 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.vecmath.Matrix4f;
 import javax.vecmath.Point3f;
-import javax.vecmath.Vector3f;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.chadj2.mesh.buffer.VertexColors;
-import io.github.chadj2.mesh.buffer.Vertices;
-
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
+import io.github.chadj2.mesh.buffer.VertexColors;
+import io.github.chadj2.mesh.buffer.Vertices;
 
 /**
  * Base class for constructing glTF Mesh geometry.
  * @author Chad Juliano
  */
-public class TopologyBuilder {
+public class TopologyBuilder extends BaseBuilder {
 
     private final static Logger LOG = LoggerFactory.getLogger(TopologyBuilder.class);
     
@@ -47,58 +44,21 @@ public class TopologyBuilder {
         TRIANGLE_FAN
     }
     
-    /** Mesh name used in metadata descriptions */
-    private String _name;
-
     /** List of vertices being added to this mesh */
     protected final List<MeshVertex> _vertexList = new ArrayList<MeshVertex>();
-    
-    /** Transform scale and offset */
-    private final Matrix4f _transform = new Matrix4f();
-    
-    /** Indicates if the X axis should be inverted. This is necessary to correct orientations for Cesium. */
-    private static final int INVERT_X = -1;
-
-    /** minimum bounds of the vertices. */
-    private Point3f _minBounds;
-    
-    /** maximum bounds of the vertices. */
-    private Point3f _maxBounds;
     
     /** Topology mode for MeshPrimitive. This indicates the type of data that will be output by the builder
      * and it can't be altered at runtime. */
     private final TopologyMode _topologyMode;
     
     /**
-     * Helper function for generating HSB colors with alpha transparency.
-     * @param hue
-     * @param sat
-     * @param val
-     * @param alpha
-     * @return
-     */
-    public static Color createHsbColor(float hue, float sat, float val, float alpha) {
-        Color color = Color.getHSBColor(hue, sat, val);
-        int alphaInt = Math.round(alpha*256);
-        Color alColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), alphaInt);
-        return alColor;
-    }
-    
-    /**
      * @param _name Name of the mesh that will be populated in the glTF.
      * @param _topologyMode Indicates how buffers are interpreted by glTF.
      */
     public TopologyBuilder(String _name, TopologyMode _topologyMode) {
-        this._name = _name;
+        super(_name);
         this._topologyMode = _topologyMode;
-        setScale(new Vector3f(1,1,1));
     }
-    
-    /** 
-     * Change the name of this builder.
-     * @param _name
-     */
-    public void setName(String _name) { this._name = _name; }
     
     /**
      * Returns true if no triangles have been added.
@@ -106,61 +66,9 @@ public class TopologyBuilder {
     public boolean isEmpty() { return this._vertexList.size() == 0; }
 
     /**
-     * Return the mesh name.
-     */
-    public String getName() { return this._name; }
-    
-    /**
-     * Get the minimum bounds of all vertices. Should only be called after build().
-     */
-    public Point3f getMinBounds() { return this._minBounds; }
-    
-    /**
-     * Get the maximum bounds of all vertices. Should only be called after build().
-     */
-    public Point3f getMaxBounds() { return this._maxBounds; }
-
-    /**
-     * Set the transform used for offset and scale. This will replace any existing translations.
-     */
-    public void setTransform(Matrix4f _transform) { this._transform.set(_transform); }
-    
-    /**
-     * Get the transformation matrix.
-     */
-    public Matrix4f getTransform() { return this._transform; }
-    
-    /**
-     * Center all vertices about a point. This will update the transformation matrix.
-     */
-    public void setCenter(Vector3f _offset) {
-        Vector3f _vec = new Vector3f(_offset);
-        
-        // negate because we are centering
-        _vec.negate();
-        
-        // invert the X axis
-        _vec.x *= INVERT_X;
-        
-        this._transform.setTranslation(_vec);
-    }
-
-    /**
      * Clear out any added geometry.
      */
     public void clear() { this._vertexList.clear(); }
-    
-    /**
-     * Scale all vertices in X/Y/Z. This will update the transformation matrix.
-     */
-    public void setScale(Vector3f _scale) {
-        this._transform.m00 = _scale.x;
-        this._transform.m11 = _scale.y;
-        this._transform.m22 = _scale.z;
-        
-        // invert the X axis
-        this._transform.m00 *= INVERT_X;
-    }
 
     /**
      * Create a new vertex and apply the current offset and scale. This vertex will be assigned
@@ -171,7 +79,7 @@ public class TopologyBuilder {
         Point3f _newVertex = new Point3f(_vertex);
         
         // apply offset and scale
-        this._transform.transform(_newVertex);
+        getTransform().transform(_newVertex);
         
         MeshVertex _meshVertex = new MeshVertex(this._vertexList.size(), _newVertex);
         this._vertexList.add(_meshVertex);
