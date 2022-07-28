@@ -77,7 +77,7 @@ public class SphereFactory extends BaseBuilder {
      * @param zPos
      * @throws Exception
      */
-    public void addSphere(Point3f pos) throws Exception {
+    public Node addSphere(Point3f pos) throws Exception {
         Integer meshIdx = getMesh();
         
         Node node = new Node();
@@ -100,6 +100,8 @@ public class SphereFactory extends BaseBuilder {
         
         this._minBounds.z = Math.min(this._minBounds.z, pos.z);
         this._maxBounds.z = Math.max(this._maxBounds.z, pos.z);
+        
+        return node;
     }
     
     /**

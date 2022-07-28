@@ -18,7 +18,7 @@ public class BaseBuilder {
     private static final int INVERT_X = -1;
 
     /**
-     * Helper function for generating HSB colors with alpha transparency.
+     * Create HSB colors with alpha transparency.
      * @param hue
      * @param sat
      * @param val
@@ -27,6 +27,16 @@ public class BaseBuilder {
      */
     public static Color createHsbColor(float hue, float sat, float val, float alpha) {
         Color color = Color.getHSBColor(hue, sat, val);
+        return createAphaColor(color, alpha);
+    }
+    
+    /**
+     * Add transparency to color.
+     * @param color
+     * @param alpha
+     * @return
+     */
+    public static Color createAphaColor(Color color, float alpha) {
         int alphaInt = Math.round(alpha*256);
         Color alColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), alphaInt);
         return alColor;
