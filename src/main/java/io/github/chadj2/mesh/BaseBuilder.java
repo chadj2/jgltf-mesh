@@ -94,7 +94,7 @@ public class BaseBuilder {
     /**
      * Center all vertices about a point. This will update the transformation matrix.
      */
-    public void setCenter(Vector3f _offset) {
+    public void setCenter(Point3f _offset) {
         Vector3f _vec = new Vector3f(_offset);
         
         // negate because we are centering
