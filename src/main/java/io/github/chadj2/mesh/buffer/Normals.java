@@ -11,11 +11,11 @@ import java.util.ArrayList;
 
 import javax.vecmath.Vector3f;
 
-import io.github.chadj2.mesh.GltfWriter;
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import io.github.chadj2.mesh.GltfWriter;
 
 /**
  * Serializer for normal vector primitives.

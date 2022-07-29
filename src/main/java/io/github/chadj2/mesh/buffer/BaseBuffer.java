@@ -11,12 +11,11 @@ import java.nio.ByteBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.chadj2.mesh.GltfWriter;
-
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import io.github.chadj2.mesh.GltfWriter;
 
 /**
  * Base class for primitive serializers.

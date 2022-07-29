@@ -51,17 +51,6 @@ public class SphereFactory extends BaseBuilder {
         this._builder.setMaterial(material);
         
         this._writer = _writer;
-        
-        this._minBounds = new Point3f();
-        this._minBounds.x = Float.POSITIVE_INFINITY;
-        this._minBounds.y = Float.POSITIVE_INFINITY;
-        this._minBounds.z = Float.POSITIVE_INFINITY;
-
-        this._maxBounds = new Point3f();
-        this._maxBounds.x = Float.NEGATIVE_INFINITY;
-        this._maxBounds.y = Float.NEGATIVE_INFINITY;
-        this._maxBounds.z = Float.NEGATIVE_INFINITY;
-        
     }
     
     public void setMaxDetail(int val) { this._builder.setMaxDetail(val); }
@@ -91,15 +80,6 @@ public class SphereFactory extends BaseBuilder {
         
         float[] translation = {pos.x, pos.y, pos.z}; 
         node.setTranslation(translation);
-
-        this._minBounds.x = Math.min(this._minBounds.x, pos.x);
-        this._maxBounds.x = Math.max(this._maxBounds.x, pos.x);
-        
-        this._minBounds.y = Math.min(this._minBounds.y, pos.y);
-        this._maxBounds.y = Math.max(this._maxBounds.y, pos.y);
-        
-        this._minBounds.z = Math.min(this._minBounds.z, pos.z);
-        this._maxBounds.z = Math.max(this._maxBounds.z, pos.z);
         
         return node;
     }

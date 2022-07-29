@@ -50,6 +50,12 @@ public class TopologyBuilder extends BaseBuilder {
     /** Topology mode for MeshPrimitive. This indicates the type of data that will be output by the builder
      * and it can't be altered at runtime. */
     private final TopologyMode _topologyMode;
+
+    /** minimum bounds of the vertices. */
+    protected Point3f _minBounds;
+    
+    /** maximum bounds of the vertices. */
+    protected Point3f _maxBounds;
     
     /**
      * @param _name Name of the mesh that will be populated in the glTF.
@@ -69,6 +75,18 @@ public class TopologyBuilder extends BaseBuilder {
      * Clear out any added geometry.
      */
     public void clear() { this._vertexList.clear(); }
+    
+    
+    /**
+     * Get the minimum bounds of all vertices. Should only be called after build().
+     */
+    public Point3f getMinBounds() { return this._minBounds; }
+    
+    /**
+     * Get the maximum bounds of all vertices. Should only be called after build().
+     */
+    public Point3f getMaxBounds() { return this._maxBounds; }
+
 
     /**
      * Create a new vertex and apply the current offset and scale. This vertex will be assigned

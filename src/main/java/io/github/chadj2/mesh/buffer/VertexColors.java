@@ -9,11 +9,11 @@ import java.awt.Color;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-import io.github.chadj2.mesh.GltfWriter;
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import io.github.chadj2.mesh.GltfWriter;
 
 /**
  * Serializer for vertex color primitives.

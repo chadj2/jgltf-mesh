@@ -15,12 +15,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.javagl.jgltf.impl.v2.Material;
 import io.github.chadj2.mesh.GltfWriter;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 import io.github.chadj2.mesh.TriangleBuilder;
-
-import de.javagl.jgltf.impl.v2.Material;
 
 public class TestCubeModel {
     

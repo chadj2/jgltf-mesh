@@ -48,11 +48,7 @@ public class BaseBuilder {
     /** Transform scale and offset */
     private final Matrix4f _transform = new Matrix4f();
 
-    /** minimum bounds of the vertices. */
-    protected Point3f _minBounds;
-    
-    /** maximum bounds of the vertices. */
-    protected Point3f _maxBounds;
+
 
     public BaseBuilder(String _name) {
         this._name = _name;
@@ -79,16 +75,6 @@ public class BaseBuilder {
      * Get the transformation matrix.
      */
     public Matrix4f getTransform() { return this._transform; }
-
-    /**
-     * Get the minimum bounds of all vertices. Should only be called after build().
-     */
-    public Point3f getMinBounds() { return this._minBounds; }
-    
-    /**
-     * Get the maximum bounds of all vertices. Should only be called after build().
-     */
-    public Point3f getMaxBounds() { return this._maxBounds; }
 
     
     /**
