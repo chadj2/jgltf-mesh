@@ -64,7 +64,6 @@ public class MeshBuilder extends TriangleBuilder {
      */
     public void addGrid(MeshVertex[][] _meshGrid, boolean _isTextured, boolean _wrapY, 
             boolean _wrapX) {
-
         int _xGridSize = _meshGrid.length;
         int _yGridSize = _meshGrid[0].length;
         
@@ -89,58 +88,7 @@ public class MeshBuilder extends TriangleBuilder {
             // and regenerate the grid.
             this._indicesList.clear();
             
-
-            // create a new grid and extend it by a row or column if it is wrapped.
-            int _xTexSize = _xGridSize;
-            if(_wrapX) {
-                _xTexSize += 1;
-            }
-            
-            int _yTexSize = _yGridSize;
-            if(_wrapY) {
-                _yTexSize += 1;
-            }
-            
-            MeshVertex[][] _texGrid = new MeshVertex[_xTexSize][_yTexSize];
-            
-            // populate the new grid
-            for(int _xGridIdx = 0; _xGridIdx < _xTexSize; _xGridIdx++) {
-                final float _uPos = interpFloat(_xTexSize - 1, 1, _xGridIdx);
-                
-                for(int _yGridIdx = 0; _yGridIdx < _yTexSize; _yGridIdx++) {
-                    MeshVertex _vertex;
-                    if(_xGridIdx >= _xGridSize || _yGridIdx >= _yGridSize) {
-                        // We are in the expanded zone so wrap back to the beginning if necessary.
-                        int _xIdxWrap = _xGridIdx;
-                        if(_xIdxWrap >= _xGridSize) {
-                            _xIdxWrap = 0;
-                        }
-                        
-                        int _yIdxWrap = _yGridIdx;
-                        if(_yIdxWrap >= _yGridSize) {
-                            _yIdxWrap = 0;
-                        }
-                        
-                        // We copy the vertex because start and end points should overlap.
-                        _vertex = this.copyVertex(_meshGrid[_xIdxWrap][_yIdxWrap]);
-                    }
-                    else {
-                        // if not in the expanded zone then use vertex from the original grid.
-                        _vertex = _meshGrid[_xGridIdx][_yGridIdx];
-                    }
-                    
-                    if(_vertex == null) {
-                        // empty point is no rendered
-                        continue;
-                    }
-
-                    final float _vPos = interpFloat(_yTexSize - 1, 1, _yGridIdx);
-                    _vertex.setTexCoord(new Point2f(_uPos, _vPos));
-                    
-                    // Assign the vertex to the texture grid.
-                    _texGrid[_xGridIdx][_yGridIdx] = _vertex;
-                }
-            }
+            MeshVertex[][] _texGrid = createTexGrid(_meshGrid, _wrapX, _wrapY);
             
             // Suppress generation of normals because we want to use the normals from the original
             // grid. We render the mesh with no wrapping because the start and end points overlap.
@@ -148,6 +96,75 @@ public class MeshBuilder extends TriangleBuilder {
             renderMesh(_texGrid, false, false);
             this.supressNormals(false);
         }
+    }
+
+    /**
+     * If the mesh is textured and wrapped then we have a problem where we need to extend 
+     * it so that there are separate points for the start and end vertices. If there is no 
+     * wrapping then the extra points are not necessary.
+     * @param _meshGrid
+     * @param _xGridSize
+     * @param _yGridSize
+     * @param _wrapX
+     * @param _wrapY
+     * @return
+     */
+    private MeshVertex[][] createTexGrid(MeshVertex[][] _meshGrid, boolean _wrapX, boolean _wrapY) {
+        int _xGridSize = _meshGrid.length;
+        int _yGridSize = _meshGrid[0].length;
+        
+        // create a new grid and extend it by a row or column if it is wrapped.
+        int _xTexSize = _xGridSize;
+        if(_wrapX) {
+            _xTexSize += 1;
+        }
+        
+        int _yTexSize = _yGridSize;
+        if(_wrapY) {
+            _yTexSize += 1;
+        }
+        
+        MeshVertex[][] _texGrid = new MeshVertex[_xTexSize][_yTexSize];
+        
+        // populate the new grid
+        for(int _xGridIdx = 0; _xGridIdx < _xTexSize; _xGridIdx++) {
+            final float _uPos = interpFloat(_xTexSize - 1, 1, _xGridIdx);
+            
+            for(int _yGridIdx = 0; _yGridIdx < _yTexSize; _yGridIdx++) {
+                MeshVertex _vertex;
+                if(_xGridIdx >= _xGridSize || _yGridIdx >= _yGridSize) {
+                    // We are in the expanded zone so wrap back to the beginning if necessary.
+                    int _xIdxWrap = _xGridIdx;
+                    if(_xIdxWrap >= _xGridSize) {
+                        _xIdxWrap = 0;
+                    }
+                    
+                    int _yIdxWrap = _yGridIdx;
+                    if(_yIdxWrap >= _yGridSize) {
+                        _yIdxWrap = 0;
+                    }
+                    
+                    // We copy the vertex because start and end points should overlap.
+                    _vertex = this.copyVertex(_meshGrid[_xIdxWrap][_yIdxWrap]);
+                }
+                else {
+                    // if not in the expanded zone then use vertex from the original grid.
+                    _vertex = _meshGrid[_xGridIdx][_yGridIdx];
+                }
+                
+                if(_vertex == null) {
+                    // empty point is no rendered
+                    continue;
+                }
+
+                final float _vPos = interpFloat(_yTexSize - 1, 1, _yGridIdx);
+                _vertex.setTexCoord(new Point2f(_uPos, _vPos));
+                
+                // Assign the vertex to the texture grid.
+                _texGrid[_xGridIdx][_yGridIdx] = _vertex;
+            }
+        }
+        return _texGrid;
     }
 
     /**
