@@ -193,36 +193,41 @@ public class MeshBuilder extends TriangleBuilder {
 
     /**
      * Add a 3D cylinder oriented in XZ.
-     * @param _position Base of the cylinder
+     * @param _bottomPos Base of the cylinder
      * @param _radius Cylinder radius
      * @param _height Cylinder height
      * @param _sides Number of vertices for the sides
      * @param _color Cylinder color
      */
-    public void addCylinderMeshXZ(Point3f _position, float _radius, float _height, int _sides, 
-            Color _color) {
-        Point3f _bottomPos = new Point3f(_position);
-        _bottomPos.sub(new Point3f(0f, _height, 0f));
+    public void addCylinderMeshXZ(Point3f _bottomPos, float _radius, float _height, 
+            int _sides, Color _color) {
+        LOG.debug("addCylinderMeshXZ: pos<{}>", _bottomPos, _radius);
+        
+        Point3f _topPos = new Point3f(_bottomPos);
+        _topPos.add(new Point3f(0f, _height, 0f));
         
         // add cylinder
         MeshVertex[][] _cylinderGrid = new MeshVertex[2][];
-        _cylinderGrid[0] = this.addCircleVerticesXZ(_position, _radius, _sides, _color);
+        _cylinderGrid[0] = this.addCircleVerticesXZ(_topPos, _radius, _sides, _color);
         _cylinderGrid[1] = this.addCircleVerticesXZ(_bottomPos, _radius, _sides, _color);
         this.addLathe(_cylinderGrid, false);
         
         // add top and bottom
-        addDiscXZ(_position, _radius, _sides, _color);
+        addDiscXZ(_topPos, _radius, _sides, _color);
         addDiscXZ(_bottomPos, -1*_radius, _sides, _color);
     }
     
     /**
-     * Add a solid disc oriented in XZ.
+     * Add a solid disc oriented in XZ. Positive radius means plane is oriented up. 
+     * Negative radius means plane is oriented down.
      * @param _position Center of the disc
      * @param _radius Disc radius
      * @param _sides Number of vertices for the sides
      * @param _color Disc color
      */
     public void addDiscXZ(Point3f _position, float _radius, int _sides, Color _color) {
+        LOG.debug("addDiscXZ: pos<{}> radius<{}>", _position, _radius);
+        
         // add center point
         MeshVertex _centerVtx = this.newVertex(_position);
         _centerVtx.setColor(_color);

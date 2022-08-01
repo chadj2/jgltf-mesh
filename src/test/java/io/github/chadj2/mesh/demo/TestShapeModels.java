@@ -188,13 +188,13 @@ public class TestShapeModels {
             // add the circle that forms the helix
             _meshGrid[_yIdx] = _meshBuilder.addCircleVerticesXZ(_circlePos,  _circleRadius, _circleSides, null);
             
-            // if this is the bottom then add a disc
+            // if this is the top then add a disc
             if(_yIdx == 0) {
                 _meshBuilderEnds.addDiscXZ(_circlePos, _circleRadius, _circleSides, Color.RED);
             }
             
-            // if this is the top then add a disc
-            if(_yIdx == (_circleSides -1)) {
+            // if this is the bottom then add a disc
+            if(_yIdx == (_yDivisions -1)) {
                 _meshBuilderEnds.addDiscXZ(_circlePos, -1*_circleRadius, _circleSides, Color.GREEN);
             }
         }

@@ -34,7 +34,7 @@ public class SphereFactory extends BaseBuilder {
     private final GltfWriter _writer;
     
     /**
-     * Map of colors to mesh indicies.
+     * Map of colors to mesh indices.
      */
     private final Map<Color, Integer> _meshMap = new HashMap<>();
     

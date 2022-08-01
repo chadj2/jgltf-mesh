@@ -48,8 +48,6 @@ public class BaseBuilder {
     /** Transform scale and offset */
     private final Matrix4f _transform = new Matrix4f();
 
-
-
     public BaseBuilder(String _name) {
         this._name = _name;
         setScale(new Vector3f(1,1,1));
@@ -75,7 +73,6 @@ public class BaseBuilder {
      * Get the transformation matrix.
      */
     public Matrix4f getTransform() { return this._transform; }
-
     
     /**
      * Center all vertices about a point. This will update the transformation matrix.
@@ -103,5 +100,4 @@ public class BaseBuilder {
         // invert the X axis
         this._transform.m00 *= INVERT_X;
     }
-    
 }
