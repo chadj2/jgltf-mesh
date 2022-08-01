@@ -15,7 +15,8 @@ import javax.vecmath.Vector3f;
 public class BaseBuilder {
     
     /** Indicates if the X axis should be inverted. This is necessary to correct orientations for Cesium. */
-    private static final int INVERT_X = -1;
+    //private static final int INVERT_X = -1;
+    private static final int INVERT_X = 1;
 
     /**
      * Create HSB colors with alpha transparency.

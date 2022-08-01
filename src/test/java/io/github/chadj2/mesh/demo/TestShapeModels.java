@@ -78,7 +78,7 @@ public class TestShapeModels {
                 final float _yPos = (float)(2*_xPos*Math.exp(-1*(_xPos*_xPos + _zPos*_zPos)));
 
                 // add the point in the mesh
-                Point3f _point = new Point3f(-1*_xPos, _yPos, _zPos);
+                Point3f _point = new Point3f(_xPos, _yPos, _zPos);
                 _meshGrid[_xIdx][_yIdx] = _meshBuilder.newVertex(_point);
             }
         }
@@ -111,7 +111,7 @@ public class TestShapeModels {
         final float[] _radiusList = { 0.2f, 1f, 0.2f };
         
         // y positions for the tube.
-        final float[] _yPosList = { 1f, 0f, -1f };
+        final float[] _yPosList = { -1f, 0f, 1f };
         final MeshVertex[][] _meshGrid = new MeshVertex[_yPosList.length][];
         
         for(int _yIdx = 0; _yIdx < _yPosList.length; _yIdx++) {
@@ -183,19 +183,19 @@ public class TestShapeModels {
             final float _yPos = MeshBuilder.interpFloat(_yDivisions, _ySize, _yIdx);
 
             // position of the circle to draw
-            final Point3f _circlePos = new Point3f(_xPos, -1*_yPos, _zPos);
+            final Point3f _circlePos = new Point3f(_xPos, _yPos, _zPos);
 
             // add the circle that forms the helix
             _meshGrid[_yIdx] = _meshBuilder.addCircleVerticesXZ(_circlePos,  _circleRadius, _circleSides, null);
             
-            // if this is the top then add a disc
+            // if this is the bottom then add a disc
             if(_yIdx == 0) {
-                _meshBuilderEnds.addDiscXZ(_circlePos, _circleRadius, _circleSides, Color.RED);
+                _meshBuilderEnds.addDiscXZ(_circlePos, -1*_circleRadius, _circleSides, Color.RED);
             }
             
-            // if this is the bottom then add a disc
+            // if this is the top then add a disc
             if(_yIdx == (_yDivisions -1)) {
-                _meshBuilderEnds.addDiscXZ(_circlePos, -1*_circleRadius, _circleSides, Color.GREEN);
+                _meshBuilderEnds.addDiscXZ(_circlePos, _circleRadius, _circleSides, Color.GREEN);
             }
         }
         
@@ -241,7 +241,7 @@ public class TestShapeModels {
         for(int _rIdx = 0; _rIdx < _sizesVertical; _rIdx++) {
             // Rotate about an angle from 0 to -2pi. 
             // If we rotate the other way then planes would render as inverted.
-            final double _angle = MeshBuilder.interpFloat(_sizesVertical, -2*Math.PI, _rIdx) - Math.PI;
+            final double _angle = MeshBuilder.interpFloat(_sizesVertical, 2*Math.PI, _rIdx);
             
             // calculate points along a circle that rotates about the axis.
         	final double _radius = _circleRadius*Math.cos(_angle) + _circleRadius + _innerRadius;
@@ -292,7 +292,7 @@ public class TestShapeModels {
             for(int _yIdx = 0; _yIdx < _length; _yIdx++) {
                 final float _zPos = MeshBuilder.interpFloat(_length, _coordLength, _yIdx) - _coordLength/2f;
                 
-                Point3f _point = new Point3f(-1*_xPos, 0, _zPos);
+                Point3f _point = new Point3f(_xPos, 0, _zPos);
                 MeshVertex _vertex = _meshBuilder.newVertex(_point);
                 _meshGrid[_xIdx][_yIdx] = _vertex;
                 _vertex.setColor(Color.WHITE);

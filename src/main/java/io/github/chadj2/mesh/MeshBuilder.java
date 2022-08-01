@@ -225,8 +225,8 @@ public class MeshBuilder extends TriangleBuilder {
         
         // add cylinder
         MeshVertex[][] _cylinderGrid = new MeshVertex[2][];
-        _cylinderGrid[0] = this.addCircleVerticesXZ(_topPos, _radius, _sides, _color);
-        _cylinderGrid[1] = this.addCircleVerticesXZ(_bottomPos, _radius, _sides, _color);
+        _cylinderGrid[1] = this.addCircleVerticesXZ(_topPos, _radius, _sides, _color);
+        _cylinderGrid[0] = this.addCircleVerticesXZ(_bottomPos, _radius, _sides, _color);
         this.addLathe(_cylinderGrid, false);
         
         // add top and bottom
@@ -256,9 +256,9 @@ public class MeshBuilder extends TriangleBuilder {
         for(int _rIdx = 1; _rIdx < _sides; _rIdx++) {
             MeshVertex _curVtx = _discVertices[_rIdx];
             MeshVertex _lastVtx = _discVertices[_rIdx - 1];
-            this.addTriangle(_curVtx, _lastVtx, _centerVtx);
+            this.addTriangle(_lastVtx, _curVtx, _centerVtx);
         }
-        this.addTriangle(_discVertices[0], _discVertices[_sides-1], _centerVtx);
+        this.addTriangle(_discVertices[_sides-1], _discVertices[0], _centerVtx);
     }
     
     /**
