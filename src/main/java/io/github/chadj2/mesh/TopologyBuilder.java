@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3f;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +94,7 @@ public class TopologyBuilder extends BaseBuilder {
      * an unique index that will be referenced when adding squares or triangles.
      * @param _vertex 3D location of this vertex.
      */
-    public MeshVertex newVertex(Point3f _vertex) {
+    public MeshVertex newVertex(Tuple3f _vertex) {
         Point3f _newVertex = new Point3f(_vertex);
         
         // apply offset and scale
