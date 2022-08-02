@@ -36,16 +36,17 @@ public class TestTubeModel {
         
         for(int idx = 0; idx < rPoints; idx++) {
             double partIdx = (double)idx/(double)rPoints;
-            
             double angleIdx = 2*Math.PI*partIdx;
             
             float xPos = (float)Math.cos(angleIdx);
-            float zPos = (float)Math.sin(angleIdx);
             float yPos = (float)partIdx;
+            float zPos = (float)Math.sin(angleIdx);
 
+            
             Vector3f point = new Vector3f(xPos, yPos, zPos);
-            final Color color = Color.getHSBColor((float)partIdx, 0.6f, 0.5f);
             MeshVertex vertex = lineBuilder.newVertex(point);
+            
+            Color color = Color.getHSBColor((float)partIdx, 0.6f, 0.5f);
             vertex.setColor(color);
             
             vecList.add(point);
@@ -89,18 +90,19 @@ public class TestTubeModel {
 
     /**
      * Create a 4D translation matrix from ux to the vector between points.
-     * @param v1
-     * @param v2
+     * @param pos1
+     * @param pos2
      * @return
      */
-    public Matrix4f transofrmBetween(Vector3f v1, Vector3f v2) {
+    public Matrix4f transofrmBetween(Vector3f pos1, Vector3f pos2) {
         Vector3f toVec = new Vector3f();
-        toVec.sub(v2, v1);
+        toVec.sub(pos2, pos1);
+        LOG.debug("Creating transform: pos1={}, vec={}", pos1, pos2, toVec);
         Matrix3f rotM = rotationFromY(toVec);
         
         Matrix4f transM4 = new Matrix4f();
         transM4.set(rotM);
-        transM4.setTranslation(v1);
+        transM4.setTranslation(pos1);
         return transM4;
     }
     
