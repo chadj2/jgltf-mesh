@@ -7,9 +7,13 @@
 package io.github.chadj2.mesh;
 
 import java.awt.Color;
+import java.util.List;
 
+import javax.vecmath.Matrix3f;
+import javax.vecmath.Matrix4f;
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -293,6 +297,104 @@ public class MeshBuilder extends TriangleBuilder {
         }
         return _result;
     }
+    
+
+    /**
+     * 
+     * @param vecList
+     * @param colorList
+     * @param radius
+     * @param sides
+     */
+    public void addPipe(List<Point3f> vecList, List<Color> colorList, float radius, int sides) {
+        Point3f origin = new Point3f(0f, 0f, 0f);
+        MeshVertex[][] meshGrid = new MeshVertex[vecList.size()][];
+
+        for(int idx = 0; idx < vecList.size(); idx++) {
+            Point3f vec1 = null;
+            if(idx > 0) {
+                vec1 = vecList.get(idx - 1);
+            }
+            
+            Point3f vec2 = vecList.get(idx);
+            
+            Point3f vec3 = null;
+            if(idx < (vecList.size() - 1)) {
+                vec3 = vecList.get(idx + 1);
+            }
+            
+            Matrix4f transM4 = getPipeTransform(vec1, vec2, vec3);
+            setTransform(transM4);
+
+            Color _color = colorList.get(idx);
+            meshGrid[idx] = addCircleVerticesXZ(origin, radius, sides, _color);
+        }
+        
+        addLathe(meshGrid, false);
+    }
+    
+    /**
+     * Create a 4D translation matrix from ux to the vector between points.
+     * @param pos1
+     * @param pos2
+     * @return
+     */
+    private static Matrix4f getPipeTransform(Point3f pos1, Point3f pos2, Point3f pos3) {
+        Vector3f toVec = new Vector3f();
+        int vecCount = 0;
+        
+        if(pos1 != null) {
+            Vector3f vec = new Vector3f();
+            vec.sub(pos2, pos1);
+            vec.normalize();
+            toVec.add(vec);
+            vecCount++;
+        }
+        
+        if(pos3 != null) {
+            Vector3f vec = new Vector3f();
+            vec.sub(pos3, pos2);
+            vec.normalize();
+            toVec.add(vec);
+            vecCount++;
+        }
+        
+        toVec.scale(1f/(float)vecCount);
+        Matrix3f rotM = rotationFromY(toVec);
+        
+        Matrix4f transM4 = new Matrix4f();
+        transM4.set(rotM);
+        transM4.setTranslation(new Vector3f(pos2));
+        return transM4;
+    }
+
+    /**
+     * Create a 3D transform from ux to a vector.
+     * @param toVec
+     * @return
+     */
+    public static Matrix3f rotationFromY(Vector3f toVec) {
+        Vector3f yUnit = new Vector3f(0f, 1f, 0f);
+        
+        Vector3f zVec = new Vector3f();
+        zVec.cross(toVec, yUnit);
+
+        Vector3f xVec = new Vector3f();
+        xVec.cross(toVec, zVec);
+
+        Vector3f yVec = new Vector3f(toVec);
+        xVec.normalize();
+        yVec.normalize();
+        zVec.normalize();
+
+        Matrix3f rotM3 = new Matrix3f();
+        rotM3.setColumn(0, xVec);
+        rotM3.setColumn(1, yVec);
+        rotM3.setColumn(2, zVec);
+        return rotM3;
+    }
+
+
     
     /**
      * Helper function for interpolation between bounds returning a float.
