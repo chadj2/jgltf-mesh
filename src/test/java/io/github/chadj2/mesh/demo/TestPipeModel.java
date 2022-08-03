@@ -17,69 +17,60 @@ import org.slf4j.LoggerFactory;
 import io.github.chadj2.mesh.GltfWriter;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
-import io.github.chadj2.mesh.TopologyBuilder;
-import io.github.chadj2.mesh.TopologyBuilder.TopologyMode;
 
-public class TestTubeModel {
+public class TestPipeModel {
     
-    private final static Logger LOG = LoggerFactory.getLogger(TestTubeModel.class);
+    private final static Logger LOG = LoggerFactory.getLogger(TestPipeModel.class);
 
     private final GltfWriter _geoWriter = new GltfWriter();
 
     @Test
     public void testTube() throws Exception {
-        TopologyBuilder lineBuilder = new TopologyBuilder("test_tube", TopologyMode.LINE_STRIP);
-        final int rPoints = 50;
-        
-        List<Vector3f> vecList = new ArrayList<>();
+        final int pieSections = 50;
+        List<Point3f> pointList = new ArrayList<>();
         List<Color> colorList = new ArrayList<>();
         
-        for(int idx = 0; idx < rPoints; idx++) {
-            double partIdx = (double)idx/(double)rPoints;
+        for(int idx = 0; idx < pieSections; idx++) {
+            double partIdx = (double)idx/(double)pieSections;
             double angleIdx = 2*Math.PI*partIdx;
             
             float xPos = (float)Math.cos(angleIdx);
             float yPos = (float)partIdx;
             float zPos = (float)Math.sin(angleIdx);
 
-            Vector3f point = new Vector3f(xPos, yPos, zPos);
-            MeshVertex vertex = lineBuilder.newVertex(point);
+            Point3f point = new Point3f(xPos, yPos, zPos);
+            pointList.add(point);
             
             Color color = Color.getHSBColor((float)partIdx, 0.6f, 0.5f);
-            vertex.setColor(color);
-            
-            vecList.add(point);
             colorList.add(color);
         }
         
-        lineBuilder.build(this._geoWriter);
-        MeshBuilder tubeBuilder = new MeshBuilder("test_tube");
+        MeshBuilder pipeBuilder = new MeshBuilder("test_pipe");
         float radius = 0.05f;
         int sides = 10;
-        addTube(vecList, colorList, tubeBuilder, radius, sides);
+        addPipe(pointList, colorList, pipeBuilder, radius, sides);
         
-        tubeBuilder.build(this._geoWriter);
+        pipeBuilder.build(this._geoWriter);
         
-        File _outFile = TestShapeModels.getFile(lineBuilder.getName());
+        File _outFile = TestShapeModels.getFile(pipeBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
 
-    private void addTube(List<Vector3f> vecList, List<Color> colorList, MeshBuilder tubeBuilder, float radius,
-            int sides) {
+    private void addPipe(List<Point3f> vecList, List<Color> colorList, 
+            MeshBuilder tubeBuilder, float radius, int sides) {
         Point3f origin = new Point3f(0f, 0f, 0f);
         MeshVertex[][] meshGrid = new MeshVertex[vecList.size()][];
 
         for(int idx = 0; idx < vecList.size(); idx++) {
-            // create transform
-            Vector3f vec1 = null;
+            Point3f vec1 = null;
             if(idx > 0) {
                 vec1 = vecList.get(idx - 1);
             }
             
-            Vector3f vec2 = vecList.get(idx);
+            Point3f vec2 = vecList.get(idx);
             
-            Vector3f vec3 = null;
+            Point3f vec3 = null;
             if(idx < (vecList.size() - 1)) {
                 vec3 = vecList.get(idx + 1);
             }
@@ -100,7 +91,7 @@ public class TestTubeModel {
      * @param pos2
      * @return
      */
-    public Matrix4f transofrmBetween(Vector3f pos1, Vector3f pos2, Vector3f pos3) {
+    public Matrix4f transofrmBetween(Point3f pos1, Point3f pos2, Point3f pos3) {
         Vector3f toVec = new Vector3f();
         int vecCount = 0;
         
@@ -125,7 +116,7 @@ public class TestTubeModel {
         
         Matrix4f transM4 = new Matrix4f();
         transM4.set(rotM);
-        transM4.setTranslation(pos2);
+        transM4.setTranslation(new Vector3f(pos2));
         return transM4;
     }
     
