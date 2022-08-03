@@ -11,7 +11,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Point3f;
+import javax.vecmath.Vector3f;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -21,6 +23,7 @@ import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.GltfWriter;
+import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 import io.github.chadj2.mesh.TopologyBuilder;
 import io.github.chadj2.mesh.TopologyBuilder.TopologyMode;
@@ -32,7 +35,7 @@ public class TestLineModels {
     private final GltfWriter _geoWriter = new GltfWriter();
     
     /**
-     * Draw a sphere using the line strip topology.
+     * Draw a spiral using the line strip topology.
      * @see TopologyMode
      */
     @Test 
@@ -63,6 +66,43 @@ public class TestLineModels {
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._geoWriter.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
+    }
+    
+
+    /**
+     * Draw a spiral with the pipe builder.
+     * @throws Exception
+     */
+    @Test
+    public void testPipe() throws Exception {
+        List<Point3f> pointList = new ArrayList<>();
+        List<Color> colorList = new ArrayList<>();
+
+        createSpiral(pointList, colorList);
+        
+        MeshBuilder meshBuilder = new MeshBuilder("test_pipe");
+        float radius = 0.02f;
+        int sides = 10;
+        meshBuilder.addPipe(pointList, colorList, radius, sides);
+        meshBuilder.build(this._geoWriter);
+        
+        File _outFile = TestShapeModels.getFile(meshBuilder.getName());
+        this._geoWriter.writeGltf(_outFile);
+        LOG.info("Finished generating: {}", _outFile);
+    }
+    
+    @Test
+    public void testTransform() {
+        Vector3f yUnit = new Vector3f(0f, 1f, 0f);
+        Vector3f toVec = new Vector3f(1f, 0f, 0f);
+        
+        Matrix3f rotM = MeshBuilder.rotationFromY(toVec);
+        Vector3f transVec = new Vector3f(yUnit);
+        rotM.transform(transVec);
+
+        LOG.info("yUnit : {}", yUnit);
+        LOG.info("toVec   : {}", toVec);
+        LOG.info("transVec: {}", transVec);
     }
 
     public static void createSpiral(List<Point3f> pointList, List<Color> colorList) {
