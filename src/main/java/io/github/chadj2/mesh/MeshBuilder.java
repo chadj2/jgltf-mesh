@@ -298,90 +298,107 @@ public class MeshBuilder extends TriangleBuilder {
         return _result;
     }
     
-
+    private final static Point3f ORIGIN_POINT = new Point3f(0f, 0f, 0f);
+    
+    private final static Vector3f Y_UNIT_VECTOR = new Vector3f(0f, 1f, 0f);
+    
     /**
-     * 
-     * @param vecList
+     * Add a pipe with given points and colors.
+     * @param pointList
      * @param colorList
      * @param radius
      * @param sides
      */
-    public void addPipe(List<Point3f> vecList, List<Color> colorList, float radius, int sides) {
-        Point3f origin = new Point3f(0f, 0f, 0f);
-        MeshVertex[][] meshGrid = new MeshVertex[vecList.size()][];
+    public void addPipe(List<Point3f> pointList, List<Color> colorList, float radius, int sides) {
+        // create the mesh that will contain the ring segments
+        final MeshVertex[][] meshGrid = new MeshVertex[pointList.size()][];
 
-        for(int idx = 0; idx < vecList.size(); idx++) {
-            Point3f vec1 = null;
+        for(int idx = 0; idx < pointList.size(); idx++) {
+            // get previous, current, and next points 
+            Point3f prevPoint = null;
+            Point3f currentPoint = pointList.get(idx);
+            Point3f nextPoint = null;
+            
             if(idx > 0) {
-                vec1 = vecList.get(idx - 1);
+                prevPoint = pointList.get(idx - 1);
             }
             
-            Point3f vec2 = vecList.get(idx);
-            
-            Point3f vec3 = null;
-            if(idx < (vecList.size() - 1)) {
-                vec3 = vecList.get(idx + 1);
+            if(idx < (pointList.size() - 1)) {
+                nextPoint = pointList.get(idx + 1);
             }
             
-            Matrix4f transM4 = getPipeTransform(vec1, vec2, vec3);
+            Matrix4f transM4 = getPipeTransform(prevPoint, currentPoint, nextPoint);
             setTransform(transM4);
 
-            Color _color = colorList.get(idx);
-            meshGrid[idx] = addCircleVerticesXZ(origin, radius, sides, _color);
+            Color color = colorList.get(idx);
+            
+            // we set the transformation so the ring segment will be in the correct
+            // location
+            meshGrid[idx] = addCircleVerticesXZ(ORIGIN_POINT, radius, sides, color);
         }
         
         addLathe(meshGrid, false);
     }
     
     /**
-     * Create a 4D translation matrix from ux to the vector between points.
-     * @param pos1
-     * @param pos2
+     * Create a 4D translation matrix from y-axis to the pipe segment.
+     * @param prevPoint
+     * @param curPoint
+     * @param nextPoint
      * @return
      */
-    private static Matrix4f getPipeTransform(Point3f pos1, Point3f pos2, Point3f pos3) {
+    private static Matrix4f getPipeTransform(Point3f prevPoint, Point3f curPoint, Point3f nextPoint) {
+        // average available segments
         Vector3f toVec = new Vector3f();
-        int vecCount = 0;
+        int segCount = 0;
         
-        if(pos1 != null) {
-            Vector3f vec = new Vector3f();
-            vec.sub(pos2, pos1);
-            vec.normalize();
-            toVec.add(vec);
-            vecCount++;
+        // prev-current segment
+        if(prevPoint != null) {
+            Vector3f seg = new Vector3f();
+            seg.sub(curPoint, prevPoint);
+            seg.normalize();
+            toVec.add(seg);
+            segCount++;
         }
         
-        if(pos3 != null) {
-            Vector3f vec = new Vector3f();
-            vec.sub(pos3, pos2);
-            vec.normalize();
-            toVec.add(vec);
-            vecCount++;
+        // current-next segment
+        if(nextPoint != null) {
+            Vector3f seg = new Vector3f();
+            seg.sub(nextPoint, curPoint);
+            seg.normalize();
+            toVec.add(seg);
+            segCount++;
         }
         
-        toVec.scale(1f/(float)vecCount);
+        // divide by number of segments
+        toVec.scale(1f/(float)segCount);
+        
+        // get rotation matrix
         Matrix3f rotM = rotationFromY(toVec);
-        
         Matrix4f transM4 = new Matrix4f();
         transM4.set(rotM);
-        transM4.setTranslation(new Vector3f(pos2));
+        
+        // set translation to the current point
+        transM4.setTranslation(new Vector3f(curPoint));
+        
         return transM4;
     }
-
+    
     /**
      * Create a 3D transform from ux to a vector.
      * @param toVec
      * @return
      */
     public static Matrix3f rotationFromY(Vector3f toVec) {
-        Vector3f yUnit = new Vector3f(0f, 1f, 0f);
-        
+        // create zVec perpendicular to toVec
         Vector3f zVec = new Vector3f();
-        zVec.cross(toVec, yUnit);
+        zVec.cross(toVec, Y_UNIT_VECTOR);
 
+        // create xVec perpendicular to zVec
         Vector3f xVec = new Vector3f();
         xVec.cross(toVec, zVec);
 
+        // normalize and set as basis in the rotation matrix.
         Vector3f yVec = new Vector3f(toVec);
         xVec.normalize();
         yVec.normalize();
@@ -393,8 +410,6 @@ public class MeshBuilder extends TriangleBuilder {
         rotM3.setColumn(2, zVec);
         return rotM3;
     }
-
-
     
     /**
      * Helper function for interpolation between bounds returning a float.
