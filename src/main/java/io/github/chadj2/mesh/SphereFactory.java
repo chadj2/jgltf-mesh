@@ -70,10 +70,9 @@ public class SphereFactory extends BaseBuilder {
         Integer meshIdx = getMesh();
         
         Node node = new Node();
-        this._writer.addNode(node);
+        int nodeIdx = this._writer.addNode(node);
         node.setMesh(meshIdx);
-        
-        node.setName(String.format("%s[%d]-node", getName(), meshIdx));
+        node.setName(String.format("%s[%d]-node", getName(), nodeIdx));
         node.setScale(this._radius);
 
         getTransform().transform(pos);
