@@ -300,8 +300,6 @@ public class MeshBuilder extends TriangleBuilder {
     
     private final static Point3f ORIGIN_POINT = new Point3f(0f, 0f, 0f);
     
-    private final static Vector3f Y_UNIT_VECTOR = new Vector3f(0f, 1f, 0f);
-    
     /**
      * Add a pipe with given points and colors.
      * @param pointList
@@ -329,8 +327,16 @@ public class MeshBuilder extends TriangleBuilder {
             
             Matrix4f transM4 = getPipeTransform(prevPoint, currentPoint, nextPoint);
             setTransform(transM4);
-
             Color color = colorList.get(idx);
+            
+            if(idx == 0) {
+                // cap the start
+                addDiscXZ(ORIGIN_POINT, -radius, sides, color);
+            }
+            else if(idx == (pointList.size() - 1)) {
+                // cap the end
+                addDiscXZ(ORIGIN_POINT, radius, sides, color);
+            }
             
             // we set the transformation so the ring segment will be in the correct
             // location
@@ -383,6 +389,12 @@ public class MeshBuilder extends TriangleBuilder {
         
         return transM4;
     }
+
+    //private final static Vector3f Y_UNIT_VECTOR = new Vector3f(0f, 1f, 0f);
+    
+    //private final static Vector3f X_UNIT_VECTOR = new Vector3f(1f, 0f, 0f);
+    
+    private final static Vector3f Z_UNIT_VECTOR = new Vector3f(0f, 0f, 1f);
     
     /**
      * Create a 3D transform from ux to a vector.
@@ -390,16 +402,19 @@ public class MeshBuilder extends TriangleBuilder {
      * @return
      */
     public static Matrix3f rotationFromY(Vector3f toVec) {
+        //LOG.info("toVec: {}", toVec);
+        
         // create zVec perpendicular to toVec
         Vector3f zVec = new Vector3f();
-        zVec.cross(toVec, Y_UNIT_VECTOR);
-
+        zVec.cross(toVec, Z_UNIT_VECTOR);
+        
         // create xVec perpendicular to zVec
         Vector3f xVec = new Vector3f();
         xVec.cross(toVec, zVec);
-
+        
         // normalize and set as basis in the rotation matrix.
         Vector3f yVec = new Vector3f(toVec);
+
         xVec.normalize();
         yVec.normalize();
         zVec.normalize();
@@ -408,6 +423,8 @@ public class MeshBuilder extends TriangleBuilder {
         rotM3.setColumn(0, xVec);
         rotM3.setColumn(1, yVec);
         rotM3.setColumn(2, zVec);
+
+        //LOG.info("rotM3:\n {}", rotM3);
         return rotM3;
     }
     
