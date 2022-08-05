@@ -10,7 +10,7 @@
     </appender>
 
     <logger name="org.apache" level="info" />
-    <logger name="io.github.chadj2.mesh" level="debug" />
+    <logger name="io.github.chadj2.mesh" level="info" />
     <logger name="io.github.chadj2.mesh.MeshBuilder" level="info" />
     <logger name="io.github.chadj2.mesh.buffer" level="info" />
     
