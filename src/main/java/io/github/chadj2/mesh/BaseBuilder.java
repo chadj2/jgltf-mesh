@@ -16,7 +16,7 @@ public class BaseBuilder {
     
     /** Indicates if the X axis should be inverted. This is necessary to correct orientations for Cesium. */
     //private static final int INVERT_X = -1;
-    private static final int INVERT_X = 1;
+    //private static final int INVERT_X = 1;
 
     /**
      * Create HSB colors with alpha transparency.
@@ -51,7 +51,7 @@ public class BaseBuilder {
 
     public BaseBuilder(String _name) {
         this._name = _name;
-        setScale(new Vector3f(1,1,1));
+        this._transform.setIdentity();
     }
     
     /** 
@@ -85,7 +85,7 @@ public class BaseBuilder {
         _vec.negate();
         
         // invert the X axis
-        _vec.x *= INVERT_X;
+        //_vec.x *= INVERT_X;
         
         this._transform.setTranslation(_vec);
     }
@@ -99,6 +99,6 @@ public class BaseBuilder {
         this._transform.m22 = _scale.z;
         
         // invert the X axis
-        this._transform.m00 *= INVERT_X;
+        //this._transform.m00 *= INVERT_X;
     }
 }

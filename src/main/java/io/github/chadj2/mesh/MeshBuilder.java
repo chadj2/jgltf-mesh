@@ -7,6 +7,7 @@
 package io.github.chadj2.mesh;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Matrix3f;
@@ -308,21 +309,36 @@ public class MeshBuilder extends TriangleBuilder {
      * @param sides
      */
     public void addPipe(List<Point3f> pointList, List<Color> colorList, float radius, int sides) {
-        // create the mesh that will contain the ring segments
-        final MeshVertex[][] meshGrid = new MeshVertex[pointList.size()][];
+        List<Point3f> tPointList = new ArrayList<>();
 
+        // save the original transform
+        Matrix4f origM4 = new Matrix4f(this.getTransform());
+        
+        // transform each of the input points.
+        for(Point3f point : pointList) {
+            Point3f tPoint = new Point3f(point);
+            origM4.transform(tPoint);
+            tPointList.add(tPoint);
+        }
+        
+        // create the mesh that will contain the ring segments
+        // this is done in the destination coordiante system since
+        // input points are already transformed. 
+        // Note: Radius is in transformed coordinate system.
+        final MeshVertex[][] meshGrid = new MeshVertex[pointList.size()][];
+        
         for(int idx = 0; idx < pointList.size(); idx++) {
             // get previous, current, and next points 
             Point3f prevPoint = null;
-            Point3f currentPoint = pointList.get(idx);
+            Point3f currentPoint = tPointList.get(idx);
             Point3f nextPoint = null;
             
             if(idx > 0) {
-                prevPoint = pointList.get(idx - 1);
+                prevPoint = tPointList.get(idx - 1);
             }
             
             if(idx < (pointList.size() - 1)) {
-                nextPoint = pointList.get(idx + 1);
+                nextPoint = tPointList.get(idx + 1);
             }
             
             Matrix4f transM4 = getPipeTransform(prevPoint, currentPoint, nextPoint);
@@ -333,7 +349,7 @@ public class MeshBuilder extends TriangleBuilder {
                 // cap the start
                 addDiscXZ(ORIGIN_POINT, -radius, sides, color);
             }
-            else if(idx == (pointList.size() - 1)) {
+            else if(idx == (tPointList.size() - 1)) {
                 // cap the end
                 addDiscXZ(ORIGIN_POINT, radius, sides, color);
             }
@@ -343,6 +359,10 @@ public class MeshBuilder extends TriangleBuilder {
             meshGrid[idx] = addCircleVerticesXZ(ORIGIN_POINT, radius, sides, color);
         }
         
+        // restore original transform
+        setTransform(origM4);
+        
+        // build the mesh
         addLathe(meshGrid, false);
     }
     

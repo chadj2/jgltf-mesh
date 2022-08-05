@@ -80,12 +80,17 @@ public class TestLineModels {
         List<Point3f> pointList = new ArrayList<>();
         List<Color> colorList = new ArrayList<>();
 
-        final int _rPoints = 500;
+        final int _rPoints = 1000;
         final int _rotations = 10;
         createSpiral(pointList, colorList, _rPoints, _rotations);
         
         MeshBuilder meshBuilder = new MeshBuilder("test_pipe");
-        float radius = 0.06f;
+        
+        // verify that centering and scale works.
+        //meshBuilder.setCenter(new Point3f(1,1,1));
+        //meshBuilder.setScale(new Vector3f(2,2,2));
+
+        float radius = 0.03f;
         int sides = 10;
         meshBuilder.addPipe(pointList, colorList, radius, sides);
         meshBuilder.build(this._geoWriter);
@@ -102,57 +107,8 @@ public class TestLineModels {
         testTransform(new Vector3f(0f,      1f,     0.1f));
         testTransform(new Vector3f(0f,      1f,     -0.1f));
     }
-
-    @Test
-    public void testTransformX2() {
-        testTransform(new Vector3f(0.1f, -1f, 0f));
-        testTransform(new Vector3f(-0.1f, -1f, 0f));
-        testTransform(new Vector3f(0f, -1f, 0.1f));
-        testTransform(new Vector3f(0f, -1f, -0.1f));
-    }
     
-    @Test
-    public void testTransformX3() {
-        testTransform(new Vector3f(1f, 0.1f, 0f));
-        testTransform(new Vector3f(1f, -0.1f, 0f));
-        
-        //
-        testTransform(new Vector3f(1f, 0f, 0.1f));
-        testTransform(new Vector3f(1f, 0f, -0.1f));
-    }
-    
-    @Test
-    public void testTransformX3b() {
-        testTransform(new Vector3f(-1f, 0.1f, 0f));
-        testTransform(new Vector3f(-1f, -0.1f, 0f));
-        
-        //
-        testTransform(new Vector3f(-1f, 0f, 0.1f));
-        testTransform(new Vector3f(-1f, 0f, -0.1f));
-    }
-    
-    @Test
-    public void testTransformX4() {
-        testTransform(new Vector3f(0f, 0.1f, 1f));
-        testTransform(new Vector3f(0f, -0.1f, 1f));
-        
-        //
-        testTransform(new Vector3f(0.1f, 0f, 1f));
-        testTransform(new Vector3f(-0.1f, 0f, 1f));
-    }
-    
-    @Test
-    public void testTransformX4b() {
-        testTransform(new Vector3f(0f, 0.1f, -1f));
-        testTransform(new Vector3f(0f, -0.1f, -1f));
-        
-        //
-        testTransform(new Vector3f(0.1f, 0f, -1f));
-        testTransform(new Vector3f(-0.1f, 0f, -1f));
-    }
-    
-    
-    public void testTransform(Vector3f toVec) {
+    private static void testTransform(Vector3f toVec) {
         Matrix3f rotM = MeshBuilder.rotationFromY(toVec);
         Vector3f yUnit = new Vector3f(0f, 1f, 0f);
         Vector3f transVec = new Vector3f(yUnit);
@@ -161,7 +117,6 @@ public class TestLineModels {
         LOG.info("toVec: {}", toVec);
         LOG.info("rotM: \n{}", rotM);
     }
-    
     
     @Test
     public void testTransformY() {
