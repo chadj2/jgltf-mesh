@@ -152,11 +152,12 @@ public class GltfWriter {
      */
     public Material newDefaultMaterial() {
         Material _material = newMaterial();
-        _material.setName("default");
 
         int _idx = this._gltf.getMaterials().indexOf(_material);
         LOG.debug("Default Material[{}]: idx=<{}> alpha=<{}>", _material.getName(), _idx, _material.getAlphaMode());
-        
+
+        String name = String.format("default[%d]", _idx);
+        _material.setName(name);
         return _material;
     }
 
