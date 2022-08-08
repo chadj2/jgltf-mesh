@@ -40,10 +40,11 @@ public class SphereFactory extends BaseBuilder {
     
     private float[] _radius = { 1f, 1f, 1f};
     
+    private int _lod = 2;
+    
     public SphereFactory(GltfWriter _writer) {
         super("sphere");
         this._builder.setIsPatterned(false);
-        this._builder.setMaxDetail(2);
         
         // need to set BLEND mode or transparency does not work.
         _writer.setAlphaMode(AlphaMode.BLEND);
@@ -53,7 +54,7 @@ public class SphereFactory extends BaseBuilder {
         this._writer = _writer;
     }
     
-    public void setMaxDetail(int val) { this._builder.setMaxDetail(val); }
+    public void setMaxDetail(int val) { this._lod = val; }
     
     public void setColor(Color color) { this._builder.setColor(color); }
     
@@ -103,7 +104,7 @@ public class SphereFactory extends BaseBuilder {
         }
         
         LOG.debug("Building new sphere: {}", meshIdx);
-        this._builder.addIcosphere();
+        this._builder.addIcosphere(this._lod);
         
         // set the name of the builder so that all objects in the JSON can be
         // identified with this sphere

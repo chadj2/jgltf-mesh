@@ -28,7 +28,7 @@ public class IcosphereBuilder extends TriangleBuilder {
      * Maximum leval of detail where zero is minimum. Higher levels of detail will
      * generate more vertices.
      */
-    private int _maxDetail = 3;
+    //private int _lod = 3;
     
     /**
      * Indicates if the sphere will be covered in a hexagonal pattern.
@@ -55,15 +55,8 @@ public class IcosphereBuilder extends TriangleBuilder {
         this.setColor(Color.WHITE);
         
         // don't invert X axis
-        this.getTransform().m00 = 1;
+        //this.getTransform().m00 = 1;
     }
-
-    /**
-     * Set the maximum level of detail where zero is minimum. Higher levels of detail will
-     * generate more vertices.
-     * @param maxDetail
-     */
-    public void setMaxDetail(int maxDetail) { this._maxDetail = maxDetail; }
     
     /**
      * Set the radius of the Icosphere.
@@ -99,10 +92,10 @@ public class IcosphereBuilder extends TriangleBuilder {
     
     /**
      * Add geometry for an Icosphere.
-     * @param _maxDetail
+     * @param lod The level of detail where zero is minimum. Higher levels of detail will
+     * generate more vertices.
      */
-    public void addIcosphere() {
-        
+    public void addIcosphere(int lod) {
         // get the 12 vertices of the Icosahedron
         MeshVertex[] vertices = getIcosahedronVertices();
         
@@ -118,25 +111,25 @@ public class IcosphereBuilder extends TriangleBuilder {
             int row2Next = row1Next + ICO_SIDES;
             
             // top triangle
-            addIcosphereTriangle(0,
+            addIcosphereTriangle(0, lod,
                     vertices[IDX_TOP], 
                     vertices[row1Next], 
                     vertices[row1Idx]);
             
             // downward middle triangle
-            addIcosphereTriangle(0,
+            addIcosphereTriangle(0, lod,
                     vertices[row2Idx], 
                     vertices[row1Idx], 
                     vertices[row1Next]);
             
             // upward middle triangle
-            addIcosphereTriangle(0,
+            addIcosphereTriangle(0, lod,
                     vertices[row1Next], 
                     vertices[row2Next], 
                     vertices[row2Idx]);
             
             // bottom triangle
-            addIcosphereTriangle(0,
+            addIcosphereTriangle(0, lod,
                     vertices[IDX_BOTTOM], 
                     vertices[row2Idx], 
                     vertices[row2Next]);
@@ -194,15 +187,16 @@ public class IcosphereBuilder extends TriangleBuilder {
     
     /**
      * Recursively add triangles to the Icosahedron.
-     * @param lod
+     * @param currentLod
+     * @param maxLod
      * @param v1
      * @param v2
      * @param v3
      */
-    private void addIcosphereTriangle(int lod, 
+    private void addIcosphereTriangle(int currentLod, int maxLod,
             MeshVertex v1, MeshVertex v2, MeshVertex v3) {
         
-        if(lod >= this._maxDetail) {
+        if(currentLod >= maxLod) {
             // this is the bottom of the recursion tree so add the triangle.
             addTriangle(v1, v2, v3);
             return;
@@ -215,15 +209,15 @@ public class IcosphereBuilder extends TriangleBuilder {
         //      / \ / \     
         //    v2---*---v3   
         //       newV2 
-        MeshVertex newV1 = getMidpoint(lod, v1, v2);
-        MeshVertex newV2 = getMidpoint(lod, v2, v3);
-        MeshVertex newV3 = getMidpoint(lod, v1, v3);
+        MeshVertex newV1 = getMidpoint(currentLod, v1, v2);
+        MeshVertex newV2 = getMidpoint(currentLod, v2, v3);
+        MeshVertex newV3 = getMidpoint(currentLod, v1, v3);
         
         // recurse
-        addIcosphereTriangle(lod+1, v1, newV3, newV1);
-        addIcosphereTriangle(lod+1, v2, newV1, newV2);
-        addIcosphereTriangle(lod+1, v3, newV2, newV3);
-        addIcosphereTriangle(lod+1, newV2, newV1, newV3);
+        addIcosphereTriangle(currentLod+1, maxLod, v1, newV3, newV1);
+        addIcosphereTriangle(currentLod+1, maxLod, v2, newV1, newV2);
+        addIcosphereTriangle(currentLod+1, maxLod, v3, newV2, newV3);
+        addIcosphereTriangle(currentLod+1, maxLod, newV2, newV1, newV3);
     }
     
     /**

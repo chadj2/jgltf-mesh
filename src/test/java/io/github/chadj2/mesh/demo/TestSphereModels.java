@@ -71,8 +71,8 @@ public class TestSphereModels {
         // add a Cyan sphere
         builder.setColor(Color.CYAN);
         builder.setIsPatterned(true);
-        builder.setMaxDetail(3);
-        builder.addIcosphere();
+        final int lod = 3;
+        builder.addIcosphere(lod);
         int meshIdx = builder.buildMesh(this._writer);
         
         Node node1 = new Node();
@@ -84,7 +84,7 @@ public class TestSphereModels {
         builder.setColor(Color.GREEN);
         builder.setIsPatterned(true);
         
-        builder.addIcosphere();
+        builder.addIcosphere(lod);
         int meshIdx2 = builder.buildMesh(this._writer);
         
         Node node2 = new Node();
