@@ -62,7 +62,11 @@ public class GltfWriter {
         MASK, 
         
         /** Texture alpha channel is used to blend regions with the background. */
-        BLEND }
+        BLEND,
+
+        /** Double sided version of BLEND. */
+        BLEND_DS
+    }
     
     /**
      * Indicates if the gltf metadata should be JSON or binary.
@@ -208,21 +212,20 @@ public class GltfWriter {
         _roughness.setRoughnessFactor(0.5f);
 
         switch(this._alphaMode) {
+            case OPAQUE_DS:
+                _material.setDoubleSided(true);
             case OPAQUE:
                 _material.setAlphaMode(AlphaMode.OPAQUE.name());
-                break;
-            case OPAQUE_DS: 
-                _material.setAlphaMode(AlphaMode.OPAQUE.name());
-                _material.setDoubleSided(true);
                 break;
             case MASK:
                 _material.setAlphaMode(AlphaMode.MASK.name());
                 _material.setAlphaCutoff(0.5f);
                 _material.setDoubleSided(true);
                 break;
+            case BLEND_DS:
+                _material.setDoubleSided(true);
             case BLEND:
                 _material.setAlphaMode(AlphaMode.BLEND.name());
-                _material.setDoubleSided(true);
                 _roughness.setBaseColorFactor(new float[] {1f, 1f, 1f, 1f} );
                 break;
         }

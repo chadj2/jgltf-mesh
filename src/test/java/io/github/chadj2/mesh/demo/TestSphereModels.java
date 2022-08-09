@@ -41,7 +41,7 @@ public class TestSphereModels {
         for(int xIdx = 0; xIdx < gridSize; xIdx++) {
             // first loop will vary the color
             float xInterp = (float)xIdx/((float)gridSize);
-            Color color = BaseBuilder.createHsbColor(xInterp, 1f, 1f, 0.5f);
+            Color color = BaseBuilder.createHsbColor(xInterp, 1f, 1f, 0.6f);
             float xPos = xInterp*20f;
             factory.setColor(color);
             
@@ -55,7 +55,7 @@ public class TestSphereModels {
             }
         }
 
-        File _outFile = TestShapeModels.getFile("sphere_factory_test");
+        File _outFile = TestShapeModels.getFile("test_sphere_factory");
         this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
@@ -66,7 +66,7 @@ public class TestSphereModels {
      */
     @Test
     public void testIcoBuilder() throws Exception {
-        IcosphereBuilder builder = new IcosphereBuilder("icosphere_test");
+        IcosphereBuilder builder = new IcosphereBuilder("test_icosphere");
         
         // add a Cyan sphere
         builder.setColor(Color.CYAN);
