@@ -26,9 +26,9 @@ public class BaseBuilder {
      * @param alpha
      * @return
      */
-    public static Color createHsbColor(float hue, float sat, float val, float alpha) {
+    public static Color createColorHSB(float hue, float sat, float val, float alpha) {
         Color color = Color.getHSBColor(hue, sat, val);
-        return createAphaColor(color, alpha);
+        return createColorTransparent(color, alpha);
     }
     
     /**
@@ -37,8 +37,8 @@ public class BaseBuilder {
      * @param alpha
      * @return
      */
-    public static Color createAphaColor(Color color, float alpha) {
-        int alphaInt = Math.round(alpha*256);
+    public static Color createColorTransparent(Color color, float alpha) {
+        int alphaInt = Math.round(alpha*255);
         Color alColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), alphaInt);
         return alColor;
     }

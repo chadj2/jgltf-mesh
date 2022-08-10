@@ -41,7 +41,7 @@ public class TestSphereModels {
         for(int xIdx = 0; xIdx < gridSize; xIdx++) {
             // first loop will vary the color
             float xInterp = (float)xIdx/((float)gridSize);
-            Color color = BaseBuilder.createHsbColor(xInterp, 1f, 1f, 0.6f);
+            Color color = BaseBuilder.createColorHSB(xInterp, 1f, 1f, 0.6f);
             float xPos = xInterp*20f;
             factory.setColor(color);
             
