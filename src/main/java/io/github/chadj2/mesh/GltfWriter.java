@@ -150,19 +150,16 @@ public class GltfWriter {
         return this._nodes.indexOf(_node);
     }
     
+    private static final float DEFAULT_METALLIC_FACTOR = 0.5f;
+    
+    private static final float DEFAULT_ROUGHNESS_FACTOR = 0.75f;
+    
     /**
      * Create a default material. You would use this if you are not using a texture and you
      * are specifying vertex colors.
      */
-    public Material newDefaultMaterial() {
-        Material _material = newMaterial();
-
-        int _idx = this._gltf.getMaterials().indexOf(_material);
-        LOG.debug("Default Material[{}]: idx=<{}> alpha=<{}>", _material.getName(), _idx, _material.getAlphaMode());
-
-        String name = String.format("default[%d]", _idx);
-        _material.setName(name);
-        return _material;
+    public Material newDefaultMaterial() { 
+        return newMaterial("default", DEFAULT_METALLIC_FACTOR, DEFAULT_ROUGHNESS_FACTOR); 
     }
 
     /**
@@ -170,7 +167,7 @@ public class GltfWriter {
      * @param _imageFile The image to use for the texture or null if none.
      */
     public Material newTextureMaterial(String _imageFile) {
-        Material _material = newMaterial();
+        Material _material = newMaterial(_imageFile, DEFAULT_METALLIC_FACTOR, DEFAULT_ROUGHNESS_FACTOR);
 
         Sampler _sampler = new Sampler();
         this._gltf.addSamplers(_sampler);
@@ -194,22 +191,22 @@ public class GltfWriter {
         MaterialPbrMetallicRoughness _roughness = _material.getPbrMetallicRoughness();
         _roughness.setBaseColorTexture(_texInfo);
 
-        _material.setName(_imageFile);
-
-        int _idx = this._gltf.getMaterials().indexOf(_material);
-        LOG.debug("Texture Material[{}]: idx=<{}> alpha=<{}>", _material.getName(), _idx, _material.getAlphaMode());
-        
         return _material;
     }
     
-    private Material newMaterial() {
+    public Material newMaterial(String name, float metallicFactor, float roughnesFactor) {
         Material _material = new Material();
         this._gltf.addMaterials(_material);
         
+        int _idx = this._gltf.getMaterials().indexOf(_material);
+        _material.setName(String.format("%s[%d]", name, _idx));
+        LOG.debug("New Material:  alpha=<{}>", _material.getName(), _material.getAlphaMode());
+        
         MaterialPbrMetallicRoughness _roughness = new MaterialPbrMetallicRoughness();
         _material.setPbrMetallicRoughness(_roughness);
-        _roughness.setMetallicFactor(0.05f);
-        _roughness.setRoughnessFactor(0.5f);
+        _roughness.setMetallicFactor(metallicFactor);
+        _roughness.setRoughnessFactor(roughnesFactor);
+        _material.setDoubleSided(false);
 
         switch(this._alphaMode) {
             case OPAQUE_DS:
