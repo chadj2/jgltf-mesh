@@ -203,7 +203,7 @@ public class SphereFactory extends BaseBuilder {
      * @return
      */
     private Material newMaterial(Color color) {
-        Material material = this._writer.newDefaultMaterial();
+        Material material = this._writer.newMaterial("sphere", 0.7f, 0.5f);
         MaterialPbrMetallicRoughness pbr = material.getPbrMetallicRoughness();
         float[] components = color.getRGBComponents(null);
         pbr.setBaseColorFactor(components);
