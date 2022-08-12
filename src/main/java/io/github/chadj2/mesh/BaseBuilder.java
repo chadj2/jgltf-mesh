@@ -26,9 +26,21 @@ public class BaseBuilder {
      * @param alpha
      * @return
      */
-    public static Color createColorHSB(float hue, float sat, float val, float alpha) {
+    public static Color colorCreateHsba(float hue, float sat, float val, float alpha) {
         Color color = Color.getHSBColor(hue, sat, val);
-        return createColorTransparent(color, alpha);
+        return colorCreateTransparent(color, alpha);
+    }
+    
+    /**
+     * Add transparency to color.
+     * @param color
+     * @param alpha
+     * @return
+     */
+    public static Color colorCreateTransparent(Color color, float alpha) {
+        int alphaInt = Math.round(alpha*255);
+        Color alColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), alphaInt);
+        return alColor;
     }
 
     /** 
@@ -38,7 +50,7 @@ public class BaseBuilder {
      * @param brFactor
      * @return 
      */
-    public static Color adjustSatBr(Color color, float satFactor, float brFactor) {
+    public static Color colorAdjustSatBr(Color color, float satFactor, float brFactor) {
         float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
         hsb[1] = Math.min(satFactor * hsb[1], 1f);
         hsb[2] = Math.min(brFactor * hsb[2], 1f);
@@ -49,18 +61,6 @@ public class BaseBuilder {
         int green = (colorNum >> 8) & 0xFF;
         int blue = (colorNum >> 0) & 0xFF;
         return  new Color(red, green, blue, color.getAlpha());
-    }
-    
-    /**
-     * Add transparency to color.
-     * @param color
-     * @param alpha
-     * @return
-     */
-    public static Color createColorTransparent(Color color, float alpha) {
-        int alphaInt = Math.round(alpha*255);
-        Color alColor = new Color(color.getRed(), color.getGreen(), color.getBlue(), alphaInt);
-        return alColor;
     }
 
     /** Mesh name used in metadata descriptions */
