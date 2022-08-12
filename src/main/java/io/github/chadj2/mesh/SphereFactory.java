@@ -66,6 +66,11 @@ public class SphereFactory extends BaseBuilder {
     
     public void setColor(Color color) { this._color = color; }
     
+    /**
+     * Set the radius of the sphere. Note that if you translate points with setTransform() then the radius is in
+     * the units of the transformed frame. 
+     * @param radius
+     */
     public void setRadius(float radius) { this._radius = new float[] { radius, radius, radius }; }
     
     /**
@@ -85,6 +90,12 @@ public class SphereFactory extends BaseBuilder {
         node.setScale(this._radius);
 
         getTransform().transform(pos);
+        
+        if(LOG.isDebugEnabled()) {
+            String colorStr = String.format("r=%d,g=%d,b=%d,a=%d", 
+                    this._color.getRed(), this._color.getGreen(), this._color.getBlue(), this._color.getAlpha());
+            LOG.debug("Add Sphere: pos=<{}> radius=<{}> color=<{}> ", pos, this._radius[0], colorStr);
+        }
         
         float[] translation = {pos.x, pos.y, pos.z}; 
         node.setTranslation(translation);
@@ -147,7 +158,7 @@ public class SphereFactory extends BaseBuilder {
         meshList.add(newMesh);
         int newMeshIdx = meshList.indexOf(newMesh);
 
-        LOG.info("Copy Mesh: <{}> {} -> {}", origMesh.getName(), origMeshIdx, newMeshIdx);
+        LOG.debug("Copy Mesh: <{}> {} -> {}", origMesh.getName(), origMeshIdx, newMeshIdx);
         String name = String.format("%s[%d]", origMesh.getName(), newMeshIdx);
         newMesh.setName(name);
         

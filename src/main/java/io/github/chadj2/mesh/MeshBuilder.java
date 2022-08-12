@@ -302,7 +302,7 @@ public class MeshBuilder extends TriangleBuilder {
     private final static Point3f ORIGIN_POINT = new Point3f(0f, 0f, 0f);
     
     /**
-     * Add a pipe with given points and colors.
+     * Add a pipe with given points and colors. Radius is in transformed coordinate system.
      * @param pointList
      * @param colorList
      * @param radius
@@ -321,10 +321,8 @@ public class MeshBuilder extends TriangleBuilder {
             tPointList.add(tPoint);
         }
         
-        // create the mesh that will contain the ring segments
-        // this is done in the destination coordiante system since
-        // input points are already transformed. 
-        // Note: Radius is in transformed coordinate system.
+        // Create the mesh that will contain the ring segments this is done in the destination coordinate 
+        // system since input points are already transformed. 
         final MeshVertex[][] meshGrid = new MeshVertex[pointList.size()][];
         
         for(int idx = 0; idx < pointList.size(); idx++) {
@@ -354,8 +352,7 @@ public class MeshBuilder extends TriangleBuilder {
                 addDiscXZ(ORIGIN_POINT, radius, sides, color);
             }
             
-            // we set the transformation so the ring segment will be in the correct
-            // location
+            // We set the transformation so the ring segment will be in the correct location
             meshGrid[idx] = addCircleVerticesXZ(ORIGIN_POINT, radius, sides, color);
         }
         
