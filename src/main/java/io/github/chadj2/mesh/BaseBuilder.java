@@ -30,6 +30,26 @@ public class BaseBuilder {
         Color color = Color.getHSBColor(hue, sat, val);
         return createColorTransparent(color, alpha);
     }
+
+    /** 
+     * Adjust saturation and brightness of a color.
+     * @param color
+     * @param satFactor
+     * @param brFactor
+     * @return 
+     */
+    public static Color adjustSatBr(Color color, float satFactor, float brFactor) {
+        float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+        hsb[1] = Math.min(satFactor * hsb[1], 1f);
+        hsb[2] = Math.min(brFactor * hsb[2], 1f);
+        
+        int colorNum = Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]);
+        
+        int red = (colorNum >> 16) & 0xFF;
+        int green = (colorNum >> 8) & 0xFF;
+        int blue = (colorNum >> 0) & 0xFF;
+        return  new Color(red, green, blue, color.getAlpha());
+    }
     
     /**
      * Add transparency to color.
