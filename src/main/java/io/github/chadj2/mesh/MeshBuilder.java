@@ -220,9 +220,10 @@ public class MeshBuilder extends TriangleBuilder {
      * @param _height Cylinder height
      * @param _sides Number of vertices for the sides
      * @param _color Cylinder color
+     * @throws Exception 
      */
     public void addCylinderMeshXZ(Point3f _bottomPos, float _radius, float _height, 
-            int _sides, Color _color) {
+            int _sides, Color _color) throws Exception {
         LOG.debug("addCylinderMeshXZ: pos<{}>", _bottomPos, _radius);
         
         Point3f _topPos = new Point3f(_bottomPos);
@@ -246,8 +247,9 @@ public class MeshBuilder extends TriangleBuilder {
      * @param _radius Disc radius
      * @param _sides Number of vertices for the sides
      * @param _color Disc color
+     * @throws Exception 
      */
-    public void addDiscXZ(Point3f _position, float _radius, int _sides, Color _color) {
+    public void addDiscXZ(Point3f _position, float _radius, int _sides, Color _color) throws Exception {
         LOG.debug("addDiscXZ: pos<{}> radius<{}>", _position, _radius);
         
         // add center point
@@ -272,9 +274,10 @@ public class MeshBuilder extends TriangleBuilder {
      * @param _radius Radius of the circle
      * @param _sides Number of sides
      * @param _color Color of the vertices
+     * @throws Exception 
      */
     public MeshVertex[] addCircleVerticesXZ(Point3f _position, float _radius, int _sides, 
-            Color _color) {
+            Color _color) throws Exception {
         MeshVertex[] _result = new MeshVertex[_sides];
         
         float _flip = 1f;
@@ -307,8 +310,9 @@ public class MeshBuilder extends TriangleBuilder {
      * @param colorList
      * @param radius
      * @param sides
+     * @throws Exception 
      */
-    public void addPipe(List<Point3f> pointList, List<Color> colorList, float radius, int sides) {
+    public void addPipe(List<Point3f> pointList, List<Color> colorList, float radius, int sides) throws Exception {
         List<Point3f> tPointList = new ArrayList<>();
 
         // save the original transform
@@ -369,8 +373,9 @@ public class MeshBuilder extends TriangleBuilder {
      * @param curPoint
      * @param nextPoint
      * @return
+     * @throws Exception 
      */
-    private static Matrix4f getPipeTransform(Point3f prevPoint, Point3f curPoint, Point3f nextPoint) {
+    private static Matrix4f getPipeTransform(Point3f prevPoint, Point3f curPoint, Point3f nextPoint) throws Exception {
         // average available segments
         Vector3f toVec = new Vector3f();
         int segCount = 0;
@@ -395,6 +400,10 @@ public class MeshBuilder extends TriangleBuilder {
         
         // divide by number of segments
         toVec.scale(1f/(float)segCount);
+        
+        if(Float.isNaN(toVec.x) || Float.isNaN(toVec.y) || Float.isNaN(toVec.z)) {
+            throw new Exception("Unable to calculate transform");
+        }
         
         // get rotation matrix
         Matrix3f rotM = rotationFromY(toVec);

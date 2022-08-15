@@ -94,8 +94,9 @@ public class IcosphereBuilder extends TriangleBuilder {
      * Add geometry for an Icosphere.
      * @param lod The level of detail where zero is minimum. Higher levels of detail will
      * generate more vertices.
+     * @throws Exception 
      */
-    public void addIcosphere(int lod) {
+    public void addIcosphere(int lod) throws Exception {
         // get the 12 vertices of the Icosahedron
         MeshVertex[] vertices = getIcosahedronVertices();
         
@@ -141,8 +142,9 @@ public class IcosphereBuilder extends TriangleBuilder {
     /**
      * Get the 12 vertices of the Icosahedron.
      * @return
+     * @throws Exception 
      */
-    private MeshVertex[] getIcosahedronVertices() {
+    private MeshVertex[] getIcosahedronVertices() throws Exception {
         final double vAngle = Math.atan(1.0d/2);  // 26.565 degrees
         final double zPos = this._radius * Math.sin(vAngle);
         final double xyPos = this._radius * Math.cos(vAngle);
@@ -192,9 +194,10 @@ public class IcosphereBuilder extends TriangleBuilder {
      * @param v1
      * @param v2
      * @param v3
+     * @throws Exception 
      */
     private void addIcosphereTriangle(int currentLod, int maxLod,
-            MeshVertex v1, MeshVertex v2, MeshVertex v3) {
+            MeshVertex v1, MeshVertex v2, MeshVertex v3) throws Exception {
         
         if(currentLod >= maxLod) {
             // this is the bottom of the recursion tree so add the triangle.
@@ -226,8 +229,9 @@ public class IcosphereBuilder extends TriangleBuilder {
      * @param v1
      * @param v2
      * @return
+     * @throws Exception 
      */
-    public MeshVertex getMidpoint(int lod, MeshVertex v1, MeshVertex v2) {
+    public MeshVertex getMidpoint(int lod, MeshVertex v1, MeshVertex v2) throws Exception {
         // We need to check if this midpoint was already added.
         String key = String.format("%d_%d", 
                 Math.min(v1.getIndex(), v2.getIndex()),

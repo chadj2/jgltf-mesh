@@ -93,12 +93,21 @@ public class TopologyBuilder extends BaseBuilder {
      * Create a new vertex and apply the current offset and scale. This vertex will be assigned
      * an unique index that will be referenced when adding squares or triangles.
      * @param _vertex 3D location of this vertex.
+     * @throws Exception 
      */
-    public MeshVertex newVertex(Tuple3f _vertex) {
+    public MeshVertex newVertex(Tuple3f _vertex) throws Exception {
         Point3f _newVertex = new Point3f(_vertex);
+
+        if(Float.isNaN(_vertex.x) || Float.isNaN(_vertex.y) || Float.isNaN(_vertex.z)) {
+            throw new Exception("Can't add vertex with NaN: " + _vertex.toString());
+        }
         
         // apply offset and scale
         getTransform().transform(_newVertex);
+        
+        if(Float.isNaN(_newVertex.x) || Float.isNaN(_newVertex.y) || Float.isNaN(_newVertex.z)) {
+            throw new Exception("Transformed vertex has NaN: " + _newVertex.toString());
+        }
         
         MeshVertex _meshVertex = new MeshVertex(this._vertexList.size(), _newVertex);
         this._vertexList.add(_meshVertex);
