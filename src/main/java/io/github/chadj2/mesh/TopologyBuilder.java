@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
+import io.github.chadj2.mesh.buffer.TriangleIndices;
 import io.github.chadj2.mesh.buffer.VertexColors;
 import io.github.chadj2.mesh.buffer.Vertices;
 
@@ -110,6 +111,12 @@ public class TopologyBuilder extends BaseBuilder {
         }
         
         MeshVertex _meshVertex = new MeshVertex(this._vertexList.size(), _newVertex);
+        
+        if(this._vertexList.size() >= TriangleIndices.MAX_INDEX) {
+            String msg = String.format("Trangle idex cannot exceed %d", TriangleIndices.MAX_INDEX);
+            throw new Exception(msg);
+        }
+        
         this._vertexList.add(_meshVertex);
         return _meshVertex;
     }
