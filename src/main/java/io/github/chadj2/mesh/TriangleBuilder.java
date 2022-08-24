@@ -169,21 +169,14 @@ public class TriangleBuilder extends TopologyBuilder {
                 _texCoords.add(_texCoord);
             }
             
-            Vector3f _normal = _meshVertex.getNormal();
-            if(_normal != null) {
-                _normals.add(_normal);
+            if(_texCoords.size() > 0 && _texCoord == null) {
+                throw new Exception("Each Vertex must have a texCoord: " + _meshVertex.toString());
             }
+            
+            _normals.add(_meshVertex.getNormal());
             
             // leave out tangents for now.
             //this._tangents.add(_meshVertex.getTangent());
-        }
-        
-        if(_normals.size() > 0 && _normals.size() != this._vertexList.size()) {
-            throw new Exception("Each Vertex must have a normal");
-        }
-        
-        if(_texCoords.size() > 0 && _texCoords.size() != this._vertexList.size()) {
-            throw new Exception("Each Vertex must have a texCoord");
         }
         
         // copy triangles to the buffer
