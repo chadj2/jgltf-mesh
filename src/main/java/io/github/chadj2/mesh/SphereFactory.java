@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.javagl.jgltf.impl.v2.Material;
-import de.javagl.jgltf.impl.v2.MaterialPbrMetallicRoughness;
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
@@ -214,11 +213,7 @@ public class SphereFactory extends BaseBuilder {
      * @return
      */
     private Material newMaterial(Color color) {
-        Material material = this._writer.newMaterial("sphere", 0.7f, 0.5f);
-        MaterialPbrMetallicRoughness pbr = material.getPbrMetallicRoughness();
-        float[] components = color.getRGBComponents(null);
-        pbr.setBaseColorFactor(components);
-        return material;
+        return this._writer.newBlendMaterial("sphere", 0.7f, 0.5f, color);
     }
     
 }

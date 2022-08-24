@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.javagl.jgltf.impl.v2.Material;
+import io.github.chadj2.mesh.BaseBuilder;
 import io.github.chadj2.mesh.GltfWriter;
 import io.github.chadj2.mesh.GltfWriter.AlphaMode;
 import io.github.chadj2.mesh.MeshBuilder;
@@ -311,6 +312,43 @@ public class TestShapeModels {
 
         // build the gltf buffers
         _meshBuilder.build(this._writer);
+
+        File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
+        this._writer.writeGltf(_outFile);
+        LOG.info("Finished generating: {}", _outFile);
+    }
+    
+    @Test
+    public void testBlend() throws Exception {
+        // Set rendering for both sides of the plane
+        this._writer.setAlphaMode(AlphaMode.BLEND_DS);
+
+        final int meshSize = 2;
+        final int numLayers = 4;
+        
+        final MeshBuilder _meshBuilder = new MeshBuilder("test_blend");
+        final MeshVertex[][] _meshGrid = new MeshVertex[meshSize][meshSize];
+        
+        for(int zIdx = 0; zIdx < numLayers; zIdx++) {
+            for(int xIdx = 0; xIdx < meshSize; xIdx++) {
+                for(int yIdx = 0; yIdx < meshSize; yIdx++) {
+                    Point3f _point = new Point3f(xIdx, zIdx*0.4f, yIdx);
+                    MeshVertex vertex = _meshBuilder.newVertex(_point);
+                    _meshGrid[xIdx][yIdx] = vertex;
+                }
+            }
+            
+            float partIdx = MeshBuilder.interpFloat(numLayers + 1, 1f, zIdx);
+            Color color = BaseBuilder.colorCreateHsba(partIdx, 0.5f, 1.0f, 0.7f);
+            Material material = this._writer.newBlendMaterial("test", 0.7f, 0.5f, color);
+            _meshBuilder.setMaterial(material);
+            
+            // render the vertices in the grid
+            _meshBuilder.addPlane(_meshGrid, false);
+            
+            // build the gltf buffers
+            _meshBuilder.build(this._writer);
+        }
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._writer.writeGltf(_outFile);

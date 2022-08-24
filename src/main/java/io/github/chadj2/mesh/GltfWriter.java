@@ -6,6 +6,7 @@
 
 package io.github.chadj2.mesh;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -192,6 +193,16 @@ public class GltfWriter {
         _roughness.setBaseColorTexture(_texInfo);
 
         return _material;
+    }
+    
+    public Material newBlendMaterial(String name, 
+            float metallicFactor, float roughnesFactor, Color color) {
+        Material material = this.newMaterial(name, metallicFactor, roughnesFactor);
+        
+        MaterialPbrMetallicRoughness pbr = material.getPbrMetallicRoughness();
+        float[] components = color.getRGBComponents(null);
+        pbr.setBaseColorFactor(components);
+        return material;
     }
     
     public Material newMaterial(String name, float metallicFactor, float roughnesFactor) {
