@@ -125,12 +125,14 @@ public class MeshVertex {
      */
     protected void addTangent(Vector3f _vec) { this._tangents.add(_vec); }
     
+    
     /**
      * Calculate the average of the normal vectors.
      */
     protected Vector3f getNormal() throws Exception {
         if(this._normals.size() == 0) {
-            return null;
+            LOG.warn("Vertex has no normals: {}", this.getIndex());
+            return newFakeNormal();
         }
         
         Vector3f _avgNormal = new Vector3f();
@@ -143,12 +145,17 @@ public class MeshVertex {
         _avgNormal.normalize();
         
         if(Float.isNaN(_avgNormal.x) || Float.isNaN(_avgNormal.y) || Float.isNaN(_avgNormal.z)) {
-            LOG.debug("Could not calculate average normal for vertex: {}", this.getIndex());
-            // create a fake normal
-            _avgNormal = new Vector3f(1f, 1f, 1f);
-            _avgNormal.normalize();
+            LOG.warn("Could not calculate average normal for vertex: {}", this.getIndex());
+            return newFakeNormal();
         }
+        
         return _avgNormal;
+    }
+    
+    private static Vector3f newFakeNormal() {
+        Vector3f normal = new Vector3f(1f, 1f, 1f);
+        normal.normalize();
+        return normal;
     }
     
     /**
