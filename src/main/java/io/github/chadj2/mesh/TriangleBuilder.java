@@ -6,11 +6,13 @@
 
 package io.github.chadj2.mesh;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.vecmath.Point2f;
+import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
 
 import org.slf4j.Logger;
@@ -145,6 +147,8 @@ public class TriangleBuilder extends TopologyBuilder {
         _vtx2.addTangent(_vec23);
         _vtx3.addTangent(_vec23);
     }
+    
+    protected Normals _normals = null;
 
     @Override
     protected void buildBuffers(GltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
@@ -160,7 +164,7 @@ public class TriangleBuilder extends TopologyBuilder {
         }
         
         TexCoords _texCoords = new TexCoords(this.getName());
-        Normals _normals = new Normals(this.getName());
+        this._normals = new Normals(this.getName());
         Tangents _tangents = new Tangents(this.getName());
         
         for(MeshVertex _meshVertex : this._vertexList) {
@@ -173,7 +177,7 @@ public class TriangleBuilder extends TopologyBuilder {
                 throw new Exception("Each Vertex must have a texCoord: " + _meshVertex.toString());
             }
             
-            _normals.add(_meshVertex.getNormal());
+            this._normals.add(_meshVertex.getNormal());
             
             // leave out tangents for now.
             //this._tangents.add(_meshVertex.getTangent());
@@ -189,9 +193,35 @@ public class TriangleBuilder extends TopologyBuilder {
         // flush all buffers to the primitive
         indices.build(_geoWriter, _meshPrimitive);
         _texCoords.build(_geoWriter, _meshPrimitive);
-        _normals.build(_geoWriter, _meshPrimitive);
+        this._normals.build(_geoWriter, _meshPrimitive);
         _tangents.build(_geoWriter, _meshPrimitive);
         
         this._indicesList.clear();
+    }
+    
+    /**
+     * Add lines to indicate direction of normals.
+     * @param _geoWriter
+     * @param _size
+     * @throws Exception
+     */
+    public void debugNormals(GltfWriter _geoWriter, float _size) throws Exception {
+        TopologyBuilder _builder = new TopologyBuilder("debug_normals", TopologyMode.LINES);
+        
+        for(int idx = 0; idx <  this._vertices.size(); idx++) {
+             Point3f _lineStart = this._vertices.get(idx);
+             Vector3f _normal = this._normals.get(idx);
+             
+             Point3f _lineEnd = new Point3f();
+             _lineEnd.scaleAdd(_size, _normal, _lineStart);
+             
+             MeshVertex _vStart = _builder.newVertex(_lineStart);
+             _vStart.setColor(Color.WHITE);
+             
+             MeshVertex _vEnd = _builder.newVertex(_lineEnd);
+             _vEnd.setColor(Color.WHITE);
+        }
+        
+        _builder.build(_geoWriter);
     }
 }

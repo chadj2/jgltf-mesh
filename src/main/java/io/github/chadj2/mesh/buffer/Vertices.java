@@ -61,6 +61,10 @@ public class Vertices extends BaseBuffer {
         this._maxPoint.z = Float.NEGATIVE_INFINITY;
     }
     
+    public Point3f get(int idx) {
+        return this._pointList.get(idx);
+    }
+    
     @Override
     public int size() {
         return this._pointList.size();

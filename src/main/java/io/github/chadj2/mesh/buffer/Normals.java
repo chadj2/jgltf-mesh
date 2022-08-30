@@ -62,6 +62,10 @@ public class Normals extends BaseBuffer {
         return this._vecList.size();
     }
     
+    public Vector3f get(int idx) {
+        return this._vecList.get(idx);
+    }
+    
     @Override
     public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
         return buildAttrib(_geoWriter, _meshPirimitive, "NORMAL");

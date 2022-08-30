@@ -179,6 +179,8 @@ public class TopologyBuilder extends BaseBuilder {
         return _meshIdx;
     }
     
+    protected Vertices _vertices = null;
+    
     /**
      * Generate primitive lists from the MeshVertex list and serialize to buffers.
      * @param _geoWriter Instance of writer class.
@@ -189,11 +191,11 @@ public class TopologyBuilder extends BaseBuilder {
             throw new Exception("No vertices to build!");
         }
         
-        Vertices _vertices = new Vertices(this.getName());
+        this._vertices = new Vertices(this.getName());
         VertexColors _colors = new VertexColors(this.getName());
 
         for(MeshVertex _meshVertex : this._vertexList) {
-            _vertices.add(_meshVertex.getVertex());
+            this._vertices.add(_meshVertex.getVertex());
             
             Color _color = _meshVertex.getColor();
             if(_color != null) {
@@ -206,10 +208,9 @@ public class TopologyBuilder extends BaseBuilder {
         }
         
         // save bounds for later
-        this._minBounds = _vertices.getMinBounds();
-        this._maxBounds = _vertices.getMaxBounds();
-        _vertices.build(_geoWriter, _meshPrimitive);
+        this._minBounds = this._vertices.getMinBounds();
+        this._maxBounds = this._vertices.getMaxBounds();
+        this._vertices.build(_geoWriter, _meshPrimitive);
         _colors.build(_geoWriter, _meshPrimitive);
-        
     }
 }

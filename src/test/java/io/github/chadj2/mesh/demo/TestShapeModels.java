@@ -348,7 +348,11 @@ public class TestShapeModels {
             
             // build the gltf buffers
             _meshBuilder.build(this._writer);
+            
+            LOG.info("Built layer: {}", zIdx);
         }
+        
+        _meshBuilder.debugNormals(this._writer, 0.2f);
 
         File _outFile = TestShapeModels.getFile(_meshBuilder.getName());
         this._writer.writeGltf(_outFile);
