@@ -133,19 +133,26 @@ public class TriangleBuilder extends TopologyBuilder {
     public void addSquare(MeshVertex _vtx0, MeshVertex _vtx1, MeshVertex _vtx2, MeshVertex _vtx3) {
         // We need to connect the points with counter-clockwise triangles.
         // Any triangles will do as long as the are CC.
-        addTriangle(_vtx0, _vtx1, _vtx2);
-        addTriangle(_vtx2, _vtx1, _vtx3);
         
-        // calculate tangents
-        Vector3f _vec01 = new Vector3f();
-        _vec01.sub(_vtx0.getVertex(), _vtx1.getVertex());
-        _vtx0.addTangent(_vec01);
-        _vtx1.addTangent(_vec01);
+        if(_vtx0 != null && _vtx1 != null && _vtx2 != null) {
+            addTriangle(_vtx0, _vtx1, _vtx2);
+            
+            // calculate tangents
+            Vector3f _vec01 = new Vector3f();
+            _vec01.sub(_vtx0.getVertex(), _vtx1.getVertex());
+            _vtx0.addTangent(_vec01);
+            _vtx1.addTangent(_vec01);
+        }
         
-        Vector3f _vec23 = new Vector3f();
-        _vec23.sub(_vtx2.getVertex(), _vtx3.getVertex());
-        _vtx2.addTangent(_vec23);
-        _vtx3.addTangent(_vec23);
+        if(_vtx2 != null && _vtx1 != null && _vtx3 != null) {
+            addTriangle(_vtx2, _vtx1, _vtx3);
+
+            // calculate tangents
+            Vector3f _vec23 = new Vector3f();
+            _vec23.sub(_vtx2.getVertex(), _vtx3.getVertex());
+            _vtx2.addTangent(_vec23);
+            _vtx3.addTangent(_vec23);
+        }
     }
     
     protected Normals _normals = null;

@@ -203,11 +203,6 @@ public class MeshBuilder extends TriangleBuilder {
                 final MeshVertex _vtx11 = _meshGrid[_xGridPrev][_yGridPrev];
                 final MeshVertex _vtx00 = _meshGrid[_xGridIdx][_yGridIdx];
                 final MeshVertex _vtx01 = _meshGrid[_xGridIdx][_yGridPrev];
-                
-                // check if any of the vertices are out of bounds
-                if(_vtx00 == null || _vtx01 == null || _vtx11 == null || _vtx10 == null) {
-                    continue;
-                }
                 this.addSquare(_vtx11, _vtx10, _vtx01, _vtx00);
             }
         }
