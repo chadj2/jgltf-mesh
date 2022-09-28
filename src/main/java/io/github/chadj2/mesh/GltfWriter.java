@@ -41,7 +41,8 @@ import de.javagl.jgltf.model.io.GltfModelWriter;
 import de.javagl.jgltf.model.io.GltfReference;
 import de.javagl.jgltf.model.io.GltfReferenceResolver;
 import de.javagl.jgltf.model.io.v2.GltfAssetV2;
-import de.javagl.jgltf.model.v2.GltfModelV2;
+import de.javagl.jgltf.model.GltfModel;
+import de.javagl.jgltf.model.GltfModels;
 
 /**
  * Serialize added nodes to glTF format.
@@ -261,7 +262,7 @@ public class GltfWriter {
     public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
         prepareWrite();
         
-        GltfModelV2 _gltfModel = getGltfModel();
+        GltfModel _gltfModel = getGltfModel();
         GltfModelWriter _gltfModelWriter = new GltfModelWriter();
         
         if(_format == GltfFormat.gltf) {
@@ -282,7 +283,7 @@ public class GltfWriter {
     public void writeGltf(File _outFile) throws Exception {
         prepareWrite();
         
-        GltfModelV2 _gltfModel = getGltfModel();
+        GltfModel _gltfModel = getGltfModel();
         GltfModelWriter _gltfModelWriter = new GltfModelWriter();
 
         String _ext = FilenameUtils.getExtension(_outFile.getName());
@@ -301,9 +302,9 @@ public class GltfWriter {
         }
     }
     
-    private GltfModelV2 getGltfModel() throws Exception {
+    private GltfModel getGltfModel() throws Exception {
         GltfAssetV2 _gltfAsset = newGltfAsset();
-        GltfModelV2 _gltfModel = new GltfModelV2(_gltfAsset);
+        GltfModel _gltfModel = GltfModels.create(_gltfAsset);
         return _gltfModel;
     }
     
