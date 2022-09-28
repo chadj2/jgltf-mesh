@@ -53,10 +53,14 @@ public class TriangleIndices extends BaseBuffer {
     
     @Override
     public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
-        Accessor _indicesAccessor = super.buildBuffer(_geoWriter);
-        int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_indicesAccessor);
+        Accessor _accessor = super.buildBuffer(_geoWriter);
+        if(_accessor == null) {
+            return null;
+        }
+        
+        int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_accessor);
         _meshPirimitive.setIndices(_accessorIdx);
-        return _indicesAccessor;
+        return _accessor;
     }
     
     @Override
