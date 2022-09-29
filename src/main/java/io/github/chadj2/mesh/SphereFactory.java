@@ -32,7 +32,7 @@ public class SphereFactory extends BaseBuilder {
     private final static Logger LOG = LoggerFactory.getLogger(SphereFactory.class);
     
     private final IcosphereBuilder _builder = new IcosphereBuilder("icosphere");
-    private final GltfWriter _writer;
+    protected final GltfWriter _writer;
     
     /**
      * Map of color/lod to mesh indices.
@@ -81,24 +81,22 @@ public class SphereFactory extends BaseBuilder {
      */
     public Node addSphere(Point3f pos) throws Exception {
         Integer meshIdx = getMeshColorLod();
+        getTransform().transform(pos);
         
         Node node = new Node();
         int nodeIdx = this._writer.addNode(node);
         node.setMesh(meshIdx);
         node.setName(String.format("%s[%d]-node", getName(), nodeIdx));
-        node.setScale(this._radius);
 
-        getTransform().transform(pos);
-        
         if(LOG.isDebugEnabled()) {
             String colorStr = String.format("r=%d,g=%d,b=%d,a=%d", 
                     this._color.getRed(), this._color.getGreen(), this._color.getBlue(), this._color.getAlpha());
             LOG.debug("Add Sphere: pos=<{}> radius=<{}> color=<{}> ", pos, this._radius[0], colorStr);
         }
         
-        float[] translation = {pos.x, pos.y, pos.z}; 
+        node.setScale(this._radius);
+        float[] translation = {pos.x, pos.y, pos.z};
         node.setTranslation(translation);
-        
         return node;
     }
     
@@ -107,7 +105,7 @@ public class SphereFactory extends BaseBuilder {
      * @return
      * @throws Exception
      */
-    private int getMeshColorLod() throws Exception {
+    protected int getMeshColorLod() throws Exception {
         String key = String.format("%X-%d", this._color.getRGB(), this._lod);
         Integer meshIdx = this._colorLodToMeshIdx.get(key);
         if(meshIdx != null) {

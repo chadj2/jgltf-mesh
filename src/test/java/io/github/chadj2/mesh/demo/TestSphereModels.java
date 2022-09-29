@@ -20,6 +20,7 @@ import io.github.chadj2.mesh.BaseBuilder;
 import io.github.chadj2.mesh.GltfWriter;
 import io.github.chadj2.mesh.IcosphereBuilder;
 import io.github.chadj2.mesh.SphereFactory;
+import io.github.chadj2.mesh.SphereFactoryExt;
 
 public class TestSphereModels {
 
@@ -36,6 +37,31 @@ public class TestSphereModels {
         SphereFactory factory = new SphereFactory(this._writer);
         factory.setMaxDetail(2);
         
+        createSpheres(factory);
+
+        File _outFile = TestShapeModels.getFile("test_sphere_factory_ext");
+        this._writer.writeGltf(_outFile);
+        LOG.info("Finished generating: {}", _outFile);
+    }
+    
+    /**
+     * Create a 10x10 grid of spheres with varying color and radius.
+     * @throws Exception
+     */
+    @Test
+    public void testSphereFactoryExt() throws Exception {
+        SphereFactoryExt factory = new SphereFactoryExt(this._writer);
+        factory.setMaxDetail(2);
+        
+        createSpheres(factory);
+        factory.build();
+
+        File _outFile = TestShapeModels.getFile("test_sphere_factory_ext");
+        this._writer.writeGltf(_outFile);
+        LOG.info("Finished generating: {}", _outFile);
+    }
+    
+    public void createSpheres(SphereFactory factory) throws Exception {
         final int gridSize = 10;
         
         for(int xIdx = 0; xIdx < gridSize; xIdx++) {
@@ -54,10 +80,6 @@ public class TestSphereModels {
                 factory.addSphere(new Point3f(xPos, yPos, 0f));
             }
         }
-
-        File _outFile = TestShapeModels.getFile("test_sphere_factory");
-        this._writer.writeGltf(_outFile);
-        LOG.info("Finished generating: {}", _outFile);
     }
     
     /**
