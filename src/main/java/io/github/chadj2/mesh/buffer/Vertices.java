@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3f;
 
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
@@ -23,51 +24,52 @@ import io.github.chadj2.mesh.GltfWriter;
  */
 public class Vertices extends BaseBuffer {
     
-    private final ArrayList<Point3f> _pointList = new ArrayList<>();
-    private final Point3f _minPoint = new Point3f();
-    private final Point3f _maxPoint = new Point3f();
+    private final ArrayList<Tuple3f> _list = new ArrayList<>();
+    private final Tuple3f _min = new Point3f();
+    private final Tuple3f _max = new Point3f();
     
     public Vertices(String _name) {
         super(_name);
         clear();
     }
     
-    public void add(Point3f _vertex) {
-        this._minPoint.x = Math.min(this._minPoint.x, _vertex.x);
-        this._minPoint.y = Math.min(this._minPoint.y, _vertex.y);
-        this._minPoint.z = Math.min(this._minPoint.z, _vertex.z);
-        
-        this._maxPoint.x = Math.max(this._maxPoint.x, _vertex.x);
-        this._maxPoint.y = Math.max(this._maxPoint.y, _vertex.y);
-        this._maxPoint.z = Math.max(this._maxPoint.z, _vertex.z);
-
-        this._pointList.add(_vertex);
-    }
-    
-    public Point3f getMinBounds() { return this._minPoint; }
-
-    public Point3f getMaxBounds() { return this._maxPoint; }
-    
     @Override
     public void clear() {
-        this._pointList.clear();
+        this._list.clear();
         
-        this._minPoint.x = Float.POSITIVE_INFINITY;
-        this._minPoint.y = Float.POSITIVE_INFINITY;
-        this._minPoint.z = Float.POSITIVE_INFINITY;
+        this._min.x = Float.POSITIVE_INFINITY;
+        this._min.y = Float.POSITIVE_INFINITY;
+        this._min.z = Float.POSITIVE_INFINITY;
         
-        this._maxPoint.x = Float.NEGATIVE_INFINITY;
-        this._maxPoint.y = Float.NEGATIVE_INFINITY;
-        this._maxPoint.z = Float.NEGATIVE_INFINITY;
+        this._max.x = Float.NEGATIVE_INFINITY;
+        this._max.y = Float.NEGATIVE_INFINITY;
+        this._max.z = Float.NEGATIVE_INFINITY;
     }
     
-    public Point3f get(int idx) {
-        return this._pointList.get(idx);
+    public void add(Point3f _vertex) {
+        this._min.x = Math.min(this._min.x, _vertex.x);
+        this._min.y = Math.min(this._min.y, _vertex.y);
+        this._min.z = Math.min(this._min.z, _vertex.z);
+        
+        this._max.x = Math.max(this._max.x, _vertex.x);
+        this._max.y = Math.max(this._max.y, _vertex.y);
+        this._max.z = Math.max(this._max.z, _vertex.z);
+
+        this._list.add(_vertex);
+    }
+    
+    public Tuple3f getMinBounds() { return this._min; }
+
+    public Tuple3f getMaxBounds() { return this._max; }
+    
+    
+    public Tuple3f get(int idx) {
+        return this._list.get(idx);
     }
     
     @Override
     public int size() {
-        return this._pointList.size();
+        return this._list.size();
     }
     
     @Override
@@ -77,8 +79,8 @@ public class Vertices extends BaseBuffer {
     
     @Override
     protected void writeBuf(ByteBuffer _buffer) {
-        for(int _i = 0; _i < this._pointList.size(); _i++) {
-            Point3f _vec = this._pointList.get(_i);
+        for(int _i = 0; _i < this._list.size(); _i++) {
+            Tuple3f _vec = this._list.get(_i);
             _buffer.putFloat(_vec.x);
             _buffer.putFloat(_vec.y);
             _buffer.putFloat(_vec.z);
@@ -92,14 +94,14 @@ public class Vertices extends BaseBuffer {
         _accessor.setType("VEC3");
         
         _accessor.setMax(new Float[] { 
-                this._maxPoint.x, 
-                this._maxPoint.y, 
-                this._maxPoint.z });
+                this._max.x, 
+                this._max.y, 
+                this._max.z });
         
         _accessor.setMin(new Float[] { 
-                this._minPoint.x, 
-                this._minPoint.y, 
-                this._minPoint.z  });
+                this._min.x, 
+                this._min.y, 
+                this._min.z  });
         return _accessor;
     }
     

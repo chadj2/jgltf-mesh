@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Point3f;
+import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import org.slf4j.Logger;
@@ -216,8 +217,8 @@ public class TriangleBuilder extends TopologyBuilder {
         TopologyBuilder _builder = new TopologyBuilder("debug_normals", TopologyMode.LINES);
         
         for(int idx = 0; idx <  this._vertices.size(); idx++) {
-             Point3f _lineStart = this._vertices.get(idx);
-             Vector3f _normal = this._normals.get(idx);
+             Tuple3f _lineStart = this._vertices.get(idx);
+             Tuple3f _normal = this._normals.get(idx);
              
              Point3f _lineEnd = new Point3f();
              _lineEnd.scaleAdd(_size, _normal, _lineStart);

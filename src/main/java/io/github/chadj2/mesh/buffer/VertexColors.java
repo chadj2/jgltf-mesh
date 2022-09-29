@@ -21,24 +21,24 @@ import io.github.chadj2.mesh.GltfWriter;
  */
 public class VertexColors extends BaseBuffer {
 
-    private final ArrayList<Color> _cList = new ArrayList<>();
+    private final ArrayList<Color> _list = new ArrayList<>();
     
     public VertexColors(String _name) {
         super(_name);
     }
     
     public void add(Color _color) {
-        this._cList.add(_color);
+        this._list.add(_color);
     }
 
     @Override
     public void clear() {
-        this._cList.clear();
+        this._list.clear();
     }
     
     @Override
     public int size() {
-        return this._cList.size();
+        return this._list.size();
     }
 
     @Override
@@ -48,8 +48,8 @@ public class VertexColors extends BaseBuffer {
     
     @Override
     protected void writeBuf(ByteBuffer _buffer) {
-        for(int _i = 0; _i < this._cList.size(); _i++) {
-            Color _color = this._cList.get(_i);
+        for(int _i = 0; _i < this._list.size(); _i++) {
+            Color _color = this._list.get(_i);
             
             Integer _r = _color.getRed();
             Integer _g = _color.getGreen();

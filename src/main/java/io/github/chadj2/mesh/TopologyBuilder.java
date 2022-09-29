@@ -54,10 +54,10 @@ public class TopologyBuilder extends BaseBuilder {
     private final TopologyMode _topologyMode;
 
     /** minimum bounds of the vertices. */
-    protected Point3f _minBounds;
+    protected Tuple3f _minBounds;
     
     /** maximum bounds of the vertices. */
-    protected Point3f _maxBounds;
+    protected Tuple3f _maxBounds;
     
     /**
      * @param _name Name of the mesh that will be populated in the glTF.
@@ -82,12 +82,12 @@ public class TopologyBuilder extends BaseBuilder {
     /**
      * Get the minimum bounds of all vertices. Should only be called after build().
      */
-    public Point3f getMinBounds() { return this._minBounds; }
+    public Tuple3f getMinBounds() { return this._minBounds; }
     
     /**
      * Get the maximum bounds of all vertices. Should only be called after build().
      */
-    public Point3f getMaxBounds() { return this._maxBounds; }
+    public Tuple3f getMaxBounds() { return this._maxBounds; }
 
 
     /**

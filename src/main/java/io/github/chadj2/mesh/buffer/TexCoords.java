@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Point2f;
+import javax.vecmath.Tuple2f;
 
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
@@ -23,39 +24,39 @@ import io.github.chadj2.mesh.GltfWriter;
  */
 public class TexCoords extends BaseBuffer {
     
-    private final ArrayList<Point2f> _pointList = new ArrayList<>();
-    private final Point2f _minPoint = new Point2f();
-    private final Point2f _maxPoint = new Point2f();
+    private final ArrayList<Tuple2f> _list = new ArrayList<>();
+    private final Tuple2f _min = new Point2f();
+    private final Tuple2f _max = new Point2f();
     
     public TexCoords(String _name) {
         super(_name);
         clear();
     }
     
-    public void add(Point2f _coord) {
-        this._minPoint.x = Math.min(this._minPoint.x, _coord.x);
-        this._minPoint.y = Math.min(this._minPoint.y, _coord.y);
+    public void add(Tuple2f _coord) {
+        this._min.x = Math.min(this._min.x, _coord.x);
+        this._min.y = Math.min(this._min.y, _coord.y);
         
-        this._maxPoint.x = Math.max(this._maxPoint.x, _coord.x);
-        this._maxPoint.y = Math.max(this._maxPoint.y, _coord.y);
+        this._max.x = Math.max(this._max.x, _coord.x);
+        this._max.y = Math.max(this._max.y, _coord.y);
         
-        this._pointList.add(_coord);
+        this._list.add(_coord);
     }
     
     @Override
     public void clear() {
-        this._pointList.clear();
+        this._list.clear();
         
-        this._minPoint.x = Float.POSITIVE_INFINITY;
-        this._minPoint.y = Float.POSITIVE_INFINITY;
+        this._min.x = Float.POSITIVE_INFINITY;
+        this._min.y = Float.POSITIVE_INFINITY;
         
-        this._maxPoint.x = Float.NEGATIVE_INFINITY;
-        this._maxPoint.y = Float.NEGATIVE_INFINITY;
+        this._max.x = Float.NEGATIVE_INFINITY;
+        this._max.y = Float.NEGATIVE_INFINITY;
     }
 
     @Override
     public int size() {
-        return this._pointList.size();
+        return this._list.size();
     }
     
     @Override
@@ -65,8 +66,8 @@ public class TexCoords extends BaseBuffer {
     
     @Override
     protected void writeBuf(ByteBuffer _buffer) {
-        for(int _i = 0; _i < this._pointList.size(); _i++) {
-            Point2f _vec = this._pointList.get(_i);
+        for(int _i = 0; _i < this._list.size(); _i++) {
+            Tuple2f _vec = this._list.get(_i);
             _buffer.putFloat(_vec.x);
             _buffer.putFloat(_vec.y);
         }
@@ -79,12 +80,12 @@ public class TexCoords extends BaseBuffer {
         _accessor.setType("VEC2");
         
         _accessor.setMax(new Float[] { 
-                this._maxPoint.x, 
-                this._maxPoint.y });
+                this._max.x, 
+                this._max.y });
         
         _accessor.setMin(new Float[] { 
-                this._minPoint.x, 
-                this._minPoint.y });
+                this._min.x, 
+                this._min.y });
         return _accessor;
     }
 

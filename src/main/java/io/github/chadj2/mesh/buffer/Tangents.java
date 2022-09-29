@@ -9,6 +9,7 @@ package io.github.chadj2.mesh.buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
 
 import de.javagl.jgltf.impl.v2.Accessor;
@@ -23,47 +24,47 @@ import io.github.chadj2.mesh.GltfWriter;
  */
 public class Tangents extends BaseBuffer {
     
-    private final ArrayList<Vector4f> _vecList = new ArrayList<>();
-    private final Vector4f _minVec = new Vector4f();
-    private final Vector4f _maxVec = new Vector4f();
+    private final ArrayList<Tuple4f> _list = new ArrayList<>();
+    private final Tuple4f _min = new Vector4f();
+    private final Tuple4f _max = new Vector4f();
     
     public Tangents(String _name) {
         super(_name);
         clear();
     }
     
-    public void add(Vector4f _tangent) {
-        this._minVec.x = Math.min(this._minVec.x, _tangent.x);
-        this._minVec.y = Math.min(this._minVec.y, _tangent.y);
-        this._minVec.z = Math.min(this._minVec.z, _tangent.z);
-        this._minVec.w = Math.min(this._minVec.w, _tangent.w);
+    public void add(Tuple4f _tangent) {
+        this._min.x = Math.min(this._min.x, _tangent.x);
+        this._min.y = Math.min(this._min.y, _tangent.y);
+        this._min.z = Math.min(this._min.z, _tangent.z);
+        this._min.w = Math.min(this._min.w, _tangent.w);
 
-        this._maxVec.x = Math.max(this._maxVec.x, _tangent.x);
-        this._maxVec.y = Math.max(this._maxVec.y, _tangent.y);
-        this._maxVec.z = Math.max(this._maxVec.z, _tangent.z);
-        this._maxVec.w = Math.max(this._maxVec.w, _tangent.w);
+        this._max.x = Math.max(this._max.x, _tangent.x);
+        this._max.y = Math.max(this._max.y, _tangent.y);
+        this._max.z = Math.max(this._max.z, _tangent.z);
+        this._max.w = Math.max(this._max.w, _tangent.w);
         
-        this._vecList.add(_tangent);
+        this._list.add(_tangent);
     }
     
     @Override
     public void clear() {
-        this._vecList.clear();
+        this._list.clear();
         
-        this._minVec.x = Float.POSITIVE_INFINITY;
-        this._minVec.y = Float.POSITIVE_INFINITY;
-        this._minVec.z = Float.POSITIVE_INFINITY;
-        this._minVec.w = Float.POSITIVE_INFINITY;
+        this._min.x = Float.POSITIVE_INFINITY;
+        this._min.y = Float.POSITIVE_INFINITY;
+        this._min.z = Float.POSITIVE_INFINITY;
+        this._min.w = Float.POSITIVE_INFINITY;
         
-        this._maxVec.x = Float.NEGATIVE_INFINITY;
-        this._maxVec.y = Float.NEGATIVE_INFINITY;
-        this._maxVec.z = Float.NEGATIVE_INFINITY;
-        this._maxVec.w = Float.NEGATIVE_INFINITY;
+        this._max.x = Float.NEGATIVE_INFINITY;
+        this._max.y = Float.NEGATIVE_INFINITY;
+        this._max.z = Float.NEGATIVE_INFINITY;
+        this._max.w = Float.NEGATIVE_INFINITY;
     }
     
     @Override
     public int size() {
-        return this._vecList.size();
+        return this._list.size();
     }
     
     @Override
@@ -73,8 +74,8 @@ public class Tangents extends BaseBuffer {
     
     @Override
     protected void writeBuf(ByteBuffer _buffer) {
-        for(int _i = 0; _i < this._vecList.size(); _i++) {
-            Vector4f _vec = this._vecList.get(_i);
+        for(int _i = 0; _i < this._list.size(); _i++) {
+            Tuple4f _vec = this._list.get(_i);
             _buffer.putFloat(_vec.x);
             _buffer.putFloat(_vec.y);
             _buffer.putFloat(_vec.z);
@@ -89,16 +90,16 @@ public class Tangents extends BaseBuffer {
         _accessor.setType("VEC4");
         
         _accessor.setMax(new Float[] { 
-                this._maxVec.x, 
-                this._maxVec.y, 
-                this._maxVec.z, 
-                this._maxVec.w });
+                this._max.x, 
+                this._max.y, 
+                this._max.z, 
+                this._max.w });
         
         _accessor.setMin(new Float[] { 
-                this._minVec.x, 
-                this._minVec.y, 
-                this._minVec.z, 
-                this._minVec.w });
+                this._min.x, 
+                this._min.y, 
+                this._min.z, 
+                this._min.w });
         
         return _accessor;
     }

@@ -25,7 +25,7 @@ public class InstTranslation extends Vertices {
         return null;
     }
     
-    protected final Accessor buildAttrib(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing, String _attribute) {
+    protected Accessor buildAttrib(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing, String _attribute) {
         Accessor _accessor = buildBuffer(_geoWriter);
         if(_accessor == null) {
             return null;

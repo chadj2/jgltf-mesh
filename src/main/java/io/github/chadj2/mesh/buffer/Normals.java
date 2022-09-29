@@ -9,6 +9,7 @@ package io.github.chadj2.mesh.buffer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import de.javagl.jgltf.impl.v2.Accessor;
@@ -23,47 +24,47 @@ import io.github.chadj2.mesh.GltfWriter;
  */
 public class Normals extends BaseBuffer {
 
-    private final ArrayList<Vector3f> _vecList = new ArrayList<>();
-    private final Vector3f _minVec = new Vector3f();
-    private final Vector3f _maxVec = new Vector3f();
+    private final ArrayList<Tuple3f> _list = new ArrayList<>();
+    private final Tuple3f _min = new Vector3f();
+    private final Tuple3f _max = new Vector3f();
     
     public Normals(String _name) {
         super(_name);
         clear();
     }
     
-    public void add(Vector3f _vertex) {
-        this._minVec.x = Math.min(this._minVec.x, _vertex.x);
-        this._minVec.y = Math.min(this._minVec.y, _vertex.y);
-        this._minVec.z = Math.min(this._minVec.z, _vertex.z);
+    public void add(Tuple3f _vertex) {
+        this._min.x = Math.min(this._min.x, _vertex.x);
+        this._min.y = Math.min(this._min.y, _vertex.y);
+        this._min.z = Math.min(this._min.z, _vertex.z);
         
-        this._maxVec.x = Math.max(this._maxVec.x, _vertex.x);
-        this._maxVec.y = Math.max(this._maxVec.y, _vertex.y);
-        this._maxVec.z = Math.max(this._maxVec.z, _vertex.z);
+        this._max.x = Math.max(this._max.x, _vertex.x);
+        this._max.y = Math.max(this._max.y, _vertex.y);
+        this._max.z = Math.max(this._max.z, _vertex.z);
 
-        this._vecList.add(_vertex);
+        this._list.add(_vertex);
     }
     
     @Override
     public void clear() {
-        this._vecList.clear();
+        this._list.clear();
         
-        this._minVec.x = Float.POSITIVE_INFINITY;
-        this._minVec.y = Float.POSITIVE_INFINITY;
-        this._minVec.z = Float.POSITIVE_INFINITY;
+        this._min.x = Float.POSITIVE_INFINITY;
+        this._min.y = Float.POSITIVE_INFINITY;
+        this._min.z = Float.POSITIVE_INFINITY;
         
-        this._maxVec.x = Float.NEGATIVE_INFINITY;
-        this._maxVec.y = Float.NEGATIVE_INFINITY;
-        this._maxVec.z = Float.NEGATIVE_INFINITY;
+        this._max.x = Float.NEGATIVE_INFINITY;
+        this._max.y = Float.NEGATIVE_INFINITY;
+        this._max.z = Float.NEGATIVE_INFINITY;
     }
     
     @Override
     public int size() {
-        return this._vecList.size();
+        return this._list.size();
     }
     
-    public Vector3f get(int idx) {
-        return this._vecList.get(idx);
+    public Tuple3f get(int idx) {
+        return this._list.get(idx);
     }
     
     @Override
@@ -73,8 +74,8 @@ public class Normals extends BaseBuffer {
     
     @Override
     protected void writeBuf(ByteBuffer _buffer) {
-        for(int _i = 0; _i < this._vecList.size(); _i++) {
-            Vector3f _vec = this._vecList.get(_i);
+        for(int _i = 0; _i < this._list.size(); _i++) {
+            Tuple3f _vec = this._list.get(_i);
             _buffer.putFloat(_vec.x);
             _buffer.putFloat(_vec.y);
             _buffer.putFloat(_vec.z);
@@ -88,14 +89,14 @@ public class Normals extends BaseBuffer {
         _accessor.setType("VEC3");
         
         _accessor.setMax(new Float[] { 
-                this._maxVec.x, 
-                this._maxVec.y, 
-                this._maxVec.z });
+                this._max.x, 
+                this._max.y, 
+                this._max.z });
         
         _accessor.setMin(new Float[] { 
-                this._minVec.x, 
-                this._minVec.y, 
-                this._minVec.z  });
+                this._min.x, 
+                this._min.y, 
+                this._min.z  });
         
         return _accessor;
     }
