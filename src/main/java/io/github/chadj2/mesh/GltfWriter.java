@@ -8,6 +8,7 @@ package io.github.chadj2.mesh;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
@@ -36,13 +37,14 @@ import de.javagl.jgltf.impl.v2.Sampler;
 import de.javagl.jgltf.impl.v2.Scene;
 import de.javagl.jgltf.impl.v2.Texture;
 import de.javagl.jgltf.impl.v2.TextureInfo;
+import de.javagl.jgltf.model.impl.DefaultGltfModel;
 import de.javagl.jgltf.model.io.Buffers;
-import de.javagl.jgltf.model.io.GltfModelWriter;
 import de.javagl.jgltf.model.io.GltfReference;
 import de.javagl.jgltf.model.io.GltfReferenceResolver;
 import de.javagl.jgltf.model.io.v2.GltfAssetV2;
-import de.javagl.jgltf.model.GltfModel;
-import de.javagl.jgltf.model.GltfModels;
+import de.javagl.jgltf.model.io.v2.GltfAssetsV2;
+import de.javagl.jgltf.model.io.v2.GltfModelWriterV2;
+import de.javagl.jgltf.model.v2.GltfModelCreatorV2;
 
 /**
  * Serialize added nodes to glTF format.
@@ -241,18 +243,20 @@ public class GltfWriter {
         
         return _material;
     }
-    
+
     /**
-     * Called before a write operation.
+     * Write a gltf to a file. The filename should have a gltf or glb extension to indicate 
+     * the type.
      */
-    private void prepareWrite() {
-        this._gltf.setNodes(this._nodes);
+    public void writeGltf(File _outFile) throws Exception {
+        String _ext = FilenameUtils.getExtension(_outFile.getName());
+        GltfFormat _format = GltfFormat.valueOf(_ext);
+        GltfWriter.LOG.info("Writing glTF: {}", _outFile.getAbsolutePath());
         
-        List<Integer> rangeList = IntStream.range(0, this._nodes.size())
-                .boxed()
-                .collect(Collectors.toList());
-        
-        this._topScene.setNodes(rangeList);
+        try (OutputStream _os = new FileOutputStream(_outFile))
+        {
+            writeGltf(_os, _format);
+        }
     }
     
     /**
@@ -260,52 +264,48 @@ public class GltfWriter {
      * @param _format Indicates if this is JSON or binary format.
      */
     public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
-        prepareWrite();
+        this._gltf.setNodes(this._nodes);
         
-        GltfModel _gltfModel = getGltfModel();
-        GltfModelWriter _gltfModelWriter = new GltfModelWriter();
+        List<Integer> rangeList = IntStream
+                .range(0, this._nodes.size())
+                .boxed()
+                .collect(Collectors.toList());
+        this._topScene.setNodes(rangeList);
         
-        if(_format == GltfFormat.gltf) {
-            _gltfModelWriter.writeEmbedded(_gltfModel, _os);
-        }
-        else if(_format == GltfFormat.glb) {
-            _gltfModelWriter.writeBinary(_gltfModel, _os);
-        }
-        else {
-            throw new IOException("File extension not recognized: " + _format);
-        }
-    }
-
-    /**
-     * Write a gltf to a file. The filename should have a gltf or glb extension to indicate 
-     * the type.
-     */
-    public void writeGltf(File _outFile) throws Exception {
-        prepareWrite();
-        
-        GltfModel _gltfModel = getGltfModel();
-        GltfModelWriter _gltfModelWriter = new GltfModelWriter();
-
-        String _ext = FilenameUtils.getExtension(_outFile.getName());
-        GltfFormat _format = GltfFormat.valueOf(_ext);
+        GltfAssetV2 gltfAsset = newGltfAsset();
+        DefaultGltfModel gltfModel =  GltfModelCreatorV2.create(gltfAsset);
+        GltfModelWriterV2 _gltfModelWriter = new GltfModelWriterV2();
         
         if(_format == GltfFormat.gltf) {
-            _gltfModelWriter.writeEmbedded(_gltfModel, _outFile);
-            GltfWriter.LOG.info("Wrote glTF: {}", _outFile.getAbsolutePath());
+            // With the introduction of DefaultGltfModel in JglTF version 2.0.3 
+            // there was a change that broke the way the asset and usedExtensions 
+            // sections are written. The new workflow is:
+            // 1. Create GltfAsset
+            // 2. Create DefaultGltfModel with GltfAsset.
+            // 3. Create new embedded asset with the DefaultGltfModel.
+            // 4. New embedded asset has new GlTF object which is passed to GltfWriter.
+            //
+            // There are currently some bugs in this approach where some contents
+            // of the GLTF file are not passed from the old asset to the new embedded asset.
+            // Once this is resolved the GltfModelWriter can be used again.
+            writeEmbedded(gltfModel, _os);
+            //_gltfModelWriter.writeEmbedded(_gltfModel, _os);
         }
         else if(_format == GltfFormat.glb) {
-            _gltfModelWriter.writeBinary(_gltfModel, _outFile);
-            GltfWriter.LOG.info("Wrote glb: {}", _outFile.getAbsolutePath());
-        }
-        else {
-            throw new IOException("File extension not recognized: " + _ext);
+            _gltfModelWriter.writeBinary(gltfModel, _os);
         }
     }
     
-    private GltfModel getGltfModel() throws Exception {
-        GltfAssetV2 _gltfAsset = newGltfAsset();
-        GltfModel _gltfModel = GltfModels.create(_gltfAsset);
-        return _gltfModel;
+    private void writeEmbedded(DefaultGltfModel gltfModel, OutputStream _os) throws IOException {
+        GltfAssetV2 embeddedAsset = GltfAssetsV2.createEmbedded(gltfModel);
+        de.javagl.jgltf.model.io.GltfWriter gltfWriter = new de.javagl.jgltf.model.io.GltfWriter();
+        GlTF embeddedGltf = embeddedAsset.getGltf();
+        
+        // workaround to copy extensions and asset from old gltf object.
+        embeddedGltf.setExtensionsUsed(this._gltf.getExtensionsUsed());
+        embeddedGltf.setAsset(this._gltf.getAsset());
+        
+        gltfWriter.write(embeddedGltf, _os);
     }
     
     private GltfAssetV2 newGltfAsset() throws Exception {
@@ -317,7 +317,18 @@ public class GltfWriter {
         _asset.setExtras(this._metaParams);
         
         this._metaParams.forEach((_k, _v) -> LOG.debug("attribute[{}] = {}", _k, _v));
-
+        
+        // add buffer to glTF
+        Buffer _gltfBuffer = getGltfBuffer();
+        this._gltf.addBuffers(_gltfBuffer);
+        
+        GltfAssetV2 _gltfAsset = new GltfAssetV2(this._gltf, this._byteBuffer);
+        resolveImages(_gltfAsset);
+        
+        return _gltfAsset;
+    }
+    
+    private Buffer getGltfBuffer() throws Exception {
         // flip the buffer for read
         this._byteBuffer.flip();
         int _totalSize = this._byteBuffer.remaining();
@@ -325,17 +336,12 @@ public class GltfWriter {
             throw new Exception("glTF buffer has no data to write.");
         }
         
-        LOG.debug("Created glTF buffer: size=<{} bytes>", _totalSize);
-        
         // add buffer to glTF
         Buffer _gltfBuffer = new Buffer();
-        this._gltf.addBuffers(_gltfBuffer);
         _gltfBuffer.setByteLength(_totalSize);
+        LOG.debug("Created glTF buffer: size=<{} bytes>", _totalSize);
         
-        GltfAssetV2 _gltfAsset = new GltfAssetV2(this._gltf, this._byteBuffer);
-        resolveImages(_gltfAsset);
-        
-        return _gltfAsset;
+        return _gltfBuffer;
     }
 
     private void resolveImages(GltfAssetV2 _gltfAsset) {
