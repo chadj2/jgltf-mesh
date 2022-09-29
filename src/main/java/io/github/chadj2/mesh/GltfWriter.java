@@ -247,23 +247,25 @@ public class GltfWriter {
     /**
      * Write a gltf to a file. The filename should have a gltf or glb extension to indicate 
      * the type.
+     * @param outFile 
      */
-    public void writeGltf(File _outFile) throws Exception {
-        String _ext = FilenameUtils.getExtension(_outFile.getName());
-        GltfFormat _format = GltfFormat.valueOf(_ext);
-        GltfWriter.LOG.info("Writing glTF: {}", _outFile.getAbsolutePath());
+    public void writeGltf(File outFile) throws Exception {
+        String ext = FilenameUtils.getExtension(outFile.getName());
+        GltfFormat format = GltfFormat.valueOf(ext);
+        GltfWriter.LOG.info("Writing glTF: {}", outFile.getAbsolutePath());
         
-        try (OutputStream _os = new FileOutputStream(_outFile))
+        try (OutputStream os = new FileOutputStream(outFile))
         {
-            writeGltf(_os, _format);
+            writeGltf(os, format);
         }
     }
     
     /**
      * Write gltf to an OutputStream. Specify gltf or glb format.
-     * @param _format Indicates if this is JSON or binary format.
+     * @param os 
+     * @param format Indicates if this is JSON or binary format.
      */
-    public void writeGltf(OutputStream _os, GltfFormat _format) throws Exception {
+    public void writeGltf(OutputStream os, GltfFormat format) throws Exception {
         this._gltf.setNodes(this._nodes);
         
         List<Integer> rangeList = IntStream
@@ -274,9 +276,9 @@ public class GltfWriter {
         
         GltfAssetV2 gltfAsset = newGltfAsset();
         DefaultGltfModel gltfModel =  GltfModelCreatorV2.create(gltfAsset);
-        GltfModelWriterV2 _gltfModelWriter = new GltfModelWriterV2();
+        GltfModelWriterV2 gltfModelWriter = new GltfModelWriterV2();
         
-        if(_format == GltfFormat.gltf) {
+        if(format == GltfFormat.gltf) {
             // With the introduction of DefaultGltfModel in JglTF version 2.0.3 
             // there was a change that broke the way the asset and usedExtensions 
             // sections are written. The new workflow is:
@@ -288,15 +290,15 @@ public class GltfWriter {
             // There are currently some bugs in this approach where some contents
             // of the GLTF file are not passed from the old asset to the new embedded asset.
             // Once this is resolved the GltfModelWriter can be used again.
-            writeEmbedded(gltfModel, _os);
+            writeEmbedded(gltfModel, os);
             //_gltfModelWriter.writeEmbedded(_gltfModel, _os);
         }
-        else if(_format == GltfFormat.glb) {
-            _gltfModelWriter.writeBinary(gltfModel, _os);
+        else if(format == GltfFormat.glb) {
+            gltfModelWriter.writeBinary(gltfModel, os);
         }
     }
     
-    private void writeEmbedded(DefaultGltfModel gltfModel, OutputStream _os) throws IOException {
+    private void writeEmbedded(DefaultGltfModel gltfModel, OutputStream os) throws IOException {
         GltfAssetV2 embeddedAsset = GltfAssetsV2.createEmbedded(gltfModel);
         de.javagl.jgltf.model.io.GltfWriter gltfWriter = new de.javagl.jgltf.model.io.GltfWriter();
         GlTF embeddedGltf = embeddedAsset.getGltf();
@@ -305,7 +307,7 @@ public class GltfWriter {
         embeddedGltf.setExtensionsUsed(this._gltf.getExtensionsUsed());
         embeddedGltf.setAsset(this._gltf.getAsset());
         
-        gltfWriter.write(embeddedGltf, _os);
+        gltfWriter.write(embeddedGltf, os);
     }
     
     private GltfAssetV2 newGltfAsset() throws Exception {
