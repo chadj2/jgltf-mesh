@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package io.github.chadj2.mesh.ext;
+package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
 
@@ -13,41 +13,16 @@ import javax.vecmath.Tuple4f;
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
-import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.model.GltfConstants;
-import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.buffer.BufferVec4;
 
 /**
  * Support EXT_mesh_gpu_instancing
  * @author Chad Juliano
  */
-public class InstRotation extends BufferVec4 {
+public class BufferByte4 extends BufferFloat4 {
     
-    public InstRotation(String _name) {
-        super(_name, "ROTATION");
-    }
-
-    @Override
-    public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
-        throw new UnsupportedOperationException("not implimented");
-    }
-    
-    public Accessor build(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing) {
-        buildAttrib(_geoWriter, _meshInstancing, this._attrib);
-        return null;
-    }
-    
-    protected final Accessor buildAttrib(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing,
-            String _attribute) {
-        Accessor _accessor = buildBuffer(_geoWriter);
-        if(_accessor == null) {
-            return null;
-        }
-        
-        int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_accessor);
-        _meshInstancing.addAttributes(_attribute, _accessorIdx);
-        return _accessor;
+    public BufferByte4(String _name, String _attrib) {
+        super(_name, _attrib);
     }
     
     @Override
@@ -59,14 +34,6 @@ public class InstRotation extends BufferVec4 {
             _buffer.put(floatToByte(_vec.z));
             _buffer.put(floatToByte(_vec.w));
         }
-    }
-    
-    private static byte floatToByte(float fVal) {
-        Integer iVal = Math.round(fVal * 127f);
-        if(iVal < -127 || iVal > 127) {
-            throw new RuntimeException(String.format("Value overflow: %d", iVal));
-        }
-        return iVal.byteValue();
     }
     
     @Override
@@ -92,6 +59,19 @@ public class InstRotation extends BufferVec4 {
         return _accessor;
     }
     
+    /**
+     * @see https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#animations
+     * @param fVal
+     * @return
+     */
+    private static byte floatToByte(float fVal) {
+        Integer iVal = Math.round(fVal * Byte.MAX_VALUE);
+        if(iVal < Byte.MIN_VALUE || iVal > Byte.MAX_VALUE) {
+            throw new RuntimeException(String.format("Value overflow: %d", iVal));
+        }
+        return iVal.byteValue();
+    }
+    
     @Override
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
@@ -99,5 +79,4 @@ public class InstRotation extends BufferVec4 {
         _bufferView.setByteStride(Byte.BYTES * 4);
         return _bufferView;
     }
-
 }

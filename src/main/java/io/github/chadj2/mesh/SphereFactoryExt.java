@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.ext.GlTFMeshGpuInstancing;
-import io.github.chadj2.mesh.ext.InstRotation;
-import io.github.chadj2.mesh.ext.InstTranslation;
+import io.github.chadj2.mesh.buffer.BufferFloat3;
+import io.github.chadj2.mesh.buffer.GlTFMeshGpuInstancing;
+import io.github.chadj2.mesh.buffer.BufferByte4;
 
 /**
  * 
@@ -32,14 +32,14 @@ public class SphereFactoryExt extends SphereFactory {
     private final static String EXT_INSTANCING = "EXT_mesh_gpu_instancing";
     
     private static class InstancingNode {
-        final InstTranslation _trans;
-        final InstRotation _rot;
+        final BufferFloat3 _trans;
+        final BufferByte4 _rot;
         final Node _node;
         
         InstancingNode(Node node, String name) {
             this._node = node;
-            this._trans = new InstTranslation(name);
-            this._rot = new InstRotation(name);
+            this._trans = new BufferFloat3(name,"TRANSLATION");
+            this._rot = new BufferByte4(name, "ROTATION");
             this._node.setName(name + "_node");
         }
         

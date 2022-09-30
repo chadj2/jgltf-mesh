@@ -16,9 +16,9 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.model.GltfConstants;
 
-public class BufferVec4 extends BufferVecBase<Tuple4f> {
+public class BufferFloat4 extends BufferFloatBase<Tuple4f> {
     
-    public BufferVec4(String _name, String _attrib) {
+    public BufferFloat4(String _name, String _attrib) {
         super(_name, _attrib);
         this._max = new Vector4f();
         this._min = new Vector4f();

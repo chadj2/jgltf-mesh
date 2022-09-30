@@ -55,6 +55,18 @@ public abstract class BufferBase<T> {
         return _accessor;
     }
     
+    protected final Accessor buildAttrib(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing,
+            String _attribute) {
+        Accessor _accessor = buildBuffer(_geoWriter);
+        if(_accessor == null) {
+            return null;
+        }
+        
+        int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_accessor);
+        _meshInstancing.addAttributes(_attribute, _accessorIdx);
+        return _accessor;
+    }
+    
     protected final Accessor buildBuffer(GltfWriter _geoWriter) {
         if(size() == 0) {
             return null;
