@@ -1,3 +1,9 @@
+/* 
+ * Copyright (c) 2022, Chad Juliano, Kinetica DB Inc.
+ * 
+ * SPDX-License-Identifier: MIT
+ */
+
 package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;

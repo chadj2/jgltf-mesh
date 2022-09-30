@@ -18,7 +18,6 @@ public class Vertices extends BufferVec3 {
     
     public Vertices(String _name) {
         super(_name);
-        clear();
     }
     
     @Override

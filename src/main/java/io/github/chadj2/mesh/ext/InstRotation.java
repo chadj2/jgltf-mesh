@@ -1,8 +1,13 @@
+/* 
+ * Copyright (c) 2022, Chad Juliano, Kinetica DB Inc.
+ * 
+ * SPDX-License-Identifier: MIT
+ */
+
 package io.github.chadj2.mesh.ext;
 
 import java.nio.ByteBuffer;
 
-import javax.vecmath.Quat4f;
 import javax.vecmath.Tuple4f;
 
 import de.javagl.jgltf.impl.v2.Accessor;
@@ -11,52 +16,21 @@ import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.buffer.BufferBase;
+import io.github.chadj2.mesh.buffer.BufferVec4;
 
-public class InstRotation extends BufferBase<Quat4f> {
-
-    private final Tuple4f _min = new Quat4f();
-    private final Tuple4f _max = new Quat4f();
+/**
+ * Support EXT_mesh_gpu_instancing
+ * @author Chad Juliano
+ */
+public class InstRotation extends BufferVec4 {
     
     public InstRotation(String _name) {
         super(_name);
-        clear();
-    }
-
-    @Override
-    public void clear() {
-        super.clear();
-        
-        this._min.x = Float.POSITIVE_INFINITY;
-        this._min.y = Float.POSITIVE_INFINITY;
-        this._min.z = Float.POSITIVE_INFINITY;
-        this._min.w = Float.POSITIVE_INFINITY;
-        
-        this._max.x = Float.NEGATIVE_INFINITY;
-        this._max.y = Float.NEGATIVE_INFINITY;
-        this._max.z = Float.NEGATIVE_INFINITY;
-        this._max.w = Float.NEGATIVE_INFINITY;
-    }
-
-    @Override
-    public void add(Quat4f _quat) {
-        super.add(_quat);
-        
-        this._min.x = Math.min(this._min.x, _quat.x);
-        this._min.y = Math.min(this._min.y, _quat.y);
-        this._min.z = Math.min(this._min.z, _quat.z);
-        this._min.w = Math.min(this._min.w, _quat.w);
-
-        this._max.x = Math.max(this._min.x, _quat.x);
-        this._max.y = Math.max(this._min.y, _quat.y);
-        this._max.z = Math.max(this._min.z, _quat.z);
-        this._max.w = Math.max(this._min.w, _quat.w);
     }
 
     @Override
     public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException("not implimented");
     }
     
     public Accessor build(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing) {
@@ -101,17 +75,19 @@ public class InstRotation extends BufferBase<Quat4f> {
         _accessor.setComponentType(GltfConstants.GL_BYTE);
         _accessor.setType("VEC4");
         
+        Tuple4f max = this.getMax();
         _accessor.setMax(new Integer[] { 
-                (int)floatToByte(this._max.x), 
-                (int)floatToByte(this._max.y), 
-                (int)floatToByte(this._max.z), 
-                (int)floatToByte(this._max.w) });
-        
+                (int)floatToByte(max.x), 
+                (int)floatToByte(max.y), 
+                (int)floatToByte(max.z), 
+                (int)floatToByte(max.w) });
+
+        Tuple4f min = this.getMin();
         _accessor.setMin(new Integer[] { 
-                (int)floatToByte(this._min.x), 
-                (int)floatToByte(this._min.y), 
-                (int)floatToByte(this._min.z), 
-                (int)floatToByte(this._min.w) });
+                (int)floatToByte(min.x), 
+                (int)floatToByte(min.y), 
+                (int)floatToByte(min.z), 
+                (int)floatToByte(min.w) });
         
         return _accessor;
     }

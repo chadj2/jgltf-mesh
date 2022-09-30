@@ -18,7 +18,6 @@ public class Tangents extends BufferVec4 {
     
     public Tangents(String _name) {
         super(_name);
-        clear();
     }
     
     @Override

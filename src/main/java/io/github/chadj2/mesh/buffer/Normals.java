@@ -18,7 +18,6 @@ public class Normals extends BufferVec3 {
     
     public Normals(String _name) {
         super(_name);
-        clear();
     }
     
     @Override

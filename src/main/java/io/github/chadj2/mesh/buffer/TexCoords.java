@@ -18,7 +18,6 @@ public class TexCoords extends BufferVec2 {
     
     public TexCoords(String _name) {
         super(_name);
-        clear();
     }
     
     @Override

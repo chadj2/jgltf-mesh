@@ -1,3 +1,9 @@
+/* 
+ * Copyright (c) 2022, Chad Juliano, Kinetica DB Inc.
+ * 
+ * SPDX-License-Identifier: MIT
+ */
+
 package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
@@ -19,6 +25,11 @@ public abstract class BufferVec4 extends BufferBase<Tuple4f> {
         super(_name);
         clear();
     }
+
+    public Tuple4f getMin() { return this._min; }
+
+    public Tuple4f getMax() { return this._max; }
+    
     
     @Override
     public void add(Tuple4f _tangent) {
