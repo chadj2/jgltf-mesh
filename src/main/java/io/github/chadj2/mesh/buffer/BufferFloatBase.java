@@ -17,7 +17,7 @@ public abstract class BufferFloatBase<T> extends BufferBase<T> {
     protected final String _attrib;
 
     public BufferFloatBase(String _name, String _attrib) {
-        super(_name);
+        super(String.format("%s-%s", _name, _attrib));
         this._attrib = _attrib;
     }
 
@@ -32,5 +32,17 @@ public abstract class BufferFloatBase<T> extends BufferBase<T> {
 
     public Accessor build(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing) {
         return buildAttrib(_geoWriter, _meshInstancing, this._attrib);
+    }
+    
+    protected final Accessor buildAttrib(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing,
+            String _attribute) {
+        Accessor _accessor = buildBuffer(_geoWriter);
+        if(_accessor == null) {
+            return null;
+        }
+        
+        int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_accessor);
+        _meshInstancing.addAttributes(_attribute, _accessorIdx);
+        return _accessor;
     }
 }

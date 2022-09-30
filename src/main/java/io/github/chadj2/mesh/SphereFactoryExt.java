@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Vector3f;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +34,15 @@ public class SphereFactoryExt extends SphereFactory {
     
     private static class InstancingNode {
         final BufferFloat3 _trans;
-        final BufferByte4 _rot;
+        final BufferByte4 _rotation;
+        final BufferFloat3 _scale;
         final Node _node;
         
         InstancingNode(Node node, String name) {
             this._node = node;
             this._trans = new BufferFloat3(name,"TRANSLATION");
-            this._rot = new BufferByte4(name, "ROTATION");
+            this._rotation = new BufferByte4(name, "ROTATION");
+            this._scale = new BufferFloat3(name,"SCALE");
             this._node.setName(name + "_node");
         }
         
@@ -48,14 +51,19 @@ public class SphereFactoryExt extends SphereFactory {
         }
         
         void addRotation(Quat4f _quat) {
-            this._rot.add(_quat);
+            this._rotation.add(_quat);
+        }
+        
+        void addScale(Vector3f scale) {
+            this._scale.add(scale);
         }
         
         void build(GltfWriter writer) {
             GlTFMeshGpuInstancing meshInstancing = new GlTFMeshGpuInstancing();
             this._node.addExtensions(EXT_INSTANCING, meshInstancing);
             this._trans.build(writer, meshInstancing);
-            this._rot.build(writer, meshInstancing);
+            this._rotation.build(writer, meshInstancing);
+            this._scale.build(writer, meshInstancing);
         }
     }
     
@@ -70,25 +78,23 @@ public class SphereFactoryExt extends SphereFactory {
         Integer meshIdx = getMeshColorLod();
         getTransform().transform(pos);
         Quat4f rotation = new Quat4f(0,0,0,1);
+        Vector3f scale = new Vector3f(this._radius);
         
         InstancingNode iNode = this._meshToNodeIndex.get(meshIdx);
-        if(iNode != null) {
-            iNode.addPos(pos);
-            iNode.addRotation(rotation);
-            return iNode._node;
+        if(iNode == null) {
+            Node node = new Node();
+            int nodeIdx = this._writer.addNode(node);
+            String name = String.format("%s[%d]", getName(), nodeIdx);
+            node.setMesh(meshIdx);
+            
+            iNode = new InstancingNode(node, name);
+            this._meshToNodeIndex.put(meshIdx, iNode);
         }
         
-        Node node = new Node();
-        int nodeIdx = this._writer.addNode(node);
-        String name = String.format("%s[%d]", getName(), nodeIdx);
-        node.setMesh(meshIdx);
-        
-        iNode = new InstancingNode(node, name);
         iNode.addPos(pos);
         iNode.addRotation(rotation);
-        
-        this._meshToNodeIndex.put(meshIdx, iNode);
-        return node;
+        iNode.addScale(scale);
+        return iNode._node;
     }
     
     public void build() {

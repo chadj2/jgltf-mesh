@@ -44,7 +44,7 @@ public class SphereFactory extends BaseBuilder {
      */
     private final Map<Integer, Integer> _lodToMeshIdx = new HashMap<>();
     
-    private float[] _radius = { 1f, 1f, 1f};
+    protected float[] _radius = { 1f, 1f, 1f};
     
     private int _lod = 2;
     
