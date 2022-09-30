@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
 
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.buffer.BufferFloat3;
-import io.github.chadj2.mesh.buffer.GlTFMeshGpuInstancing;
 import io.github.chadj2.mesh.MeshGltfWriter;
-import io.github.chadj2.mesh.buffer.BufferByte4;
+import io.github.chadj2.mesh.buffer.BufferFloat3;
+import io.github.chadj2.mesh.buffer.BufferFloat4;
+import io.github.chadj2.mesh.buffer.GlTFMeshGpuInstancing;
 
 /**
  * 
@@ -35,14 +35,15 @@ public class SphereFactoryExt extends SphereFactory {
     
     private static class InstancingNode {
         final BufferFloat3 _trans;
-        final BufferByte4 _rotation;
+        final BufferFloat4 _rotation;
         final BufferFloat3 _scale;
         final Node _node;
         
         InstancingNode(Node node, String name) {
             this._node = node;
             this._trans = new BufferFloat3(name,"TRANSLATION");
-            this._rotation = new BufferByte4(name, "ROTATION");
+            //this._rotation = new BufferByte4(name, "ROTATION");
+            this._rotation = new BufferFloat4(name, "ROTATION");
             this._scale = new BufferFloat3(name,"SCALE");
             this._node.setName(name + "_node");
         }
@@ -98,6 +99,7 @@ public class SphereFactoryExt extends SphereFactory {
         return iNode._node;
     }
     
+    @Override
     public void build() {
         GlTF gltf = this._writer.getGltf();
         gltf.addExtensionsUsed(EXT_INSTANCING);

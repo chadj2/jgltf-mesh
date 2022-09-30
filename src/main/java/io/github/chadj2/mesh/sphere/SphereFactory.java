@@ -74,6 +74,10 @@ public class SphereFactory extends BaseBuilder {
      */
     public void setRadius(float radius) { this._radius = new float[] { radius, radius, radius }; }
     
+    public void build() { 
+        // do nothing
+    }
+    
     /**
      * Add a sphere at the given position.
      * @param xPos

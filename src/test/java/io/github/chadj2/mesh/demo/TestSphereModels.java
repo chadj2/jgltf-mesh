@@ -39,7 +39,7 @@ public class TestSphereModels {
         
         createSpheres(factory);
 
-        File _outFile = TestShapeModels.getFile("test_sphere_factory_ext");
+        File _outFile = TestShapeModels.getFile("test_sphere_factory");
         this._writer.writeGltf(_outFile);
         LOG.info("Finished generating: {}", _outFile);
     }
@@ -62,17 +62,18 @@ public class TestSphereModels {
     }
     
     public void createSpheres(SphereFactory factory) throws Exception {
-        final int gridSize = 10;
+        final int xGridSize = 10;
+        final int yGridSize = 10;
         
-        for(int xIdx = 0; xIdx < gridSize; xIdx++) {
+        for(int xIdx = 0; xIdx < xGridSize; xIdx++) {
             // first loop will vary the color
-            float xInterp = (float)xIdx/((float)gridSize);
+            float xInterp = (float)xIdx/((float)xGridSize);
             Color color = BaseBuilder.colorCreateHsba(xInterp, 1f, 1f, 0.6f);
             float xPos = xInterp*20f;
             factory.setColor(color);
             
-            for(int yIdx = gridSize; yIdx > 0; yIdx--) {
-                float yInterp = (float)yIdx/((float)gridSize);
+            for(int yIdx = yGridSize; yIdx > 0; yIdx--) {
+                float yInterp = (float)yIdx/((float)yGridSize);
                 float yPos = yInterp*20f;
                 factory.setRadius(yInterp);
                 
