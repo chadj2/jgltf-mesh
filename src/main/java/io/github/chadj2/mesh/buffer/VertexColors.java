@@ -12,6 +12,7 @@ import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.GltfWriter;
 
 /**
@@ -49,7 +50,7 @@ public class VertexColors extends BaseBuffer<Color> {
     @Override
     protected Accessor addAccessor(GlTF _gltf, BufferView _bufferView) {
         Accessor _accessor = super.addAccessor(_gltf, _bufferView);
-        _accessor.setComponentType(BaseBuffer.UNSIGNED_BYTE);
+        _accessor.setComponentType(GltfConstants.GL_UNSIGNED_BYTE);
         _accessor.setType("VEC4");
         _accessor.setNormalized(true);
         return _accessor;
@@ -58,8 +59,8 @@ public class VertexColors extends BaseBuffer<Color> {
     @Override
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
-        _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
-        _bufferView.setByteStride(Integer.BYTES);
+        _bufferView.setTarget(GltfConstants.GL_ARRAY_BUFFER);
+        _bufferView.setByteStride(Byte.BYTES * 4);
         return _bufferView;
     }
 }

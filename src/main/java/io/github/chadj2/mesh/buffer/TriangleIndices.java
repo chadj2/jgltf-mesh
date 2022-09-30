@@ -13,6 +13,7 @@ import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.GltfWriter;
 
 /**
@@ -66,7 +67,7 @@ public class TriangleIndices extends BaseBuffer<Short> {
     @Override
     protected Accessor addAccessor(GlTF _gltf, BufferView _bufferView) {
         Accessor _accessor = super.addAccessor(_gltf, _bufferView);
-        _accessor.setComponentType(BaseBuffer.UNSIGNED_SHORT);
+        _accessor.setComponentType(GltfConstants.GL_UNSIGNED_SHORT);
         _accessor.setType("SCALAR");
         
         _accessor.setMax(new Short[] { 
@@ -81,7 +82,7 @@ public class TriangleIndices extends BaseBuffer<Short> {
     @Override
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
-        _bufferView.setTarget(BaseBuffer.ELEMENT_ARRAY_BUFFER);
+        _bufferView.setTarget(GltfConstants.GL_ELEMENT_ARRAY_BUFFER);
         BaseBuffer.alignWords(_buffer);
         return _bufferView;
     }

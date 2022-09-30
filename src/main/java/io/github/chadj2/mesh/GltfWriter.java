@@ -37,6 +37,7 @@ import de.javagl.jgltf.impl.v2.Sampler;
 import de.javagl.jgltf.impl.v2.Scene;
 import de.javagl.jgltf.impl.v2.Texture;
 import de.javagl.jgltf.impl.v2.TextureInfo;
+import de.javagl.jgltf.model.GltfConstants;
 import de.javagl.jgltf.model.impl.DefaultGltfModel;
 import de.javagl.jgltf.model.io.Buffers;
 import de.javagl.jgltf.model.io.GltfReference;
@@ -79,11 +80,6 @@ public class GltfWriter {
 
     private final static Logger LOG = LoggerFactory.getLogger(GltfWriter.class);
 
-    private static final int FILTER_LINEAR = 9729;
-    //private static final int FILTER_LINEAR_MIPMAP_LINEAR = 9987;
-    private static final int WRAP_CLAMP_TO_EDGE = 33071;
-    //private static final int WRAP_MIRRORED_REPEAT = 33648;
-    
     /** Largest size of byte buffer we will support. */
     private static final int MAX_BUFFER_SIZE = 50*1024*1024;
 
@@ -175,10 +171,10 @@ public class GltfWriter {
 
         Sampler _sampler = new Sampler();
         this._gltf.addSamplers(_sampler);
-        _sampler.setMagFilter(FILTER_LINEAR);
-        _sampler.setMinFilter(FILTER_LINEAR);
-        _sampler.setWrapS(WRAP_CLAMP_TO_EDGE);
-        _sampler.setWrapT(WRAP_CLAMP_TO_EDGE);
+        _sampler.setMagFilter(GltfConstants.GL_LINEAR);
+        _sampler.setMinFilter(GltfConstants.GL_LINEAR);
+        _sampler.setWrapS(GltfConstants.GL_CLAMP_TO_EDGE);
+        _sampler.setWrapT(GltfConstants.GL_CLAMP_TO_EDGE);
         
         Image _image = new Image();
         this._gltf.addImages(_image);

@@ -69,11 +69,12 @@ public class SphereFactoryExt extends SphereFactory {
     public Node addSphere(Point3f pos) throws Exception {
         Integer meshIdx = getMeshColorLod();
         getTransform().transform(pos);
+        Quat4f rotation = new Quat4f(0,0,0,1);
         
         InstancingNode iNode = this._meshToNodeIndex.get(meshIdx);
         if(iNode != null) {
             iNode.addPos(pos);
-            iNode.addRotation(new Quat4f(0,0,0,1));
+            iNode.addRotation(rotation);
             return iNode._node;
         }
         
@@ -84,7 +85,7 @@ public class SphereFactoryExt extends SphereFactory {
         
         iNode = new InstancingNode(node, name);
         iNode.addPos(pos);
-        iNode.addRotation(new Quat4f(0,0,0,1));
+        iNode.addRotation(rotation);
         
         this._meshToNodeIndex.put(meshIdx, iNode);
         return node;

@@ -119,8 +119,8 @@ public class InstRotation extends BaseBuffer<Quat4f> {
     @Override
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
-        _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
-        _bufferView.setByteStride(4 * Byte.BYTES);
+        _bufferView.setTarget(GltfConstants.GL_ARRAY_BUFFER);
+        _bufferView.setByteStride(Byte.BYTES * 4);
         return _bufferView;
     }
 

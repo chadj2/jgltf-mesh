@@ -16,7 +16,6 @@ import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
-import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.GltfWriter;
 
 /**
@@ -25,15 +24,6 @@ import io.github.chadj2.mesh.GltfWriter;
  */
 public abstract class BaseBuffer<T> {
     private static final Logger LOG = LoggerFactory.getLogger(BaseBuffer.class);
-
-    // accessor types
-    protected static final int UNSIGNED_SHORT = GltfConstants.GL_UNSIGNED_SHORT;
-    protected static final int UNSIGNED_BYTE = GltfConstants.GL_UNSIGNED_BYTE;
-    protected static final int FLOAT = GltfConstants.GL_FLOAT;
-    
-    // buffer types
-    protected static final int ELEMENT_ARRAY_BUFFER = GltfConstants.GL_ELEMENT_ARRAY_BUFFER;
-    protected static final int ARRAY_BUFFER = GltfConstants.GL_ARRAY_BUFFER;
     
     protected final String _name;
     protected final ArrayList<T> _list = new ArrayList<>();

@@ -15,6 +15,7 @@ import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.GltfWriter;
 
 /**
@@ -70,7 +71,7 @@ public class TexCoords extends BaseBuffer<Point2f> {
     @Override
     protected Accessor addAccessor(GlTF _gltf, BufferView _bufferView) {
         Accessor _accessor = super.addAccessor(_gltf, _bufferView);
-        _accessor.setComponentType(BaseBuffer.FLOAT);
+        _accessor.setComponentType(GltfConstants.GL_FLOAT);
         _accessor.setType("VEC2");
         
         _accessor.setMax(new Float[] { 
@@ -86,7 +87,7 @@ public class TexCoords extends BaseBuffer<Point2f> {
     @Override
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
-        _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
+        _bufferView.setTarget(GltfConstants.GL_ARRAY_BUFFER);
         _bufferView.setByteStride(Float.BYTES * 2);
         return _bufferView;
     }
