@@ -11,9 +11,9 @@ import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.buffer.BaseBuffer;
+import io.github.chadj2.mesh.buffer.BufferBase;
 
-public class InstRotation extends BaseBuffer<Quat4f> {
+public class InstRotation extends BufferBase<Quat4f> {
 
     private final Tuple4f _min = new Quat4f();
     private final Tuple4f _max = new Quat4f();

@@ -22,7 +22,7 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer for texture coordinate primitives.
  * @author Chad Juliano
  */
-public class TexCoords extends BaseBuffer<Point2f> {
+public class TexCoords extends BufferBase<Point2f> {
     
     private final Tuple2f _min = new Point2f();
     private final Tuple2f _max = new Point2f();

@@ -20,7 +20,7 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer for triangle index primitives.
  * @author Chad Juliano
  */
-public class TriangleIndices extends BaseBuffer<Short> {
+public class TriangleIndices extends BufferBase<Short> {
     
     public static final int MAX_INDEX = 65535;
     
@@ -83,7 +83,7 @@ public class TriangleIndices extends BaseBuffer<Short> {
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
         _bufferView.setTarget(GltfConstants.GL_ELEMENT_ARRAY_BUFFER);
-        BaseBuffer.alignWords(_buffer);
+        BufferBase.alignWords(_buffer);
         return _bufferView;
     }
 }

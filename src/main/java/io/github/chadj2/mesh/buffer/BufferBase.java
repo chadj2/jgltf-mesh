@@ -22,13 +22,13 @@ import io.github.chadj2.mesh.GltfWriter;
  * Base class for primitive serializers.
  * @author Chad Juliano
  */
-public abstract class BaseBuffer<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(BaseBuffer.class);
+public abstract class BufferBase<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(BufferBase.class);
     
     protected final String _name;
     protected final ArrayList<T> _list = new ArrayList<>();
     
-    public BaseBuffer(String _name) {
+    public BufferBase(String _name) {
         this._name = _name;
     }
     

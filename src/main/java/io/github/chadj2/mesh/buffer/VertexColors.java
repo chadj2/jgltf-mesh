@@ -19,7 +19,7 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer for vertex color primitives.
  * @author Chad Juliano
  */
-public class VertexColors extends BaseBuffer<Color> {
+public class VertexColors extends BufferBase<Color> {
     
     public VertexColors(String _name) {
         super(_name);
