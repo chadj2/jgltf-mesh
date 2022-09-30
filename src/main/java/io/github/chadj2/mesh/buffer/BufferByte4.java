@@ -42,19 +42,17 @@ public class BufferByte4 extends BufferFloat4 {
         _accessor.setComponentType(GltfConstants.GL_BYTE);
         _accessor.setType("VEC4");
         
-        Tuple4f max = this.getMax();
         _accessor.setMax(new Integer[] { 
-                (int)floatToByte(max.x), 
-                (int)floatToByte(max.y), 
-                (int)floatToByte(max.z), 
-                (int)floatToByte(max.w) });
+                (int)floatToByte(this._max.x), 
+                (int)floatToByte(this._max.y), 
+                (int)floatToByte(this._max.z), 
+                (int)floatToByte(this._max.w) });
 
-        Tuple4f min = this.getMin();
         _accessor.setMin(new Integer[] { 
-                (int)floatToByte(min.x), 
-                (int)floatToByte(min.y), 
-                (int)floatToByte(min.z), 
-                (int)floatToByte(min.w) });
+                (int)floatToByte(this._min.x), 
+                (int)floatToByte(this._min.y), 
+                (int)floatToByte(this._min.z), 
+                (int)floatToByte(this._min.w) });
         
         return _accessor;
     }

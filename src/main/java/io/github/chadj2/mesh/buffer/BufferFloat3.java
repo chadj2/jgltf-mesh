@@ -19,7 +19,7 @@ import de.javagl.jgltf.model.GltfConstants;
 public class BufferFloat3 extends BufferFloatBase<Tuple3f>  {
 
     public BufferFloat3(String _name, String _attrib) {
-        super(_name, _attrib);
+        super(_name, _attrib, Float.BYTES * 3);
         this._max = new Vector3f();
         this._min = new Vector3f();
         clear();
@@ -78,13 +78,4 @@ public class BufferFloat3 extends BufferFloatBase<Tuple3f>  {
                 this._min.z  });
         return _accessor;
     }
-
-    @Override
-    protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
-        BufferView _bufferView = super.addBufferView(_gltf, _buffer);
-        _bufferView.setTarget(GltfConstants.GL_ARRAY_BUFFER);
-        _bufferView.setByteStride(Float.BYTES * 3);
-        return _bufferView;
-    }
-    
 }
