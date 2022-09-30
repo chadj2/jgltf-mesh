@@ -14,15 +14,19 @@ import javax.vecmath.Vector3f;
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
+import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.model.GltfConstants;
+import io.github.chadj2.mesh.GltfWriter;
 
-public abstract class BufferVec3 extends BufferBase<Tuple3f>  {
+public class BufferVec3 extends BufferBase<Tuple3f>  {
     
     private final Vector3f _min = new Vector3f();
     private final Vector3f _max = new Vector3f();
+    protected final String _attrib;
 
-    public BufferVec3(String _name) {
+    public BufferVec3(String _name, String _attrib) {
         super(_name);
+        this._attrib = _attrib;
         clear();
     }
 
@@ -30,6 +34,10 @@ public abstract class BufferVec3 extends BufferBase<Tuple3f>  {
 
     public Tuple3f getMax() { return this._max; }
     
+    @Override
+    public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
+        return buildAttrib(_geoWriter, _meshPirimitive, this._attrib);
+    }
 
     @Override
     public void add(Tuple3f _vec3) {

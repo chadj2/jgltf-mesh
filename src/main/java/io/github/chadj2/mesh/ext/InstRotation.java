@@ -25,7 +25,7 @@ import io.github.chadj2.mesh.buffer.BufferVec4;
 public class InstRotation extends BufferVec4 {
     
     public InstRotation(String _name) {
-        super(_name);
+        super(_name, "ROTATION");
     }
 
     @Override
@@ -34,7 +34,7 @@ public class InstRotation extends BufferVec4 {
     }
     
     public Accessor build(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing) {
-        buildAttrib(_geoWriter, _meshInstancing, "ROTATION");
+        buildAttrib(_geoWriter, _meshInstancing, this._attrib);
         return null;
     }
     

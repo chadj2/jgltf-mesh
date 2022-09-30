@@ -8,20 +8,20 @@ package io.github.chadj2.mesh.ext;
 
 import de.javagl.jgltf.impl.v2.Accessor;
 import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.buffer.Vertices;
+import io.github.chadj2.mesh.buffer.BufferVec3;
 
 /**
  * Support EXT_mesh_gpu_instancing
  * @author Chad Juliano
  */
-public class InstTranslation extends Vertices {
+public class InstTranslation extends BufferVec3 {
 
     public InstTranslation(String _name) {
-        super(_name);
+        super(_name, "TRANSLATION");
     }
 
     public Accessor build(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing) {
-        buildAttrib(_geoWriter, _meshInstancing, "TRANSLATION");
+        buildAttrib(_geoWriter, _meshInstancing, this._attrib);
         return null;
     }
     

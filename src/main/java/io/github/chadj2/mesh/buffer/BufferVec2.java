@@ -14,16 +14,29 @@ import javax.vecmath.Tuple2f;
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
+import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.model.GltfConstants;
+import io.github.chadj2.mesh.GltfWriter;
 
-public abstract class BufferVec2 extends BufferBase<Tuple2f>  {
+public class BufferVec2 extends BufferBase<Tuple2f>  {
 
     private final Tuple2f _min = new Point2f();
     private final Tuple2f _max = new Point2f();
+    protected final String _attrib;
     
-    public BufferVec2(String _name) {
+    public BufferVec2(String _name, String _attrib) {
         super(_name);
+        this._attrib = _attrib;
         clear();
+    }
+    
+    public Tuple2f getMin() { return this._min; }
+
+    public Tuple2f getMax() { return this._max; }
+    
+    @Override
+    public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
+        return buildAttrib(_geoWriter, _meshPirimitive, this._attrib);
     }
     
     @Override

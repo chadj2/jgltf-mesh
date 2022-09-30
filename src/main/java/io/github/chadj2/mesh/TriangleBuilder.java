@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.Material;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.buffer.Normals;
-import io.github.chadj2.mesh.buffer.Tangents;
-import io.github.chadj2.mesh.buffer.TexCoords;
+import io.github.chadj2.mesh.buffer.BufferVec2;
+import io.github.chadj2.mesh.buffer.BufferVec3;
+import io.github.chadj2.mesh.buffer.BufferVec4;
 import io.github.chadj2.mesh.buffer.TriangleIndices;
 
 /**
@@ -156,7 +156,7 @@ public class TriangleBuilder extends TopologyBuilder {
         }
     }
     
-    protected Normals _normals = null;
+    protected BufferVec3 _normals = null;
 
     @Override
     protected void buildBuffers(GltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
@@ -171,9 +171,9 @@ public class TriangleBuilder extends TopologyBuilder {
             throw new Exception("Mesh has no indices: " + this.getName());
         }
         
-        TexCoords _texCoords = new TexCoords(this.getName());
-        this._normals = new Normals(this.getName());
-        Tangents _tangents = new Tangents(this.getName());
+        BufferVec2 _texCoords = new BufferVec2(this.getName(), "TEXCOORD_0");
+        this._normals = new BufferVec3(this.getName(), "NORMAL");
+        BufferVec4 _tangents = new BufferVec4(this.getName(), "TANGENT");
         
         for(MeshVertex _meshVertex : this._vertexList) {
             Point2f _texCoord = _meshVertex.getTexCoord();
