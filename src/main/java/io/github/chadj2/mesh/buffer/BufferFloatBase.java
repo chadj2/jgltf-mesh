@@ -13,7 +13,7 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.model.GltfConstants;
-import io.github.chadj2.mesh.GltfWriter;
+import io.github.chadj2.mesh.MeshGltfWriter;
 
 public abstract class BufferFloatBase<T> extends BufferBase<T> {
     
@@ -33,15 +33,15 @@ public abstract class BufferFloatBase<T> extends BufferBase<T> {
     public T getMax() { return this._max; }
     
     @Override
-    public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
+    public Accessor build(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
         return buildAttrib(_geoWriter, _meshPirimitive, this._attrib);
     }
 
-    public Accessor build(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing) {
+    public Accessor build(MeshGltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing) {
         return buildAttrib(_geoWriter, _meshInstancing, this._attrib);
     }
     
-    protected final Accessor buildAttrib(GltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing,
+    protected final Accessor buildAttrib(MeshGltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing,
             String _attribute) {
         Accessor _accessor = buildBuffer(_geoWriter);
         if(_accessor == null) {

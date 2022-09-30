@@ -142,7 +142,7 @@ public class TopologyBuilder extends BaseBuilder {
      * @param _geoWriter Instance of writer class.
      * @return Node containing the mesh.
      */
-    public Node build(GltfWriter _geoWriter) throws Exception {
+    public Node build(MeshGltfWriter _geoWriter) throws Exception {
         int _meshIdx = buildMesh(_geoWriter);
         
         Node _node = new Node();
@@ -159,7 +159,7 @@ public class TopologyBuilder extends BaseBuilder {
      * @return
      * @throws Exception
      */
-    public int buildMesh(GltfWriter _geoWriter) throws Exception {
+    public int buildMesh(MeshGltfWriter _geoWriter) throws Exception {
         MeshPrimitive _meshPrimitive = new MeshPrimitive();
         _meshPrimitive.setMode(this._topologyMode.ordinal());
 
@@ -186,7 +186,7 @@ public class TopologyBuilder extends BaseBuilder {
      * @param _geoWriter Instance of writer class.
      * @param _meshPrimitive The glTF section containing serialized buffers.
      */
-    protected void buildBuffers(GltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
+    protected void buildBuffers(MeshGltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
         if(this._vertexList.size() == 0) {
             throw new Exception("No vertices to build!");
         }

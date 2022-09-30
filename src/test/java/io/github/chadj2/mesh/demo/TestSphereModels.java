@@ -17,16 +17,16 @@ import org.slf4j.LoggerFactory;
 
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.BaseBuilder;
-import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.IcosphereBuilder;
-import io.github.chadj2.mesh.SphereFactory;
-import io.github.chadj2.mesh.SphereFactoryExt;
+import io.github.chadj2.mesh.MeshGltfWriter;
+import io.github.chadj2.mesh.sphere.IcosphereBuilder;
+import io.github.chadj2.mesh.sphere.SphereFactory;
+import io.github.chadj2.mesh.sphere.SphereFactoryExt;
 
 public class TestSphereModels {
 
     private final static Logger LOG = LoggerFactory.getLogger(TestSphereModels.class);
 
-    private final GltfWriter _writer = new GltfWriter();
+    private final MeshGltfWriter _writer = new MeshGltfWriter();
 
     /**
      * Create a 10x10 grid of spheres with varying color and radius.

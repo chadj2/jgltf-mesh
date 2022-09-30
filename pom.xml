@@ -4,7 +4,7 @@
 
     <groupId>io.github.chadj2</groupId>
     <artifactId>jgltf-mesh</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>Java glTF MeshBuilder</name>

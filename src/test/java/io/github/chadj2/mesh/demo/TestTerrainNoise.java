@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.javagl.jgltf.impl.v2.Material;
-import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.GltfWriter.AlphaMode;
+import io.github.chadj2.mesh.MeshGltfWriter;
+import io.github.chadj2.mesh.MeshGltfWriter.AlphaMode;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 import io.github.chadj2.mesh.noise.NoiseGenerator;
@@ -27,7 +27,7 @@ public class TestTerrainNoise {
     private final static Logger LOG = LoggerFactory.getLogger(TestShapeModels.class);
     private final static String TEST_TEXTURE_PNG = "gltf_logo.png";
     
-    private final GltfWriter _geoWriter = new GltfWriter();
+    private final MeshGltfWriter _geoWriter = new MeshGltfWriter();
     
     @Before
     public void setup() {

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package io.github.chadj2.mesh;
+package io.github.chadj2.mesh.sphere;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -20,7 +20,9 @@ import de.javagl.jgltf.impl.v2.Material;
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.GltfWriter.AlphaMode;
+import io.github.chadj2.mesh.BaseBuilder;
+import io.github.chadj2.mesh.MeshGltfWriter;
+import io.github.chadj2.mesh.MeshGltfWriter.AlphaMode;
 
 /**
  * Generate a large set of spheres of various sizes, colors, and transparencies. 
@@ -32,7 +34,7 @@ public class SphereFactory extends BaseBuilder {
     private final static Logger LOG = LoggerFactory.getLogger(SphereFactory.class);
     
     private final IcosphereBuilder _builder = new IcosphereBuilder("icosphere");
-    protected final GltfWriter _writer;
+    protected final MeshGltfWriter _writer;
     
     /**
      * Map of color/lod to mesh indices.
@@ -50,7 +52,7 @@ public class SphereFactory extends BaseBuilder {
     
     private Color _color = Color.WHITE;
     
-    public SphereFactory(GltfWriter _writer) {
+    public SphereFactory(MeshGltfWriter _writer) {
         super("sphere");
         this._builder.setIsPatterned(false);
         this._builder.setColor(Color.WHITE);

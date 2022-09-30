@@ -62,7 +62,7 @@ public class TriangleBuilder extends TopologyBuilder {
     /**
      * Set a Material that will be used when generating the mesh.
      * @param _material Material from the GltfWriter
-     * @see GltfWriter#newTextureMaterial(String)
+     * @see MeshGltfWriter#newTextureMaterial(String)
      */
     public void setMaterial(Material _material) {
         this._material = _material;
@@ -75,11 +75,11 @@ public class TriangleBuilder extends TopologyBuilder {
      * This method should be called when all shapes have added. It will serialize the MeshVertex
      * list and indices to buffers.
      * @param _material Material from the GltfWriter
-     * @see GltfWriter#newTextureMaterial(String)
+     * @see MeshGltfWriter#newTextureMaterial(String)
      * @deprecated Use {@link #setMaterial(Material)} instead
      */
     @Deprecated
-    public Node build(GltfWriter _geoWriter, Material _material) throws Exception {
+    public Node build(MeshGltfWriter _geoWriter, Material _material) throws Exception {
         this.setMaterial(_material);
         return build(_geoWriter);
     }
@@ -159,7 +159,7 @@ public class TriangleBuilder extends TopologyBuilder {
     protected BufferFloat3 _normals = null;
 
     @Override
-    protected void buildBuffers(GltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
+    protected void buildBuffers(MeshGltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
         super.buildBuffers(_geoWriter, _meshPrimitive);
         
         if(this._material != null) {
@@ -213,7 +213,7 @@ public class TriangleBuilder extends TopologyBuilder {
      * @param _size
      * @throws Exception
      */
-    public void debugNormals(GltfWriter _geoWriter, float _size) throws Exception {
+    public void debugNormals(MeshGltfWriter _geoWriter, float _size) throws Exception {
         TopologyBuilder _builder = new TopologyBuilder("debug_normals", TopologyMode.LINES);
         
         for(int idx = 0; idx <  this._vertices.size(); idx++) {

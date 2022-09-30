@@ -42,6 +42,7 @@ import de.javagl.jgltf.model.impl.DefaultGltfModel;
 import de.javagl.jgltf.model.io.Buffers;
 import de.javagl.jgltf.model.io.GltfReference;
 import de.javagl.jgltf.model.io.GltfReferenceResolver;
+import de.javagl.jgltf.model.io.GltfWriter;
 import de.javagl.jgltf.model.io.v2.GltfAssetV2;
 import de.javagl.jgltf.model.io.v2.GltfAssetsV2;
 import de.javagl.jgltf.model.io.v2.GltfModelWriterV2;
@@ -51,7 +52,7 @@ import de.javagl.jgltf.model.v2.GltfModelCreatorV2;
  * Serialize added nodes to glTF format.
  * @author Chad Juliano
  */
-public class GltfWriter {
+public class MeshGltfWriter {
     
     /**
      * The AlphaMode is used when creating a Material.
@@ -78,7 +79,7 @@ public class GltfWriter {
      */
     public enum GltfFormat { gltf, glb }
 
-    private final static Logger LOG = LoggerFactory.getLogger(GltfWriter.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MeshGltfWriter.class);
 
     /** Largest size of byte buffer we will support. */
     private static final int MAX_BUFFER_SIZE = 50*1024*1024;
@@ -106,7 +107,7 @@ public class GltfWriter {
     /** These nodes will get added to the GlTF object at write time */
     private final List<Node> _nodes = new ArrayList<>();
     
-    public GltfWriter() {
+    public MeshGltfWriter() {
         this._gltf.addScenes(this._topScene);
     }
     
@@ -248,7 +249,7 @@ public class GltfWriter {
     public void writeGltf(File outFile) throws Exception {
         String ext = FilenameUtils.getExtension(outFile.getName());
         GltfFormat format = GltfFormat.valueOf(ext);
-        GltfWriter.LOG.info("Writing glTF: {}", outFile.getAbsolutePath());
+        MeshGltfWriter.LOG.info("Writing glTF: {}", outFile.getAbsolutePath());
         
         try (OutputStream os = new FileOutputStream(outFile))
         {
@@ -296,7 +297,7 @@ public class GltfWriter {
     
     private void writeEmbedded(DefaultGltfModel gltfModel, OutputStream os) throws IOException {
         GltfAssetV2 embeddedAsset = GltfAssetsV2.createEmbedded(gltfModel);
-        de.javagl.jgltf.model.io.GltfWriter gltfWriter = new de.javagl.jgltf.model.io.GltfWriter();
+        GltfWriter gltfWriter = new GltfWriter();
         GlTF embeddedGltf = embeddedAsset.getGltf();
         
         // workaround to copy extensions and asset from old gltf object.

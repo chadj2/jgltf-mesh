@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package io.github.chadj2.mesh;
+package io.github.chadj2.mesh.sphere;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +20,7 @@ import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.buffer.BufferFloat3;
 import io.github.chadj2.mesh.buffer.GlTFMeshGpuInstancing;
+import io.github.chadj2.mesh.MeshGltfWriter;
 import io.github.chadj2.mesh.buffer.BufferByte4;
 
 /**
@@ -58,7 +59,7 @@ public class SphereFactoryExt extends SphereFactory {
             this._scale.add(scale);
         }
         
-        void build(GltfWriter writer) {
+        void build(MeshGltfWriter writer) {
             GlTFMeshGpuInstancing meshInstancing = new GlTFMeshGpuInstancing();
             this._node.addExtensions(EXT_INSTANCING, meshInstancing);
             this._trans.build(writer, meshInstancing);
@@ -69,7 +70,7 @@ public class SphereFactoryExt extends SphereFactory {
     
     private final Map<Integer, InstancingNode> _meshToNodeIndex = new HashMap<>();
     
-    public SphereFactoryExt(GltfWriter writer) {
+    public SphereFactoryExt(MeshGltfWriter writer) {
         super(writer);
     }
     

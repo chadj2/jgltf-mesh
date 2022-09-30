@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import de.javagl.jgltf.impl.v2.Material;
 import io.github.chadj2.mesh.BaseBuilder;
-import io.github.chadj2.mesh.GltfWriter;
-import io.github.chadj2.mesh.GltfWriter.AlphaMode;
+import io.github.chadj2.mesh.MeshGltfWriter;
+import io.github.chadj2.mesh.MeshGltfWriter.AlphaMode;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 
@@ -31,7 +31,7 @@ public class TestShapeModels {
     private final static String TEST_TEXTURE_PNG = "uv_grid_512.png";
     private final static String OUT_PATH = "./demo";
     
-    private final GltfWriter _writer = new GltfWriter();
+    private final MeshGltfWriter _writer = new MeshGltfWriter();
     
     @Before
     public void setup() {

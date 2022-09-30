@@ -16,7 +16,7 @@ import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
-import io.github.chadj2.mesh.GltfWriter;
+import io.github.chadj2.mesh.MeshGltfWriter;
 
 /**
  * Base class for primitive serializers.
@@ -40,11 +40,11 @@ public abstract class BufferBase<T> {
 
     public void clear() { this._list.clear(); }
     
-    public abstract Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive);
+    public abstract Accessor build(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive);
 
     protected abstract void writeBuf(ByteBuffer _buffer);
     
-    protected final Accessor buildAttrib(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive, String _attribute) {
+    protected final Accessor buildAttrib(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive, String _attribute) {
         Accessor _accessor = buildBuffer(_geoWriter);
         if(_accessor == null) {
             return null;
@@ -55,7 +55,7 @@ public abstract class BufferBase<T> {
         return _accessor;
     }
     
-    protected final Accessor buildBuffer(GltfWriter _geoWriter) {
+    protected final Accessor buildBuffer(MeshGltfWriter _geoWriter) {
         if(size() == 0) {
             return null;
         }

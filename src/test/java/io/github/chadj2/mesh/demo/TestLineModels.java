@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.GltfWriter;
+import io.github.chadj2.mesh.MeshGltfWriter;
 import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
 import io.github.chadj2.mesh.TopologyBuilder;
@@ -32,7 +32,7 @@ public class TestLineModels {
     
     private final static Logger LOG = LoggerFactory.getLogger(TestLineModels.class);
 
-    private final GltfWriter _geoWriter = new GltfWriter();
+    private final MeshGltfWriter _geoWriter = new MeshGltfWriter();
     
     /**
      * Draw a spiral using the line strip topology.

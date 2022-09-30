@@ -4,13 +4,16 @@
  * SPDX-License-Identifier: MIT
  */
 
-package io.github.chadj2.mesh;
+package io.github.chadj2.mesh.sphere;
 
 import java.awt.Color;
 import java.util.HashMap;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+
+import io.github.chadj2.mesh.MeshVertex;
+import io.github.chadj2.mesh.TriangleBuilder;
 
 /**
  * Generate 3d Icosphere.
