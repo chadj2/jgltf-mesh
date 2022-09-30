@@ -7,7 +7,6 @@
 package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Tuple2f;
@@ -22,9 +21,8 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer for texture coordinate primitives.
  * @author Chad Juliano
  */
-public class TexCoords extends BaseBuffer {
+public class TexCoords extends BaseBuffer<Point2f> {
     
-    private final ArrayList<Tuple2f> _list = new ArrayList<>();
     private final Tuple2f _min = new Point2f();
     private final Tuple2f _max = new Point2f();
     
@@ -33,30 +31,26 @@ public class TexCoords extends BaseBuffer {
         clear();
     }
     
-    public void add(Tuple2f _coord) {
+    @Override
+    public void add(Point2f _coord) {
+        super.add(_coord);
+        
         this._min.x = Math.min(this._min.x, _coord.x);
         this._min.y = Math.min(this._min.y, _coord.y);
         
         this._max.x = Math.max(this._max.x, _coord.x);
         this._max.y = Math.max(this._max.y, _coord.y);
-        
-        this._list.add(_coord);
     }
     
     @Override
     public void clear() {
-        this._list.clear();
+        super.clear();
         
         this._min.x = Float.POSITIVE_INFINITY;
         this._min.y = Float.POSITIVE_INFINITY;
         
         this._max.x = Float.NEGATIVE_INFINITY;
         this._max.y = Float.NEGATIVE_INFINITY;
-    }
-
-    @Override
-    public int size() {
-        return this._list.size();
     }
     
     @Override
@@ -93,7 +87,7 @@ public class TexCoords extends BaseBuffer {
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
         _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
-        _bufferView.setByteStride(8);
+        _bufferView.setByteStride(Float.BYTES * 2);
         return _bufferView;
     }
 }

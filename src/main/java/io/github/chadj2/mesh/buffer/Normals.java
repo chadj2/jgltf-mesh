@@ -7,7 +7,6 @@
 package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
@@ -22,32 +21,32 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer for normal vector primitives.
  * @author Chad Juliano
  */
-public class Normals extends BaseBuffer {
+public class Normals extends BaseBuffer<Vector3f> {
 
-    private final ArrayList<Tuple3f> _list = new ArrayList<>();
-    private final Tuple3f _min = new Vector3f();
-    private final Tuple3f _max = new Vector3f();
+    private final Vector3f _min = new Vector3f();
+    private final Vector3f _max = new Vector3f();
     
     public Normals(String _name) {
         super(_name);
         clear();
     }
     
-    public void add(Tuple3f _vertex) {
-        this._min.x = Math.min(this._min.x, _vertex.x);
-        this._min.y = Math.min(this._min.y, _vertex.y);
-        this._min.z = Math.min(this._min.z, _vertex.z);
+    @Override
+    public void add(Vector3f _primitive) {
+        super.add(_primitive);
         
-        this._max.x = Math.max(this._max.x, _vertex.x);
-        this._max.y = Math.max(this._max.y, _vertex.y);
-        this._max.z = Math.max(this._max.z, _vertex.z);
-
-        this._list.add(_vertex);
+        this._min.x = Math.min(this._min.x, _primitive.x);
+        this._min.y = Math.min(this._min.y, _primitive.y);
+        this._min.z = Math.min(this._min.z, _primitive.z);
+        
+        this._max.x = Math.max(this._max.x, _primitive.x);
+        this._max.y = Math.max(this._max.y, _primitive.y);
+        this._max.z = Math.max(this._max.z, _primitive.z);
     }
     
     @Override
     public void clear() {
-        this._list.clear();
+        super.clear();
         
         this._min.x = Float.POSITIVE_INFINITY;
         this._min.y = Float.POSITIVE_INFINITY;
@@ -56,15 +55,6 @@ public class Normals extends BaseBuffer {
         this._max.x = Float.NEGATIVE_INFINITY;
         this._max.y = Float.NEGATIVE_INFINITY;
         this._max.z = Float.NEGATIVE_INFINITY;
-    }
-    
-    @Override
-    public int size() {
-        return this._list.size();
-    }
-    
-    public Tuple3f get(int idx) {
-        return this._list.get(idx);
     }
     
     @Override
@@ -105,7 +95,7 @@ public class Normals extends BaseBuffer {
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
         _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
-        _bufferView.setByteStride(12);
+        _bufferView.setByteStride(Float.BYTES * 3);
         return _bufferView;
     }
 }

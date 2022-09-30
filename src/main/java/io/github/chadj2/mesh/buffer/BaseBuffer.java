@@ -7,6 +7,7 @@
 package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,36 +16,43 @@ import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.GltfWriter;
 
 /**
  * Base class for primitive serializers.
  * @author Chad Juliano
  */
-public abstract class BaseBuffer {
-    
-    private final static Logger LOG = LoggerFactory.getLogger(BaseBuffer.class);
-    
+public abstract class BaseBuffer<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(BaseBuffer.class);
+
     // accessor types
-    protected static final int UNSIGNED_SHORT = 5123;
-    protected static final int UNSIGNED_BYTE = 5121;
-    protected static final int FLOAT = 5126;
+    protected static final int UNSIGNED_SHORT = GltfConstants.GL_UNSIGNED_SHORT;
+    protected static final int UNSIGNED_BYTE = GltfConstants.GL_UNSIGNED_BYTE;
+    protected static final int FLOAT = GltfConstants.GL_FLOAT;
     
     // buffer types
-    protected static final int ELEMENT_ARRAY_BUFFER = 34963;
-    protected static final int ARRAY_BUFFER = 34962;
-    
-    public abstract int size();
-    public abstract void clear();
-    public abstract Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive);
-
-    protected abstract void writeBuf(ByteBuffer _buffer);
+    protected static final int ELEMENT_ARRAY_BUFFER = GltfConstants.GL_ELEMENT_ARRAY_BUFFER;
+    protected static final int ARRAY_BUFFER = GltfConstants.GL_ARRAY_BUFFER;
     
     protected final String _name;
+    protected final ArrayList<T> _list = new ArrayList<>();
     
     public BaseBuffer(String _name) {
         this._name = _name;
     }
+    
+    public void add(T _primitive) {  this._list.add(_primitive); }
+    
+    public T get(int idx) { return this._list.get(idx); }
+    
+    public int size() { return this._list.size(); }
+
+    public void clear() { this._list.clear(); }
+    
+    public abstract Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive);
+
+    protected abstract void writeBuf(ByteBuffer _buffer);
     
     protected final Accessor buildAttrib(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive, String _attribute) {
         Accessor _accessor = buildBuffer(_geoWriter);

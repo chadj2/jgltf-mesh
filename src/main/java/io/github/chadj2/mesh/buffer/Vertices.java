@@ -7,7 +7,6 @@
 package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 import javax.vecmath.Point3f;
 import javax.vecmath.Tuple3f;
@@ -22,9 +21,8 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer vertex primitives.
  * @author Chad Juliano
  */
-public class Vertices extends BaseBuffer {
+public class Vertices extends BaseBuffer<Point3f> {
     
-    private final ArrayList<Tuple3f> _list = new ArrayList<>();
     private final Tuple3f _min = new Point3f();
     private final Tuple3f _max = new Point3f();
     
@@ -35,7 +33,7 @@ public class Vertices extends BaseBuffer {
     
     @Override
     public void clear() {
-        this._list.clear();
+        super.clear();
         
         this._min.x = Float.POSITIVE_INFINITY;
         this._min.y = Float.POSITIVE_INFINITY;
@@ -46,7 +44,10 @@ public class Vertices extends BaseBuffer {
         this._max.z = Float.NEGATIVE_INFINITY;
     }
     
+    @Override
     public void add(Point3f _vertex) {
+        super.add(_vertex);
+        
         this._min.x = Math.min(this._min.x, _vertex.x);
         this._min.y = Math.min(this._min.y, _vertex.y);
         this._min.z = Math.min(this._min.z, _vertex.z);
@@ -54,23 +55,12 @@ public class Vertices extends BaseBuffer {
         this._max.x = Math.max(this._max.x, _vertex.x);
         this._max.y = Math.max(this._max.y, _vertex.y);
         this._max.z = Math.max(this._max.z, _vertex.z);
+    }
+    
+    public Tuple3f getMin() { return this._min; }
 
-        this._list.add(_vertex);
-    }
+    public Tuple3f getMax() { return this._max; }
     
-    public Tuple3f getMinBounds() { return this._min; }
-
-    public Tuple3f getMaxBounds() { return this._max; }
-    
-    
-    public Tuple3f get(int idx) {
-        return this._list.get(idx);
-    }
-    
-    @Override
-    public int size() {
-        return this._list.size();
-    }
     
     @Override
     public Accessor build(GltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
@@ -109,7 +99,7 @@ public class Vertices extends BaseBuffer {
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
         _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
-        _bufferView.setByteStride(12);
+        _bufferView.setByteStride(Float.BYTES * 3);
         return _bufferView;
     }
     

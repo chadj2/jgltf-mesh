@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.vecmath.Point3f;
+import javax.vecmath.Quat4f;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.ext.GlTFMeshGpuInstancing;
+import io.github.chadj2.mesh.ext.InstRotation;
 import io.github.chadj2.mesh.ext.InstTranslation;
 
 /**
@@ -31,11 +33,13 @@ public class SphereFactoryExt extends SphereFactory {
     
     private static class InstancingNode {
         final InstTranslation _trans;
+        final InstRotation _rot;
         final Node _node;
         
         InstancingNode(Node node, String name) {
             this._node = node;
             this._trans = new InstTranslation(name);
+            this._rot = new InstRotation(name);
             this._node.setName(name + "_node");
         }
         
@@ -43,10 +47,15 @@ public class SphereFactoryExt extends SphereFactory {
             this._trans.add(pos);
         }
         
+        void addRotation(Quat4f _quat) {
+            this._rot.add(_quat);
+        }
+        
         void build(GltfWriter writer) {
             GlTFMeshGpuInstancing meshInstancing = new GlTFMeshGpuInstancing();
             this._node.addExtensions(EXT_INSTANCING, meshInstancing);
             this._trans.build(writer, meshInstancing);
+            this._rot.build(writer, meshInstancing);
         }
     }
     
@@ -64,6 +73,7 @@ public class SphereFactoryExt extends SphereFactory {
         InstancingNode iNode = this._meshToNodeIndex.get(meshIdx);
         if(iNode != null) {
             iNode.addPos(pos);
+            iNode.addRotation(new Quat4f(0,0,0,1));
             return iNode._node;
         }
         
@@ -74,6 +84,7 @@ public class SphereFactoryExt extends SphereFactory {
         
         iNode = new InstancingNode(node, name);
         iNode.addPos(pos);
+        iNode.addRotation(new Quat4f(0,0,0,1));
         
         this._meshToNodeIndex.put(meshIdx, iNode);
         return node;

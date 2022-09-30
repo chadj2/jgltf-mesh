@@ -208,8 +208,8 @@ public class TopologyBuilder extends BaseBuilder {
         }
         
         // save bounds for later
-        this._minBounds = this._vertices.getMinBounds();
-        this._maxBounds = this._vertices.getMaxBounds();
+        this._minBounds = this._vertices.getMin();
+        this._maxBounds = this._vertices.getMax();
         this._vertices.build(_geoWriter, _meshPrimitive);
         _colors.build(_geoWriter, _meshPrimitive);
     }

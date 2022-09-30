@@ -7,7 +7,6 @@
 package io.github.chadj2.mesh.buffer;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 import javax.vecmath.Tuple4f;
 import javax.vecmath.Vector4f;
@@ -22,9 +21,8 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer for Tangent primitives.
  * @author Chad Juliano
  */
-public class Tangents extends BaseBuffer {
+public class Tangents extends BaseBuffer<Vector4f> {
     
-    private final ArrayList<Tuple4f> _list = new ArrayList<>();
     private final Tuple4f _min = new Vector4f();
     private final Tuple4f _max = new Vector4f();
     
@@ -33,7 +31,10 @@ public class Tangents extends BaseBuffer {
         clear();
     }
     
-    public void add(Tuple4f _tangent) {
+    @Override
+    public void add(Vector4f _tangent) {
+        super.add(_tangent);
+        
         this._min.x = Math.min(this._min.x, _tangent.x);
         this._min.y = Math.min(this._min.y, _tangent.y);
         this._min.z = Math.min(this._min.z, _tangent.z);
@@ -43,13 +44,11 @@ public class Tangents extends BaseBuffer {
         this._max.y = Math.max(this._max.y, _tangent.y);
         this._max.z = Math.max(this._max.z, _tangent.z);
         this._max.w = Math.max(this._max.w, _tangent.w);
-        
-        this._list.add(_tangent);
     }
     
     @Override
     public void clear() {
-        this._list.clear();
+        super.clear();
         
         this._min.x = Float.POSITIVE_INFINITY;
         this._min.y = Float.POSITIVE_INFINITY;
@@ -60,11 +59,6 @@ public class Tangents extends BaseBuffer {
         this._max.y = Float.NEGATIVE_INFINITY;
         this._max.z = Float.NEGATIVE_INFINITY;
         this._max.w = Float.NEGATIVE_INFINITY;
-    }
-    
-    @Override
-    public int size() {
-        return this._list.size();
     }
     
     @Override
@@ -108,7 +102,7 @@ public class Tangents extends BaseBuffer {
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
         _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
-        _bufferView.setByteStride(16);
+        _bufferView.setByteStride(Float.BYTES * 4);
         return _bufferView;
     }
 }

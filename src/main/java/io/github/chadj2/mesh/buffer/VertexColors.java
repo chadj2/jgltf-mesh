@@ -7,7 +7,6 @@ package io.github.chadj2.mesh.buffer;
 
 import java.awt.Color;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
@@ -19,26 +18,10 @@ import io.github.chadj2.mesh.GltfWriter;
  * Serializer for vertex color primitives.
  * @author Chad Juliano
  */
-public class VertexColors extends BaseBuffer {
-
-    private final ArrayList<Color> _list = new ArrayList<>();
+public class VertexColors extends BaseBuffer<Color> {
     
     public VertexColors(String _name) {
         super(_name);
-    }
-    
-    public void add(Color _color) {
-        this._list.add(_color);
-    }
-
-    @Override
-    public void clear() {
-        this._list.clear();
-    }
-    
-    @Override
-    public int size() {
-        return this._list.size();
     }
 
     @Override
@@ -76,7 +59,7 @@ public class VertexColors extends BaseBuffer {
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
         _bufferView.setTarget(BaseBuffer.ARRAY_BUFFER);
-        _bufferView.setByteStride(4);
+        _bufferView.setByteStride(Integer.BYTES);
         return _bufferView;
     }
 }
