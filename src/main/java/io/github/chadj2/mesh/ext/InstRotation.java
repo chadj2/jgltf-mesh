@@ -88,11 +88,11 @@ public class InstRotation extends BufferBase<Quat4f> {
     }
     
     private static byte floatToByte(float fVal) {
-        int iVal = Math.round(fVal * 127f);
+        Integer iVal = Math.round(fVal * 127f);
         if(iVal < -127 || iVal > 127) {
             throw new RuntimeException(String.format("Value overflow: %d", iVal));
         }
-        return (byte)iVal;
+        return iVal.byteValue();
     }
     
     @Override
