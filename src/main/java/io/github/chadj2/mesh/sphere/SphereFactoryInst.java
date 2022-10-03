@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.MeshGltfWriter;
-import io.github.chadj2.mesh.buffer.BufferFloat3;
-import io.github.chadj2.mesh.buffer.BufferFloat4;
+import io.github.chadj2.mesh.buffer.BufferVecFloat3;
+import io.github.chadj2.mesh.buffer.BufferVecFloat4;
 import io.github.chadj2.mesh.ext.FeatureId;
 import io.github.chadj2.mesh.ext.GlTFMeshGpuInstancing;
 import io.github.chadj2.mesh.ext.NodeInstanceFeatures;
@@ -38,17 +38,17 @@ public class SphereFactoryInst extends SphereFactory {
     private final static String EXT_INST_FEATURES = "EXT_instance_features";
     
     private static class InstancingNode {
-        final BufferFloat3 _scale;
-        final BufferFloat4 _rotation;
-        final BufferFloat3 _trans;
+        final BufferVecFloat3 _scale;
+        final BufferVecFloat4 _rotation;
+        final BufferVecFloat3 _trans;
         final Node _node;
         
         InstancingNode(Node node, String name) {
             this._node = node;
-            this._scale = new BufferFloat3(name + "-scale");
+            this._scale = new BufferVecFloat3(name + "-scale");
             //this._rotation = new BufferByte4(name, "ROTATION");
-            this._rotation = new BufferFloat4(name + "-rotation");
-            this._trans = new BufferFloat3(name + "-translation");
+            this._rotation = new BufferVecFloat4(name + "-rotation");
+            this._trans = new BufferVecFloat3(name + "-translation");
             this._node.setName(name + "_node");
         }
         

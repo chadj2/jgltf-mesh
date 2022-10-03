@@ -6,8 +6,13 @@
 
 package io.github.chadj2.mesh.buffer;
 
+import java.nio.ByteBuffer;
+
 import de.javagl.jgltf.impl.v2.Accessor;
+import de.javagl.jgltf.impl.v2.BufferView;
+import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
+import de.javagl.jgltf.model.GltfConstants;
 import io.github.chadj2.mesh.MeshGltfWriter;
 
 /**
@@ -48,5 +53,13 @@ public class TriangleIndices extends BufferShort {
         int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_accessor);
         _meshPirimitive.setIndices(_accessorIdx);
         return _accessor;
+    }
+
+    @Override
+    protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
+        BufferView _bufferView = super.addBufferView(_gltf, _buffer);
+        _bufferView.setTarget(GltfConstants.GL_ELEMENT_ARRAY_BUFFER);
+        BufferBase.alignWords(_buffer);
+        return _bufferView;
     }
 }

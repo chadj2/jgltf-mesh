@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.Material;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.buffer.BufferFloat2;
-import io.github.chadj2.mesh.buffer.BufferFloat3;
+import io.github.chadj2.mesh.buffer.BufferVecFloat2;
+import io.github.chadj2.mesh.buffer.BufferVecFloat3;
 import io.github.chadj2.mesh.buffer.TriangleIndices;
 
 /**
@@ -155,7 +155,7 @@ public class TriangleBuilder extends TopologyBuilder {
         }
     }
     
-    protected BufferFloat3 _normals = null;
+    protected BufferVecFloat3 _normals = null;
 
     @Override
     protected void buildBuffers(MeshGltfWriter _geoWriter, MeshPrimitive _meshPrimitive) throws Exception {
@@ -170,8 +170,8 @@ public class TriangleBuilder extends TopologyBuilder {
             throw new Exception("Mesh has no indices: " + this.getName());
         }
         
-        BufferFloat2 _texCoords = new BufferFloat2(this.getName() + "-texCoords");
-        this._normals = new BufferFloat3(this.getName() + "-normals");
+        BufferVecFloat2 _texCoords = new BufferVecFloat2(this.getName() + "-texCoords");
+        this._normals = new BufferVecFloat3(this.getName() + "-normals");
         //BufferFloat4 _tangents = new BufferFloat4(this.getName(), "tangents");
         
         for(MeshVertex _meshVertex : this._vertexList) {

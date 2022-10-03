@@ -32,6 +32,11 @@ public abstract class BufferBase<T> {
     public BufferBase(String _name) {
         this._name = _name;
     }
+
+
+    public abstract T getMin();
+
+    public abstract T getMax();
     
     public void add(T _primitive) {  this._list.add(_primitive); }
     

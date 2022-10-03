@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.buffer.BufferFloat3;
+import io.github.chadj2.mesh.buffer.BufferVecFloat3;
 import io.github.chadj2.mesh.buffer.TriangleIndices;
 import io.github.chadj2.mesh.buffer.VertexColors;
 
@@ -179,7 +179,7 @@ public class TopologyBuilder extends BaseBuilder {
         return _meshIdx;
     }
     
-    protected BufferFloat3 _vertices = null;
+    protected BufferVecFloat3 _vertices = null;
     
     /**
      * Generate primitive lists from the MeshVertex list and serialize to buffers.
@@ -191,7 +191,7 @@ public class TopologyBuilder extends BaseBuilder {
             throw new Exception("No vertices to build!");
         }
         
-        this._vertices = new BufferFloat3(this.getName() + "-vertices");
+        this._vertices = new BufferVecFloat3(this.getName() + "-vertices");
         VertexColors _colors = new VertexColors(this.getName());
 
         for(MeshVertex _meshVertex : this._vertexList) {

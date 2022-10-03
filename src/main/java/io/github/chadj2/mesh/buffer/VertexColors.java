@@ -7,6 +7,7 @@ package io.github.chadj2.mesh.buffer;
 
 import java.awt.Color;
 import java.nio.ByteBuffer;
+import java.util.Collections;
 
 import de.javagl.jgltf.impl.v2.Accessor;
 import de.javagl.jgltf.impl.v2.BufferView;
@@ -19,7 +20,7 @@ import io.github.chadj2.mesh.MeshGltfWriter;
  * Serializer for vertex color primitives.
  * @author Chad Juliano
  */
-public class VertexColors extends BufferArrayBase<Byte> {
+public class VertexColors extends BufferVecBase<Byte> {
     
     public VertexColors(String _name) {
         super(_name, Byte.BYTES * 4);
@@ -27,6 +28,16 @@ public class VertexColors extends BufferArrayBase<Byte> {
 
     public Accessor build(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
         return buildAttrib(_geoWriter, _meshPirimitive, "COLOR_0");
+    }
+    
+    @Override
+    public Byte getMin() { 
+        return Collections.min(this._list);
+    }
+    
+    @Override
+    public Byte getMax() {
+        return Collections.max(this._list);
     }
     
     @Override
@@ -50,6 +61,13 @@ public class VertexColors extends BufferArrayBase<Byte> {
         _accessor.setComponentType(GltfConstants.GL_UNSIGNED_BYTE);
         _accessor.setType("VEC4");
         _accessor.setNormalized(true);
+        
+        _accessor.setMax(new Number[] { 
+                getMax() });
+        
+        _accessor.setMin(new Number[] { 
+                getMin() });
+        
         return _accessor;
     }
 

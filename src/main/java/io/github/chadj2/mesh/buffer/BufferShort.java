@@ -20,10 +20,12 @@ public class BufferShort extends BufferBase<Short> {
         super(_name);
     }
 
+    @Override
     public Short getMin() { 
         return Collections.min(this._list);
     }
     
+    @Override
     public Short getMax() {
         return Collections.max(this._list);
     }
@@ -34,29 +36,20 @@ public class BufferShort extends BufferBase<Short> {
         _accessor.setComponentType(GltfConstants.GL_UNSIGNED_SHORT);
         _accessor.setType("SCALAR");
         
-        _accessor.setMax(new Short[] { 
+        _accessor.setMax(new Number[] { 
                 getMax() });
         
-        _accessor.setMin(new Short[] { 
+        _accessor.setMin(new Number[] { 
                 getMin() });
         
         return _accessor;
     }
-
     
     @Override
     protected void writeBuf(ByteBuffer _buffer) {
         for(short _s : this._list) {
             _buffer.putShort(_s);
         }
-    }
-
-    @Override
-    protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
-        BufferView _bufferView = super.addBufferView(_gltf, _buffer);
-        _bufferView.setTarget(GltfConstants.GL_ELEMENT_ARRAY_BUFFER);
-        BufferBase.alignWords(_buffer);
-        return _bufferView;
     }
     
 }

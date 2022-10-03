@@ -19,10 +19,33 @@ import de.javagl.jgltf.model.GltfConstants;
  * Support EXT_mesh_gpu_instancing
  * @author Chad Juliano
  */
-public class BufferQuaterionByte extends BufferFloat4 {
+public class BufferVecQuat extends BufferVecFloat4 {
     
-    public BufferQuaterionByte(String _name) {
+    public BufferVecQuat(String _name) {
         super(_name);
+    }
+    
+    @Override
+    protected Accessor addAccessor(GlTF _gltf, BufferView _bufferView) {
+        Accessor _accessor = super.addAccessor(_gltf, _bufferView);
+        _accessor.setComponentType(GltfConstants.GL_BYTE);
+        _accessor.setType("VEC4");
+        
+        Tuple4f max = this.getMin();
+        _accessor.setMax(new Number[] { 
+                floatToByte(max.x), 
+                floatToByte(max.y), 
+                floatToByte(max.z), 
+                floatToByte(max.w) });
+
+        Tuple4f min = this.getMin();
+        _accessor.setMax(new Number[] { 
+                floatToByte(min.x), 
+                floatToByte(min.y), 
+                floatToByte(min.z), 
+                floatToByte(min.w) });
+        
+        return _accessor;
     }
     
     @Override
@@ -34,27 +57,6 @@ public class BufferQuaterionByte extends BufferFloat4 {
             _buffer.put(floatToByte(_vec.z));
             _buffer.put(floatToByte(_vec.w));
         }
-    }
-    
-    @Override
-    protected Accessor addAccessor(GlTF _gltf, BufferView _bufferView) {
-        Accessor _accessor = super.addAccessor(_gltf, _bufferView);
-        _accessor.setComponentType(GltfConstants.GL_BYTE);
-        _accessor.setType("VEC4");
-        
-        _accessor.setMax(new Integer[] { 
-                (int)floatToByte(this._max.x), 
-                (int)floatToByte(this._max.y), 
-                (int)floatToByte(this._max.z), 
-                (int)floatToByte(this._max.w) });
-
-        _accessor.setMin(new Integer[] { 
-                (int)floatToByte(this._min.x), 
-                (int)floatToByte(this._min.y), 
-                (int)floatToByte(this._min.z), 
-                (int)floatToByte(this._min.w) });
-        
-        return _accessor;
     }
     
     /**
