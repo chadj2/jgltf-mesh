@@ -19,32 +19,29 @@ import io.github.chadj2.mesh.MeshGltfWriter;
  * Serializer for vertex color primitives.
  * @author Chad Juliano
  */
-public class VertexColors extends BufferBase<Color> {
+public class VertexColors extends BufferArrayBase<Byte> {
     
     public VertexColors(String _name) {
-        super(_name);
+        super(_name, Byte.BYTES * 4);
     }
 
-    @Override
     public Accessor build(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive) {
         return buildAttrib(_geoWriter, _meshPirimitive, "COLOR_0");
     }
     
     @Override
-    protected void writeBuf(ByteBuffer _buffer) {
-        for(int _i = 0; _i < this._list.size(); _i++) {
-            Color _color = this._list.get(_i);
-            
-            Integer _r = _color.getRed();
-            Integer _g = _color.getGreen();
-            Integer _b = _color.getBlue();
-            Integer _a = _color.getAlpha();
-            
-            _buffer.put(_r.byteValue());
-            _buffer.put(_g.byteValue());
-            _buffer.put(_b.byteValue());
-            _buffer.put(_a.byteValue());
-        }
+    public int size() { return this._list.size() / 4; }
+    
+    public void add(Color color) {
+        Integer _r = color.getRed();
+        Integer _g = color.getGreen();
+        Integer _b = color.getBlue();
+        Integer _a = color.getAlpha();
+        
+        add(_r.byteValue());
+        add(_g.byteValue());
+        add(_b.byteValue());
+        add(_a.byteValue());
     }
     
     @Override
@@ -55,12 +52,11 @@ public class VertexColors extends BufferBase<Color> {
         _accessor.setNormalized(true);
         return _accessor;
     }
-    
+
     @Override
-    protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
-        BufferView _bufferView = super.addBufferView(_gltf, _buffer);
-        _bufferView.setTarget(GltfConstants.GL_ARRAY_BUFFER);
-        _bufferView.setByteStride(Byte.BYTES * 4);
-        return _bufferView;
+    protected void writeBuf(ByteBuffer _buffer) {
+        for(byte _b : this._list) {
+            _buffer.put(_b);
+        }
     }
 }

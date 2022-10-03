@@ -21,66 +21,74 @@ import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.MeshGltfWriter;
 import io.github.chadj2.mesh.buffer.BufferFloat3;
 import io.github.chadj2.mesh.buffer.BufferFloat4;
-import io.github.chadj2.mesh.buffer.GlTFMeshGpuInstancing;
+import io.github.chadj2.mesh.ext.FeatureId;
+import io.github.chadj2.mesh.ext.GlTFMeshGpuInstancing;
+import io.github.chadj2.mesh.ext.NodeInstanceFeatures;
 
 /**
- * 
+ * Create a set of spheres using the EXT_mesh_gpu_instancing extension. This is necessary
+ * for visualizations requiring a large number of spheres.
  * @author Chad Juliano
  */
-public class SphereFactoryExt extends SphereFactory {
+public class SphereFactoryInst extends SphereFactory {
     
-    private final static Logger LOG = LoggerFactory.getLogger(SphereFactoryExt.class);
+    private final static Logger LOG = LoggerFactory.getLogger(SphereFactoryInst.class);
     
     private final static String EXT_INSTANCING = "EXT_mesh_gpu_instancing";
+    private final static String EXT_INST_FEATURES = "EXT_instance_features";
     
     private static class InstancingNode {
-        final BufferFloat3 _trans;
-        final BufferFloat4 _rotation;
         final BufferFloat3 _scale;
+        final BufferFloat4 _rotation;
+        final BufferFloat3 _trans;
         final Node _node;
         
         InstancingNode(Node node, String name) {
             this._node = node;
-            this._trans = new BufferFloat3(name,"TRANSLATION");
+            this._scale = new BufferFloat3(name + "-scale");
             //this._rotation = new BufferByte4(name, "ROTATION");
-            this._rotation = new BufferFloat4(name, "ROTATION");
-            this._scale = new BufferFloat3(name,"SCALE");
+            this._rotation = new BufferFloat4(name + "-rotation");
+            this._trans = new BufferFloat3(name + "-translation");
             this._node.setName(name + "_node");
         }
         
-        void addPos(Point3f pos) {
-            this._trans.add(pos);
-        }
-        
-        void addRotation(Quat4f _quat) {
-            this._rotation.add(_quat);
-        }
-        
-        void addScale(Vector3f scale) {
+        void add(Vector3f scale, Quat4f rot, Point3f trans) {
             this._scale.add(scale);
+            this._rotation.add(rot);
+            this._trans.add(trans);
         }
         
         void build(MeshGltfWriter writer) {
             GlTFMeshGpuInstancing meshInstancing = new GlTFMeshGpuInstancing();
             this._node.addExtensions(EXT_INSTANCING, meshInstancing);
-            this._trans.build(writer, meshInstancing);
-            this._rotation.build(writer, meshInstancing);
-            this._scale.build(writer, meshInstancing);
+            
+            this._scale.buildAttrib(writer, meshInstancing, "SCALE");
+            this._rotation.buildAttrib(writer, meshInstancing, "ROTATION");
+            this._trans.buildAttrib(writer, meshInstancing, "TRANSLATION");
+            
+        }
+        
+        void addFeatures(MeshGltfWriter writer) {
+            NodeInstanceFeatures instFeatures = new NodeInstanceFeatures();
+            this._node.addExtensions(EXT_INST_FEATURES, instFeatures);
+            
+            FeatureId featureId = new FeatureId();
+            instFeatures.addFeatureIds(featureId);
+            featureId.setLabel("eventId");
+            featureId.setFeatureCount(this._scale.size());
+            featureId.setPropertyTable(0);
         }
     }
     
     private final Map<Integer, InstancingNode> _meshToNodeIndex = new HashMap<>();
     
-    public SphereFactoryExt(MeshGltfWriter writer) {
+    public SphereFactoryInst(MeshGltfWriter writer) {
         super(writer);
     }
     
     @Override
     public Node addSphere(Point3f pos) throws Exception {
         Integer meshIdx = getMeshColorLod();
-        getTransform().transform(pos);
-        Quat4f rotation = new Quat4f(0,0,0,1);
-        Vector3f scale = new Vector3f(this._radius);
         
         InstancingNode iNode = this._meshToNodeIndex.get(meshIdx);
         if(iNode == null) {
@@ -92,10 +100,12 @@ public class SphereFactoryExt extends SphereFactory {
             iNode = new InstancingNode(node, name);
             this._meshToNodeIndex.put(meshIdx, iNode);
         }
+
+        getTransform().transform(pos);
+        Quat4f rotation = new Quat4f(0,0,0,1);
+        Vector3f scale = new Vector3f(this._radius);
+        iNode.add(scale, rotation, pos);
         
-        iNode.addPos(pos);
-        iNode.addRotation(rotation);
-        iNode.addScale(scale);
         return iNode._node;
     }
     
@@ -103,12 +113,16 @@ public class SphereFactoryExt extends SphereFactory {
     public void build() {
         GlTF gltf = this._writer.getGltf();
         gltf.addExtensionsUsed(EXT_INSTANCING);
+        gltf.addExtensionsRequired(EXT_INSTANCING);
         LOG.info("Adding extension: {}", EXT_INSTANCING);
+        
+
+        gltf.addExtensionsUsed(EXT_INST_FEATURES);
+        LOG.info("Adding extension: {}", EXT_INST_FEATURES);
         
         for(InstancingNode iNode : this._meshToNodeIndex.values()) {
             iNode.build(this._writer);
+            iNode.addFeatures(this._writer);
         }
     }
- 
-    
 }

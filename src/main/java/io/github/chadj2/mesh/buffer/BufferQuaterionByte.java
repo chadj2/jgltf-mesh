@@ -19,10 +19,10 @@ import de.javagl.jgltf.model.GltfConstants;
  * Support EXT_mesh_gpu_instancing
  * @author Chad Juliano
  */
-public class BufferByte4 extends BufferFloat4 {
+public class BufferQuaterionByte extends BufferFloat4 {
     
-    public BufferByte4(String _name, String _attrib) {
-        super(_name, _attrib);
+    public BufferQuaterionByte(String _name) {
+        super(_name);
     }
     
     @Override

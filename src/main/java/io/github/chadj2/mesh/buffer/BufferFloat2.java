@@ -16,10 +16,10 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.model.GltfConstants;
 
-public class BufferFloat2 extends BufferFloatBase<Tuple2f>  {
+public class BufferFloat2 extends BufferArrayBase<Tuple2f>  {
 
-    public BufferFloat2(String _name, String _attrib) {
-        super(_name, _attrib, Float.BYTES * 2);
+    public BufferFloat2(String _name) {
+        super(_name, Float.BYTES * 2);
         this._max = new Vector2f();
         this._min = new Vector2f();
         clear();

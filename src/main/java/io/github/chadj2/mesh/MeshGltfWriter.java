@@ -297,13 +297,14 @@ public class MeshGltfWriter {
     
     private void writeEmbedded(DefaultGltfModel gltfModel, OutputStream os) throws IOException {
         GltfAssetV2 embeddedAsset = GltfAssetsV2.createEmbedded(gltfModel);
-        GltfWriter gltfWriter = new GltfWriter();
         GlTF embeddedGltf = embeddedAsset.getGltf();
         
         // workaround to copy extensions and asset from old gltf object.
         embeddedGltf.setExtensionsUsed(this._gltf.getExtensionsUsed());
+        embeddedGltf.setExtensionsRequired(this._gltf.getExtensionsRequired());
         embeddedGltf.setAsset(this._gltf.getAsset());
-        
+
+        GltfWriter gltfWriter = new GltfWriter();
         gltfWriter.write(embeddedGltf, os);
     }
     

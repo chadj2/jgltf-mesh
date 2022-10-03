@@ -191,7 +191,7 @@ public class TopologyBuilder extends BaseBuilder {
             throw new Exception("No vertices to build!");
         }
         
-        this._vertices = new BufferFloat3(this.getName(), "POSITION");
+        this._vertices = new BufferFloat3(this.getName() + "-vertices");
         VertexColors _colors = new VertexColors(this.getName());
 
         for(MeshVertex _meshVertex : this._vertexList) {
@@ -210,7 +210,7 @@ public class TopologyBuilder extends BaseBuilder {
         // save bounds for later
         this._minBounds = this._vertices.getMin();
         this._maxBounds = this._vertices.getMax();
-        this._vertices.build(_geoWriter, _meshPrimitive);
+        this._vertices.buildAttrib(_geoWriter, _meshPrimitive, "POSITION");
         _colors.build(_geoWriter, _meshPrimitive);
     }
 }

@@ -20,7 +20,7 @@ import io.github.chadj2.mesh.BaseBuilder;
 import io.github.chadj2.mesh.MeshGltfWriter;
 import io.github.chadj2.mesh.sphere.IcosphereBuilder;
 import io.github.chadj2.mesh.sphere.SphereFactory;
-import io.github.chadj2.mesh.sphere.SphereFactoryExt;
+import io.github.chadj2.mesh.sphere.SphereFactoryInst;
 
 public class TestSphereModels {
 
@@ -45,12 +45,12 @@ public class TestSphereModels {
     }
     
     /**
-     * Create a 10x10 grid of spheres with varying color and radius.
+     * Create a 10x10 grid of spheres using the EXT_mesh_gpu_instancing extension.
      * @throws Exception
      */
     @Test
     public void testSphereFactoryExt() throws Exception {
-        SphereFactoryExt factory = new SphereFactoryExt(this._writer);
+        SphereFactoryInst factory = new SphereFactoryInst(this._writer);
         factory.setMaxDetail(2);
         
         createSpheres(factory);

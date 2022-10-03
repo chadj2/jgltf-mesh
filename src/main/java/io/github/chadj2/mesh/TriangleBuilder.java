@@ -24,7 +24,6 @@ import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.buffer.BufferFloat2;
 import io.github.chadj2.mesh.buffer.BufferFloat3;
-import io.github.chadj2.mesh.buffer.BufferFloat4;
 import io.github.chadj2.mesh.buffer.TriangleIndices;
 
 /**
@@ -171,9 +170,9 @@ public class TriangleBuilder extends TopologyBuilder {
             throw new Exception("Mesh has no indices: " + this.getName());
         }
         
-        BufferFloat2 _texCoords = new BufferFloat2(this.getName(), "TEXCOORD_0");
-        this._normals = new BufferFloat3(this.getName(), "NORMAL");
-        BufferFloat4 _tangents = new BufferFloat4(this.getName(), "TANGENT");
+        BufferFloat2 _texCoords = new BufferFloat2(this.getName() + "-texCoords");
+        this._normals = new BufferFloat3(this.getName() + "-normals");
+        //BufferFloat4 _tangents = new BufferFloat4(this.getName(), "tangents");
         
         for(MeshVertex _meshVertex : this._vertexList) {
             Point2f _texCoord = _meshVertex.getTexCoord();
@@ -200,9 +199,9 @@ public class TriangleBuilder extends TopologyBuilder {
         
         // flush all buffers to the primitive
         indices.build(_geoWriter, _meshPrimitive);
-        _texCoords.build(_geoWriter, _meshPrimitive);
-        this._normals.build(_geoWriter, _meshPrimitive);
-        _tangents.build(_geoWriter, _meshPrimitive);
+        _texCoords.buildAttrib(_geoWriter, _meshPrimitive, "TEXCOORD_0");
+        this._normals.buildAttrib(_geoWriter, _meshPrimitive, "NORMAL");
+        //_tangents.build(_geoWriter, _meshPrimitive);
         
         this._indicesList.clear();
     }

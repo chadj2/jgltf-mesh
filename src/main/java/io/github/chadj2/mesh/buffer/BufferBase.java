@@ -17,6 +17,7 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import io.github.chadj2.mesh.MeshGltfWriter;
+import io.github.chadj2.mesh.ext.GlTFMeshGpuInstancing;
 
 /**
  * Base class for primitive serializers.
@@ -39,12 +40,10 @@ public abstract class BufferBase<T> {
     public int size() { return this._list.size(); }
 
     public void clear() { this._list.clear(); }
-    
-    public abstract Accessor build(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive);
 
     protected abstract void writeBuf(ByteBuffer _buffer);
     
-    protected final Accessor buildAttrib(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive, String _attribute) {
+    public final Accessor buildAttrib(MeshGltfWriter _geoWriter, MeshPrimitive _meshPirimitive, String _attribute) {
         Accessor _accessor = buildBuffer(_geoWriter);
         if(_accessor == null) {
             return null;
@@ -52,6 +51,18 @@ public abstract class BufferBase<T> {
         
         int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_accessor);
         _meshPirimitive.addAttributes(_attribute, _accessorIdx);
+        return _accessor;
+    }
+
+    public Accessor buildAttrib(MeshGltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing,
+            String _attribute) {
+        Accessor _accessor = buildBuffer(_geoWriter);
+        if(_accessor == null) {
+            return null;
+        }
+        
+        int _accessorIdx = _geoWriter.getGltf().getAccessors().indexOf(_accessor);
+        _meshInstancing.addAttributes(_attribute, _accessorIdx);
         return _accessor;
     }
     

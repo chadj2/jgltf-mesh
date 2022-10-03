@@ -6,7 +6,7 @@
  * Copyright (c) 2016-2021 Marco Hutter - http://www.javagl.de
  */
 
-package io.github.chadj2.mesh.buffer;
+package io.github.chadj2.mesh.ext;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
