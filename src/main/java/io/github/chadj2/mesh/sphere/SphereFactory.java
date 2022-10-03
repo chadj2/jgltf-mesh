@@ -80,12 +80,11 @@ public class SphereFactory extends BaseBuilder {
     
     /**
      * Add a sphere at the given position.
-     * @param xPos
-     * @param yPos
-     * @param zPos
+     * @param pos sphere position
+     * @param id sphere ID for click events
      * @throws Exception
      */
-    public Node addSphere(Point3f pos) throws Exception {
+    public Node addSphere(Point3f pos, String eventId) throws Exception {
         Integer meshIdx = getMeshColorLod();
         getTransform().transform(pos);
         
@@ -103,6 +102,13 @@ public class SphereFactory extends BaseBuilder {
         node.setScale(this._radius);
         float[] translation = {pos.x, pos.y, pos.z};
         node.setTranslation(translation);
+        
+
+        // add the eventId to the extras
+        final Map<String, Object> extras = new HashMap<>();
+        extras.put("eventId", eventId);
+        node.setExtras(extras);
+        
         return node;
     }
     

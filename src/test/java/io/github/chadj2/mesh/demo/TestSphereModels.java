@@ -78,7 +78,8 @@ public class TestSphereModels {
                 factory.setRadius(yInterp);
                 
                 // add the sphere
-                factory.addSphere(new Point3f(xPos, yPos, 0f));
+                String eventId = String.format("%d,%d", xIdx, yIdx);
+                factory.addSphere(new Point3f(xPos, yPos, 0f), eventId);
             }
         }
     }

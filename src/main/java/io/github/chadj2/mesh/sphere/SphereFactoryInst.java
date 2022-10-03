@@ -6,6 +6,7 @@
 
 package io.github.chadj2.mesh.sphere;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.MeshGltfWriter;
+import io.github.chadj2.mesh.buffer.BufferShort;
 import io.github.chadj2.mesh.buffer.BufferVecFloat3;
 import io.github.chadj2.mesh.buffer.BufferVecFloat4;
 import io.github.chadj2.mesh.ext.FeatureId;
@@ -41,21 +43,26 @@ public class SphereFactoryInst extends SphereFactory {
         final BufferVecFloat3 _scale;
         final BufferVecFloat4 _rotation;
         final BufferVecFloat3 _trans;
+        final BufferShort _featureId;
         final Node _node;
         
         InstancingNode(Node node, String name) {
             this._node = node;
+            this._node.setName(name + "_node");
+            
             this._scale = new BufferVecFloat3(name + "-scale");
             //this._rotation = new BufferByte4(name, "ROTATION");
             this._rotation = new BufferVecFloat4(name + "-rotation");
             this._trans = new BufferVecFloat3(name + "-translation");
-            this._node.setName(name + "_node");
+            this._featureId = new BufferShort(name + "-featureId");
+            
         }
         
-        void add(Vector3f scale, Quat4f rot, Point3f trans) {
+        void add(Vector3f scale, Quat4f rot, Point3f trans, int featureId) {
             this._scale.add(scale);
             this._rotation.add(rot);
             this._trans.add(trans);
+            this._featureId.add((short)featureId);
         }
         
         void build(MeshGltfWriter writer) {
@@ -65,7 +72,7 @@ public class SphereFactoryInst extends SphereFactory {
             this._scale.buildAttrib(writer, meshInstancing, "SCALE");
             this._rotation.buildAttrib(writer, meshInstancing, "ROTATION");
             this._trans.buildAttrib(writer, meshInstancing, "TRANSLATION");
-            
+            this._featureId.buildAttrib(writer, meshInstancing, "_FEATURE_ID_0");
         }
         
         void addFeatures(MeshGltfWriter writer) {
@@ -86,8 +93,10 @@ public class SphereFactoryInst extends SphereFactory {
         super(writer);
     }
     
+    private ArrayList<String> eventIdList = new ArrayList<>();
+    
     @Override
-    public Node addSphere(Point3f pos) throws Exception {
+    public Node addSphere(Point3f pos, String eventId) throws Exception {
         Integer meshIdx = getMeshColorLod();
         
         InstancingNode iNode = this._meshToNodeIndex.get(meshIdx);
@@ -104,7 +113,11 @@ public class SphereFactoryInst extends SphereFactory {
         getTransform().transform(pos);
         Quat4f rotation = new Quat4f(0,0,0,1);
         Vector3f scale = new Vector3f(this._radius);
-        iNode.add(scale, rotation, pos);
+        
+        this.eventIdList.add(eventId);
+        int featureId = this.eventIdList.size() - 1;
+        
+        iNode.add(scale, rotation, pos, featureId);
         
         return iNode._node;
     }
