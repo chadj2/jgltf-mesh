@@ -6,7 +6,7 @@
  * Copyright (c) 2016-2021 Marco Hutter - http://www.javagl.de
  */
 
-package io.github.chadj2.mesh.ext;
+package io.github.chadj2.mesh.extinst;
 
 import de.javagl.jgltf.impl.v2.GlTFProperty;
 

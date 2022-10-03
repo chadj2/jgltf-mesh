@@ -17,7 +17,7 @@ import de.javagl.jgltf.impl.v2.BufferView;
 import de.javagl.jgltf.impl.v2.GlTF;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import io.github.chadj2.mesh.MeshGltfWriter;
-import io.github.chadj2.mesh.ext.GlTFMeshGpuInstancing;
+import io.github.chadj2.mesh.extinst.GlTFMeshGpuInstancing;
 
 /**
  * Base class for primitive serializers.

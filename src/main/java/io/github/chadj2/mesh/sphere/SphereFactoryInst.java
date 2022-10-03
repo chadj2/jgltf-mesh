@@ -23,9 +23,9 @@ import io.github.chadj2.mesh.MeshGltfWriter;
 import io.github.chadj2.mesh.buffer.BufferShort;
 import io.github.chadj2.mesh.buffer.BufferVecFloat3;
 import io.github.chadj2.mesh.buffer.BufferVecFloat4;
-import io.github.chadj2.mesh.ext.FeatureId;
-import io.github.chadj2.mesh.ext.GlTFMeshGpuInstancing;
-import io.github.chadj2.mesh.ext.NodeInstanceFeatures;
+import io.github.chadj2.mesh.extinst.FeatureId;
+import io.github.chadj2.mesh.extinst.GlTFMeshGpuInstancing;
+import io.github.chadj2.mesh.extinst.NodeInstanceFeatures;
 
 /**
  * Create a set of spheres using the EXT_mesh_gpu_instancing extension. This is necessary
