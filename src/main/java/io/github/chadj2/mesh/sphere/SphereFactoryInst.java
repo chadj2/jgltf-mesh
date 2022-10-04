@@ -6,7 +6,6 @@
 
 package io.github.chadj2.mesh.sphere;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,8 +54,9 @@ public class SphereFactoryInst extends SphereFactory {
             this._rotation = new BufferVecFloat4(name + "-rotation");
             this._trans = new BufferVecFloat3(name + "-translation");
             this._featureId = new BufferShort(name + "-featureId");
-            
         }
+        
+        int size() { return this._scale.size(); }
         
         void add(Vector3f scale, Quat4f rot, Point3f trans, int featureId) {
             this._scale.add(scale);
@@ -75,25 +75,24 @@ public class SphereFactoryInst extends SphereFactory {
             this._featureId.buildAttrib(writer, meshInstancing, "_FEATURE_ID_0");
         }
         
-        void addFeatures(MeshGltfWriter writer) {
+        void buildFeatures(int tableIdx) {
             NodeInstanceFeatures instFeatures = new NodeInstanceFeatures();
             this._node.addExtensions(EXT_INST_FEATURES, instFeatures);
             
             FeatureId featureId = new FeatureId();
             instFeatures.addFeatureIds(featureId);
             featureId.setLabel("eventId");
-            featureId.setFeatureCount(this._scale.size());
-            featureId.setPropertyTable(0);
+            featureId.setFeatureCount(size());
+            featureId.setPropertyTable(tableIdx);
         }
     }
     
     private final Map<Integer, InstancingNode> _meshToNodeIndex = new HashMap<>();
+    private final SphereMetadata _metadata = new SphereMetadata();
     
     public SphereFactoryInst(MeshGltfWriter writer) {
         super(writer);
     }
-    
-    private ArrayList<String> eventIdList = new ArrayList<>();
     
     @Override
     public Node addSphere(Point3f pos, String eventId) throws Exception {
@@ -113,9 +112,7 @@ public class SphereFactoryInst extends SphereFactory {
         getTransform().transform(pos);
         Quat4f rotation = new Quat4f(0,0,0,1);
         Vector3f scale = new Vector3f(this._radius);
-        
-        this.eventIdList.add(eventId);
-        int featureId = this.eventIdList.size() - 1;
+        int featureId = this._metadata.addEventId(eventId);
         
         iNode.add(scale, rotation, pos, featureId);
         
@@ -129,13 +126,14 @@ public class SphereFactoryInst extends SphereFactory {
         gltf.addExtensionsRequired(EXT_INSTANCING);
         LOG.info("Adding extension: {}", EXT_INSTANCING);
         
+        this._metadata.build(this._writer);
 
         gltf.addExtensionsUsed(EXT_INST_FEATURES);
         LOG.info("Adding extension: {}", EXT_INST_FEATURES);
         
         for(InstancingNode iNode : this._meshToNodeIndex.values()) {
             iNode.build(this._writer);
-            iNode.addFeatures(this._writer);
+            iNode.buildFeatures(this._metadata.getTableIdx());
         }
     }
 }

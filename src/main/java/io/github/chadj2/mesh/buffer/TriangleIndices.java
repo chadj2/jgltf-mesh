@@ -59,7 +59,6 @@ public class TriangleIndices extends BufferShort {
     protected BufferView addBufferView(GlTF _gltf, ByteBuffer _buffer) {
         BufferView _bufferView = super.addBufferView(_gltf, _buffer);
         _bufferView.setTarget(GltfConstants.GL_ELEMENT_ARRAY_BUFFER);
-        BufferBase.alignWords(_buffer);
         return _bufferView;
     }
 }

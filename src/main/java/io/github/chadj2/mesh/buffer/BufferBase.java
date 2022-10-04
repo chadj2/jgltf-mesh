@@ -33,7 +33,6 @@ public abstract class BufferBase<T> {
         this._name = _name;
     }
 
-
     public abstract T getMin();
 
     public abstract T getMax();
@@ -59,8 +58,7 @@ public abstract class BufferBase<T> {
         return _accessor;
     }
 
-    public Accessor buildAttrib(MeshGltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing,
-            String _attribute) {
+    public Accessor buildAttrib(MeshGltfWriter _geoWriter, GlTFMeshGpuInstancing _meshInstancing, String _attribute) {
         Accessor _accessor = buildBuffer(_geoWriter);
         if(_accessor == null) {
             return null;
@@ -115,10 +113,12 @@ public abstract class BufferBase<T> {
         String _bufViewName = String.format("%s-%s", this._name, _type);
         _bufferView.setName(_bufViewName);
         LOG.debug("BufferView[{}]: start={}, size={}", _bufViewName, _startPos, _length);
+
+        BufferBase.alignWords(_buffer);
         return _bufferView;
     }
 
-    protected static void alignWords(ByteBuffer _byteBuffer) {
+    private static void alignWords(ByteBuffer _byteBuffer) {
         int _limit = _byteBuffer.position();
         int _padding = _limit % 4;
         
