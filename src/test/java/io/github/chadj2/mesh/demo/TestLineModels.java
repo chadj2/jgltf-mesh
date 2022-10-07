@@ -81,7 +81,7 @@ public class TestLineModels {
         List<Color> colorList = new ArrayList<>();
 
         final int _rPoints = 1000;
-        final int _rotations = 10;
+        final int _rotations = 20;
         createSpiral(pointList, colorList, _rPoints, _rotations);
         
         MeshBuilder meshBuilder = new MeshBuilder("test_pipe");
