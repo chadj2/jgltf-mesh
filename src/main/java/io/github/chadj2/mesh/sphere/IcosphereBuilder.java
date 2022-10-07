@@ -228,7 +228,7 @@ public class IcosphereBuilder extends TriangleBuilder {
     
     /**
      * Find midpoint of 2 vertices. 
-     * @param tBuilder
+     * @param lod
      * @param v1
      * @param v2
      * @return

@@ -60,7 +60,7 @@ public class BufferVecQuat extends BufferVecFloat4 {
     }
     
     /**
-     * @see https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#animations
+     * @see "https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#animations"
      * @param fVal
      * @return
      */

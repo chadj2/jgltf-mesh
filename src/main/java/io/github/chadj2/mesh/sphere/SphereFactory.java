@@ -81,7 +81,7 @@ public class SphereFactory extends BaseBuilder {
     /**
      * Add a sphere at the given position.
      * @param pos sphere position
-     * @param id sphere ID for click events
+     * @param eventId sphere ID for click events
      * @throws Exception
      */
     public Node addSphere(Point3f pos, String eventId) throws Exception {

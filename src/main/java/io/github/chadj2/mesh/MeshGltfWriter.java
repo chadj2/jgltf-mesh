@@ -144,7 +144,7 @@ public class MeshGltfWriter {
     
     /**
      * Add a node to the default Scene.
-     * @returns index of the node
+     * @return index of the node
      */
     public int addNode(Node _node) {
         this._nodes.add(_node);

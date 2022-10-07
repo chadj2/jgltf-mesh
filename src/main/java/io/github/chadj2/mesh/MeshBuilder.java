@@ -269,6 +269,7 @@ public class MeshBuilder extends TriangleBuilder {
      * @param _radius Radius of the circle
      * @param _sides Number of sides
      * @param _color Color of the vertices
+     * @return 
      * @throws Exception 
      */
     public MeshVertex[] addCircleVerticesXZ(Point3f _position, float _radius, int _sides, 
