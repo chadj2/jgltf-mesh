@@ -20,7 +20,6 @@ import de.javagl.jgltf.impl.v2.Material;
 import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
-import io.github.chadj2.mesh.BaseBuilder;
 import io.github.chadj2.mesh.MeshGltfWriter;
 import io.github.chadj2.mesh.MeshGltfWriter.AlphaMode;
 
@@ -29,13 +28,13 @@ import io.github.chadj2.mesh.MeshGltfWriter.AlphaMode;
  * Spheres of the same color will get reused to reduce the file size. 
  * @author Chad Juliano
  */
-public class SphereFactory extends BaseBuilder {
+public class SphereFactory extends SphereFactoryBase {
     
     private final static Logger LOG = LoggerFactory.getLogger(SphereFactory.class);
-    
-    private final IcosphereBuilder _builder = new IcosphereBuilder("icosphere");
+
     protected final MeshGltfWriter _writer;
-    
+    private final IcosphereBuilder _builder = new IcosphereBuilder("icosphere");
+
     /**
      * Map of color/lod to mesh indices.
      */
@@ -46,35 +45,19 @@ public class SphereFactory extends BaseBuilder {
      */
     private final Map<Integer, Integer> _lodToMeshIdx = new HashMap<>();
     
-    protected float[] _radius = { 1f, 1f, 1f};
-    
-    private int _lod = 2;
-    
-    private Color _color = Color.WHITE;
-    
     public SphereFactory(MeshGltfWriter _writer) {
         super("sphere");
         this._builder.setIsPatterned(false);
-        this._builder.setColor(Color.WHITE);
+        this._builder.setColor(this.getColor());
         
         // need to set BLEND mode or transparency does not work.
         _writer.setAlphaMode(AlphaMode.BLEND);
         
         this._writer = _writer;
     }
-    
-    public void setMaxDetail(int val) { this._lod = val; }
-    
-    public void setColor(Color color) { this._color = color; }
-    
-    /**
-     * Set the radius of the sphere. Note that if you translate points with setTransform() then the radius is in
-     * the units of the transformed frame. 
-     * @param radius
-     */
-    public void setRadius(float radius) { this._radius = new float[] { radius, radius, radius }; }
-    
-    public void build() { 
+
+    @Override
+    public void build() {
         // do nothing
     }
     
@@ -84,6 +67,7 @@ public class SphereFactory extends BaseBuilder {
      * @param eventId sphere ID for click events
      * @throws Exception
      */
+    @Override
     public Node addSphere(Point3f pos, String eventId) throws Exception {
         Integer meshIdx = getMeshColorLod();
         getTransform().transform(pos);
@@ -95,15 +79,18 @@ public class SphereFactory extends BaseBuilder {
 
         if(LOG.isDebugEnabled()) {
             String colorStr = String.format("r=%d,g=%d,b=%d,a=%d", 
-                    this._color.getRed(), this._color.getGreen(), this._color.getBlue(), this._color.getAlpha());
-            LOG.debug("Add Sphere: pos=<{}> radius=<{}> color=<{}> ", pos, this._radius[0], colorStr);
+                    this.getColor().getRed(), 
+                    this.getColor().getGreen(), 
+                    this.getColor().getBlue(), 
+                    this.getColor().getAlpha());
+            LOG.debug("Add Sphere: pos=<{}> radius=<{}> color=<{}> ", pos, this.getRadius(), colorStr);
         }
         
-        node.setScale(this._radius);
+        float[] scale = new float[] { this.getRadius(), this.getRadius(), this.getRadius() };
+        node.setScale(scale);
         float[] translation = {pos.x, pos.y, pos.z};
         node.setTranslation(translation);
         
-
         // add the eventId to the extras
         final Map<String, Object> extras = new HashMap<>();
         extras.put("eventId", eventId);
@@ -118,7 +105,7 @@ public class SphereFactory extends BaseBuilder {
      * @throws Exception
      */
     protected int getMeshColorLod() throws Exception {
-        String key = String.format("%X-%d", this._color.getRGB(), this._lod);
+        String key = String.format("%X-%d", this.getColor().getRGB(), this.getMaxDetail());
         Integer meshIdx = this._colorLodToMeshIdx.get(key);
         if(meshIdx != null) {
             // found a cached mesh for this color/lod combo
@@ -138,19 +125,19 @@ public class SphereFactory extends BaseBuilder {
      * @throws Exception
      */
     private int getMeshLod() throws Exception {
-        Integer meshIdx = this._lodToMeshIdx.get(this._lod);
+        Integer meshIdx = this._lodToMeshIdx.get(this.getMaxDetail());
         if(meshIdx != null) {
             // found a mesh for the LOD. 
             // create a copy of this mesh with the new color
-            int newMeshIdx = copyMesh(meshIdx, this._color);
+            int newMeshIdx = copyMesh(meshIdx, this.getColor());
             return newMeshIdx;
         }
         
         // create a new mesh for this LOD
-        meshIdx = createMesh(this._color, this._lod);
+        meshIdx = createMesh(this.getColor(), this.getMaxDetail());
 
         // add this sphere to the cache.
-        this._lodToMeshIdx.put(this._lod, meshIdx);
+        this._lodToMeshIdx.put(this.getMaxDetail(), meshIdx);
         return meshIdx;
     }
     

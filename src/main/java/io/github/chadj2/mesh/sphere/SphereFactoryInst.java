@@ -97,6 +97,7 @@ public class SphereFactoryInst extends SphereFactory {
     @Override
     public Node addSphere(Point3f pos, String eventId) throws Exception {
         Integer meshIdx = getMeshColorLod();
+        getTransform().transform(pos);
         
         InstancingNode iNode = this._meshToNodeIndex.get(meshIdx);
         if(iNode == null) {
@@ -109,9 +110,8 @@ public class SphereFactoryInst extends SphereFactory {
             this._meshToNodeIndex.put(meshIdx, iNode);
         }
 
-        getTransform().transform(pos);
         Quat4f rotation = new Quat4f(0,0,0,1);
-        Vector3f scale = new Vector3f(this._radius);
+        Vector3f scale = new Vector3f(this.getRadius(), this.getRadius(), this.getRadius());
         int featureId = this._metadata.addEventId(eventId);
         
         iNode.add(scale, rotation, pos, featureId);
