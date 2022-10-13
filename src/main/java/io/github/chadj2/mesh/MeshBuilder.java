@@ -338,11 +338,22 @@ public class MeshBuilder extends TriangleBuilder {
             if(idx < (pointList.size() - 1)) {
                 nextPoint = tPointList.get(idx + 1);
             }
+
+            // create a rotation matrix based on the axis
+            Vector3f axisVec = getPipeAxis(prevPoint, currentPoint, nextPoint);
+            Matrix3f rotation3f = rotationFromY(axisVec);
             
-            Matrix4f transM4 = getPipeTransform(prevPoint, currentPoint, nextPoint);
-            setTransform(transM4);
+            // create a matrix for the rotation and translation.
+            Matrix4f rtsMatrix = new Matrix4f(rotation3f, new Vector3f(currentPoint), 1f);
+
+            // We set the transformation so the ring segment will be in the correct location
+            setTransform(rtsMatrix);
+            
             Color color = colorList.get(idx);
             
+            meshGrid[idx] = addCircleVerticesXZ(ORIGIN_POINT, radius, sides, color);
+            
+            // add caps to start and end
             if(idx == 0) {
                 // cap the start
                 addDiscXZ(ORIGIN_POINT, -radius, sides, color);
@@ -351,9 +362,6 @@ public class MeshBuilder extends TriangleBuilder {
                 // cap the end
                 addDiscXZ(ORIGIN_POINT, radius, sides, color);
             }
-            
-            // We set the transformation so the ring segment will be in the correct location
-            meshGrid[idx] = addCircleVerticesXZ(ORIGIN_POINT, radius, sides, color);
         }
         
         // restore original transform
@@ -364,16 +372,16 @@ public class MeshBuilder extends TriangleBuilder {
     }
     
     /**
-     * Create a 4D translation matrix from y-axis to the pipe segment.
+     * Get the axis or direction of the pipe.
      * @param prevPoint
      * @param curPoint
      * @param nextPoint
      * @return
-     * @throws Exception 
+     * @throws Exception
      */
-    private static Matrix4f getPipeTransform(Point3f prevPoint, Point3f curPoint, Point3f nextPoint) throws Exception {
+    private static Vector3f getPipeAxis(Point3f prevPoint, Point3f curPoint, Point3f nextPoint) throws Exception {
         // average available segments
-        Vector3f toVec = new Vector3f();
+        Vector3f axisVec = new Vector3f();
         int segCount = 0;
         
         // prev-current segment
@@ -381,7 +389,7 @@ public class MeshBuilder extends TriangleBuilder {
             Vector3f seg = new Vector3f();
             seg.sub(curPoint, prevPoint);
             seg.normalize();
-            toVec.add(seg);
+            axisVec.add(seg);
             segCount++;
         }
         
@@ -390,52 +398,44 @@ public class MeshBuilder extends TriangleBuilder {
             Vector3f seg = new Vector3f();
             seg.sub(nextPoint, curPoint);
             seg.normalize();
-            toVec.add(seg);
+            axisVec.add(seg);
             segCount++;
         }
         
         // divide by number of segments
-        toVec.scale(1f/(float)segCount);
+        axisVec.scale(1f/(float)segCount);
         
-        if(Float.isNaN(toVec.x) || Float.isNaN(toVec.y) || Float.isNaN(toVec.z)) {
+        if(Float.isNaN(axisVec.x) || Float.isNaN(axisVec.y) || Float.isNaN(axisVec.z)) {
             throw new Exception("Unable to calculate transform");
         }
         
-        // get rotation matrix
-        Matrix3f rotM = rotationFromY(toVec);
-        Matrix4f transM4 = new Matrix4f();
-        transM4.set(rotM);
-        
-        // set translation to the current point
-        transM4.setTranslation(new Vector3f(curPoint));
-        
-        return transM4;
+        return axisVec;
     }
-
-    //private final static Vector3f Y_UNIT_VECTOR = new Vector3f(0f, 1f, 0f);
     
-    //private final static Vector3f X_UNIT_VECTOR = new Vector3f(1f, 0f, 0f);
+    private final static Vector3f Y_UNIT_VECTOR = new Vector3f(0f, 1f, 0f);
+    
+    private final static Vector3f X_UNIT_VECTOR = new Vector3f(1f, 0f, 0f);
     
     private final static Vector3f Z_UNIT_VECTOR = new Vector3f(0f, 0f, 1f);
     
     /**
-     * Create a 3D transform from ux to a vector.
-     * @param toVec
+     * Create a 3D transform in the direction of the axis.
+     * @param axisVec
      * @return
      */
-    public static Matrix3f rotationFromY(Vector3f toVec) {
+    public static Matrix3f rotationFromY(Vector3f axisVec) {
         //LOG.info("toVec: {}", toVec);
         
         // create zVec perpendicular to toVec
         Vector3f zVec = new Vector3f();
-        zVec.cross(toVec, Z_UNIT_VECTOR);
+        zVec.cross(axisVec, Y_UNIT_VECTOR);
         
         // create xVec perpendicular to zVec
         Vector3f xVec = new Vector3f();
-        xVec.cross(toVec, zVec);
+        xVec.cross(axisVec, zVec);
         
         // normalize and set as basis in the rotation matrix.
-        Vector3f yVec = new Vector3f(toVec);
+        Vector3f yVec = new Vector3f(axisVec);
 
         xVec.normalize();
         yVec.normalize();
