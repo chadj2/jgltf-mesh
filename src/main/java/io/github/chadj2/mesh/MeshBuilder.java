@@ -341,6 +341,7 @@ public class MeshBuilder extends TriangleBuilder {
 
             // create a rotation matrix based on the axis
             Vector3f axisVec = getPipeAxis(prevPoint, currentPoint, nextPoint);
+            //LOG.info("axisVec: {}", axisVec);
             Matrix3f rotation3f = rotationFromY(axisVec);
             
             // create a matrix for the rotation and translation.
@@ -412,9 +413,9 @@ public class MeshBuilder extends TriangleBuilder {
         return axisVec;
     }
     
-    private final static Vector3f Y_UNIT_VECTOR = new Vector3f(0f, 1f, 0f);
+    //private final static Vector3f Y_UNIT_VECTOR = new Vector3f(0f, 1f, 0f);
     
-    private final static Vector3f X_UNIT_VECTOR = new Vector3f(1f, 0f, 0f);
+    //private final static Vector3f X_UNIT_VECTOR = new Vector3f(1f, 0f, 0f);
     
     private final static Vector3f Z_UNIT_VECTOR = new Vector3f(0f, 0f, 1f);
     
@@ -422,32 +423,33 @@ public class MeshBuilder extends TriangleBuilder {
      * Create a 3D transform in the direction of the axis.
      * @param axisVec
      * @return
+     * @throws Exception 
      */
-    public static Matrix3f rotationFromY(Vector3f axisVec) {
-        //LOG.info("toVec: {}", toVec);
-        
-        // create zVec perpendicular to toVec
+    public static Matrix3f rotationFromY(Vector3f axisVec) throws Exception {
         Vector3f zVec = new Vector3f();
-        zVec.cross(axisVec, Y_UNIT_VECTOR);
+        Vector3f yVec = new Vector3f(axisVec);
+        Vector3f xVec = new Vector3f();
+        
+        // create zVec perpendicular to axisVec
+        zVec.cross(axisVec, Z_UNIT_VECTOR);
+        
+        if(zVec.length() == 0f) {
+            throw new Exception("Unable to calculate rotation transform for axis: " + axisVec.toString());
+        }
         
         // create xVec perpendicular to zVec
-        Vector3f xVec = new Vector3f();
         xVec.cross(axisVec, zVec);
         
-        // normalize and set as basis in the rotation matrix.
-        Vector3f yVec = new Vector3f(axisVec);
-
         xVec.normalize();
         yVec.normalize();
         zVec.normalize();
 
-        Matrix3f rotM3 = new Matrix3f();
-        rotM3.setColumn(0, xVec);
-        rotM3.setColumn(1, yVec);
-        rotM3.setColumn(2, zVec);
-
-        //LOG.info("rotM3:\n {}", rotM3);
-        return rotM3;
+        Matrix3f rotation = new Matrix3f();
+        rotation.setColumn(0, xVec);
+        rotation.setColumn(1, yVec);
+        rotation.setColumn(2, zVec);
+        
+        return rotation;
     }
     
     /**

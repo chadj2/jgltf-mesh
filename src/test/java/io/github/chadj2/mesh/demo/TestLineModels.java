@@ -91,7 +91,7 @@ public class TestLineModels {
         //meshBuilder.setScale(new Vector3f(2,2,2));
 
         float radius = 0.03f;
-        int sides = 10;
+        int sides = 4;
         meshBuilder.addPipe(pointList, colorList, radius, sides);
         meshBuilder.build(this._geoWriter);
         
@@ -101,14 +101,14 @@ public class TestLineModels {
     }
     
     @Test
-    public void testTransformX() {
+    public void testTransformX() throws Exception {
         testTransform(new Vector3f(0.1f,    1f,     0f));
         testTransform(new Vector3f(-0.1f,   1f,     0f));
         testTransform(new Vector3f(0f,      1f,     0.1f));
         testTransform(new Vector3f(0f,      1f,     -0.1f));
     }
     
-    private static void testTransform(Vector3f toVec) {
+    private static void testTransform(Vector3f toVec) throws Exception {
         Matrix3f rotM = MeshBuilder.rotationFromY(toVec);
         Vector3f yUnit = new Vector3f(0f, 1f, 0f);
         Vector3f transVec = new Vector3f(yUnit);
@@ -119,7 +119,7 @@ public class TestLineModels {
     }
     
     @Test
-    public void testTransformY() {
+    public void testTransformY() throws Exception {
         Vector3f yUnit = new Vector3f(0f, 1f, 0f);
         Vector3f toVec = new Vector3f(0f, 1f, 0f);
         
