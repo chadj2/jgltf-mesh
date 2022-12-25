@@ -23,8 +23,8 @@ import de.javagl.jgltf.impl.v2.Mesh;
 import de.javagl.jgltf.impl.v2.MeshPrimitive;
 import de.javagl.jgltf.impl.v2.Node;
 import io.github.chadj2.mesh.MeshGltfWriter;
-import io.github.chadj2.mesh.MeshBuilder;
 import io.github.chadj2.mesh.MeshVertex;
+import io.github.chadj2.mesh.PipeBuilder;
 import io.github.chadj2.mesh.TopologyBuilder;
 import io.github.chadj2.mesh.TopologyBuilder.TopologyMode;
 
@@ -84,7 +84,7 @@ public class TestLineModels {
         final int _rotations = 20;
         createSpiral(pointList, colorList, _rPoints, _rotations);
         
-        MeshBuilder meshBuilder = new MeshBuilder("test_pipe");
+        PipeBuilder meshBuilder = new PipeBuilder("test_pipe");
         
         // verify that centering and scale works.
         //meshBuilder.setCenter(new Point3f(1,1,1));
@@ -109,7 +109,7 @@ public class TestLineModels {
     }
     
     private static void testTransform(Vector3f toVec) throws Exception {
-        Matrix3f rotM = MeshBuilder.rotationFromY(toVec);
+        Matrix3f rotM = PipeBuilder.rotationFromY(toVec);
         Vector3f yUnit = new Vector3f(0f, 1f, 0f);
         Vector3f transVec = new Vector3f(yUnit);
         rotM.transform(transVec);
@@ -123,7 +123,7 @@ public class TestLineModels {
         Vector3f yUnit = new Vector3f(0f, 1f, 0f);
         Vector3f toVec = new Vector3f(0f, 1f, 0f);
         
-        Matrix3f rotM = MeshBuilder.rotationFromY(toVec);
+        Matrix3f rotM = PipeBuilder.rotationFromY(toVec);
         Vector3f transVec = new Vector3f(yUnit);
         rotM.transform(transVec);
 
