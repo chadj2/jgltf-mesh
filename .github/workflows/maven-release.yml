@@ -27,13 +27,14 @@ jobs:
         
       - name: Prepare the release
         run: mvn --batch-mode -Prelease,release-ossrh -Dresume=false release:prepare
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         
       - name: Deploy to Maven Central
         run: mvn --batch-mode -Prelease,release-ossrh release:perform
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           
       - name: Push version to repository
         run: git push --tags origin master
