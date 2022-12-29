@@ -34,6 +34,7 @@ jobs:
       - name: Deploy to Maven Central
         run: mvn --batch-mode -Prelease,release-ossrh release:perform
         env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           
