@@ -10,20 +10,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up JDK 11 for Shared Runner
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '11'
-        server-id: 'github'
-        cache: 'maven'
-
-    - name: Verify the build configuration
-      run: mvn --batch-mode validate -Prelease,release-github
-
-    - name: Publish to GitHub Packages
-      run: mvn --batch-mode deploy -Prelease,release-github
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/checkout@v3
+      
+      - name: Set up JDK 11 for Shared Runner
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          server-id: 'github'
+          cache: 'maven'
+  
+      - name: Verify the build configuration
+        run: mvn --batch-mode validate -Prelease,release-github
+  
+      - name: Publish to GitHub Packages
+        run: mvn --batch-mode deploy -Prelease,release-github
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
