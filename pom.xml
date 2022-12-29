@@ -4,7 +4,7 @@
 
     <groupId>io.github.chadj2</groupId>
     <artifactId>jgltf-mesh</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
 
     <name>Java glTF MeshBuilder</name>
@@ -31,7 +31,7 @@
         <connection>scm:git:${project.scm.url}</connection>
         <developerConnection>scm:git:${project.scm.url}</developerConnection>
         <url>https://github.com/chadj2/jgltf-mesh.git</url>
-        <tag>HEAD</tag>
+        <tag>v1.2.0</tag>
     </scm>
     
     <properties>
