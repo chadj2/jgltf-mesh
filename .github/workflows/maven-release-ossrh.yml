@@ -5,13 +5,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
+    env:
+      MAVEN_CMD: mvn --batch-mode -Prelease,release-ossrh
     steps:
       - uses: actions/checkout@v3
       - uses: fregante/setup-git-user@v1
       
-      - name: Set up Maven Central Repository
+      - name: Configure Maven Environment
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -23,20 +25,20 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
-      - name: Verify the build configuration
-        run: mvn --batch-mode validate -Prelease,release-ossrh
+      - name: Validate the POM configuration
+        run: ${{ env.MAVEN_CMD }} validate
         
       - name: Prepare the release
-        run: mvn --batch-mode -Prelease,release-ossrh -Dresume=false release:prepare
+        run: ${{ env.MAVEN_CMD }} -Dresume=false release:prepare
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         
       - name: Deploy to Maven Central
-        run: mvn --batch-mode -Prelease,release-ossrh release:perform
+        run: ${{ env.MAVEN_CMD }} release:perform
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           
-      - name: Push version to repository
+      - name: Push tag and updated pom files to project
         run: git push --tags origin master

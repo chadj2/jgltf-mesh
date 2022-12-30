@@ -1,17 +1,19 @@
-name: Publish to Maven Central
-run-name: Publish to Maven Central on ${{ github.ref }}
+name: Deploy to Maven Central
+run-name: Deploy to Maven Central on ${{ github.ref }}
 
 on:
   release:
     types: [created]
 
 jobs:
-  publish:
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      MAVEN_CMD: mvn --batch-mode -Prelease,release-ossrh
     steps:
       - uses: actions/checkout@v3
       
-      - name: Set up Maven Central Repository
+      - name: Configure Maven Environment
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -23,11 +25,11 @@ jobs:
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
-      - name: Verify the build configuration
-        run: mvn --batch-mode validate -Prelease,release-ossrh
+      - name: Validate the POM configuration
+        run: ${{ env.MAVEN_CMD }} validate
           
-      - name: Publish to Apache Maven Central
-        run: mvn --batch-mode deploy -Prelease,release-ossrh
+      - name: Deploy to Maven Central
+        run: ${{ env.MAVEN_CMD }} deploy
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}

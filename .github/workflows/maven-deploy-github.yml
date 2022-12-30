@@ -1,0 +1,31 @@
+name: Deploy to Github Packages
+run-name: Deploy to Github on ${{ github.ref }}
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  deploy:
+    env:
+      MAVEN_CMD: mvn --batch-mode -Prelease,release-github
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Configure Maven Environment
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          server-id: 'github'
+          cache: 'maven'
+  
+      - name: Validate the POM configuration
+        run: ${{ env.MAVEN_CMD }} validate
+  
+      - name: Deploy to GitHub Packages
+        run: ${{ env.MAVEN_CMD }} deploy
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
