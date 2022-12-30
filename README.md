@@ -1,7 +1,7 @@
 # Java glTF MeshBuilder
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.chadj2/jgltf-mesh.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.github.chadj2/jgltf-mesh) 
-[![Publish to Github Packages](https://github.com/chadj2/jgltf-mesh/actions/workflows/maven-publish-github.yml/badge.svg)](https://github.com/chadj2/jgltf-mesh/actions/workflows/maven-publish-github.yml)
+[![Deploy to Github Packages](https://github.com/chadj2/jgltf-mesh/actions/workflows/maven-deploy-github.yml/badge.svg)](https://github.com/chadj2/jgltf-mesh/actions/workflows/maven-deploy-github.yml)
 
 This project transforms simple 2D arrays into 3D meshes represented as glTF models. The meshes can be planar or wrapped about the x-axis or y-axis to generate cylindrical and spherical shapes that include:
 
