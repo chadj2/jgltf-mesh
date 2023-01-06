@@ -8,7 +8,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     env:
-      MAVEN_CMD: mvn --batch-mode -Prelease,release-ossrh
+      # enable the release and release-ossrh profiles
+      MAVEN_CMD: mvn --batch-mode -P release,release-ossrh
     steps:
       - uses: actions/checkout@v3
       - uses: fregante/setup-git-user@v1
@@ -26,19 +27,19 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
           
       - name: Validate the POM configuration
-        run: ${{ env.MAVEN_CMD }} validate
+        run: ${MAVEN_CMD} validate
         
       - name: Prepare the release
-        run: ${{ env.MAVEN_CMD }} -Dresume=false release:prepare
+        run: ${MAVEN_CMD} -D resume=false release:prepare
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
         
       - name: Deploy to Maven Central
-        run: ${{ env.MAVEN_CMD }} release:perform
+        run: ${MAVEN_CMD} release:perform
         env:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
           
       - name: Push tag and updated pom files to project
-        run: git push --tags origin master
+        run: git push --tags origin ${GITHUB_REF}

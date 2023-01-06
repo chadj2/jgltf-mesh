@@ -9,7 +9,7 @@ on:
 jobs:
   deploy:
     env:
-      MAVEN_CMD: mvn --batch-mode -Prelease,release-github
+      MAVEN_CMD: mvn --batch-mode -P release,release-github
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -23,9 +23,9 @@ jobs:
           cache: 'maven'
   
       - name: Validate the POM configuration
-        run: ${{ env.MAVEN_CMD }} validate
+        run: ${MAVEN_CMD} validate
   
       - name: Deploy to GitHub Packages
-        run: ${{ env.MAVEN_CMD }} deploy
+        run: ${MAVEN_CMD} deploy
         env:
           GITHUB_TOKEN: ${{ github.token }}
